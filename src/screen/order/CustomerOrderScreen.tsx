@@ -33,7 +33,7 @@ export function CustomerOrderScreen() {
   const [oneTime, setOneTime] = useState(false);
   const [count, setCount] = useState(0);
   const [verify, setVerify] = useState(true);
-  const [allow, setAllow] = useState(false);
+  const [allow, setAllow] = useState(true);
 
   const [generate] = useGenerateTokenOrderMutation();
 
@@ -59,7 +59,9 @@ export function CustomerOrderScreen() {
           Number(msg.coords.longitude),
         );
 
-        if (Number(km) < 0.08) {
+        console.log(km);
+
+        if (Number(km) < 0.1) {
           setAllow(true);
         }
       });
@@ -97,7 +99,7 @@ export function CustomerOrderScreen() {
 
   const pwdwifi = setting.find((f) => f.option === 'GUEST_WIFI')?.value;
 
-  if (loading || !params.get('token') || !allow) {
+  if (loading || !params.get('token')) {
     return (
       <>
         <Topbar isCart={false} />
@@ -134,34 +136,38 @@ export function CustomerOrderScreen() {
           <VerifyCustomerOrderScreen onVerify={setVerify} />
         ) : (
           <ProviderOrderContext>
-            <Topbar isCart />
-            <div className="w-full text-center">
-              <div>
-                Wifi: <b>MooD-WiFi</b>
-              </div>
-              <div>
-                Password: <b>{pwdwifi}</b>
-              </div>
-            </div>
-            <br />
-            <div className="max-w-[1200px] mx-auto flex flex-row gap-4 max-sm:w-full max-sm:gap-0 max-sm:p-4">
-              <div className="w-[70%] flex flex-col gap-4 max-sm:w-full">
-                {groups &&
-                  Object.keys(groups).map((g) => {
-                    return (
-                      <div key={g}>
-                        <div className="text-xl my-2 font-semibold">{g}</div>
-                        <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
-                          {groups[g].map((x: any, i: any) => {
-                            return <ProductItem key={i} product={x} keyItem={info.name} />;
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-              <LayoutCart />
-            </div>
+            <Topbar isCart={allow} />
+            {!!allow && (
+              <>
+                <div className="w-full text-center">
+                  <div>
+                    Wifi: <b>MooD-WiFi</b>
+                  </div>
+                  <div>
+                    Password: <b>{pwdwifi}</b>
+                  </div>
+                </div>
+                <br />
+                <div className="max-w-[1200px] mx-auto flex flex-row gap-4 max-sm:w-full max-sm:gap-0 max-sm:p-4">
+                  <div className="w-[70%] flex flex-col gap-4 max-sm:w-full">
+                    {groups &&
+                      Object.keys(groups).map((g) => {
+                        return (
+                          <div key={g}>
+                            <div className="text-xl my-2 font-semibold">{g}</div>
+                            <div className="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+                              {groups[g].map((x: any, i: any) => {
+                                return <ProductItem key={i} product={x} keyItem={info.name} />;
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  {/* <LayoutCart /> */}
+                </div>
+              </>
+            )}
           </ProviderOrderContext>
         )}
       </div>

@@ -4,12 +4,14 @@ import { setCookie } from 'cookies-next';
 import { useCustomToast } from '@/components/custom/CustomToast';
 import { Telegram } from '@/api/telegram';
 import moment from 'moment';
-import { Banner, Box, Button, Card, LegacyCard, Text, TextField } from '@shopify/polaris';
+import { Banner, Box, Button, Card, Icon, LegacyCard, Text, TextField } from '@shopify/polaris';
 import Image from 'next/image';
 import { config_app } from '@/lib/config_app';
 import { useLoginMutation } from '@/gql/graphql';
+import { HideIcon, ViewIcon } from '@shopify/polaris-icons';
 
 export function LoginScreen() {
+  const [show, setShow] = useState(false);
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   const { toasts, setToasts } = useCustomToast();
   const [msg, setMsg] = useState<any | null>(null);
@@ -86,12 +88,12 @@ export function LoginScreen() {
         <Card>
           <Box padding={'0'}>
             <div className="m-10">
-              <div className="flex flex-row items-center">
+              <div className="flex flex-row items-center justify-center">
                 <Image
                   alt=""
                   src={config_app.public.assets.logo || '/affiliate.svg'}
-                  width={56}
-                  height={45}
+                  width={100}
+                  height={100}
                   objectFit="container"
                 />
                 {/* <b className='ml-2 text-[12pt] text-[#674F36]'>Mood Panel</b> */}
@@ -125,7 +127,7 @@ export function LoginScreen() {
                   <TextField
                     autoComplete="off"
                     label="Password"
-                    type="password"
+                    type={show ? 'text' : 'password'}
                     value={passwordInput}
                     onChange={setPasswordInput}
                     // disabled={loading}
@@ -133,6 +135,11 @@ export function LoginScreen() {
                     //   msg?.success === false &&
                     //   msg.message === "Invalid password"
                     // }
+                    suffix={
+                      <div className="cursor-pointer" onClick={() => setShow(!show)}>
+                        {(<Icon source={show ? HideIcon : ViewIcon} />) as any}
+                      </div>
+                    }
                   />
                 </div>
                 <div className="mt-5">
@@ -146,7 +153,7 @@ export function LoginScreen() {
                     tone="success"
                     variant="primary"
                   >
-                    Continue with phone number
+                    Continue
                   </Button>
                 </div>
               </form>

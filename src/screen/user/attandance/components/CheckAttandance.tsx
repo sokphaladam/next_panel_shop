@@ -1,6 +1,7 @@
 'use client';
 
 import { useCheckAttendanceMutation, useGetAttendanceStaffTodayQuery } from '@/gql/graphql';
+import { Modal } from '@/hook/modal';
 import { haversineDistance } from '@/lib/loacationDistance';
 import { useUser } from '@/service/UserProvider';
 import { useSetting } from '@/service/useSettingProvider';
@@ -17,8 +18,8 @@ export function CheckAttandance() {
       date: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     },
   });
-  const [attandance] = useCheckAttendanceMutation({
-    refetchQueries: ['getAttendanceStaffToday'],
+  const [attendance] = useCheckAttendanceMutation({
+    refetchQueries: ['getAttendanceStaffToday', 'getAttendanceStaff'],
   });
 
   useEffect(() => {
@@ -42,25 +43,47 @@ export function CheckAttandance() {
 
   const handleCheckIn = useCallback(() => {
     const d = new Date();
-    attandance({
-      variables: {
-        userId: Number(user?.id),
-        date: moment(d).format('YYYY-MM-DD HH:mm:ss'),
-      },
+    Modal.dialog({
+      title: 'Confirmation',
+      body: [<div key={1}>You are check in at {moment(d).format('YYYY-MM-DD HH:mm:ss')}</div>],
+      buttons: [
+        {
+          title: 'Confirm',
+          onPress: () => {
+            attendance({
+              variables: {
+                userId: Number(user?.id),
+                date: moment(d).format('YYYY-MM-DD HH:mm:ss'),
+              },
+            });
+          },
+        },
+      ],
     });
-  }, [attandance]);
+  }, [attendance, user]);
 
   const handleCheckOut = useCallback(() => {
     const d = new Date();
-    attandance({
-      variables: {
-        userId: Number(user?.id),
-        date: moment(d).format('YYYY-MM-DD HH:mm:ss'),
-      },
+    Modal.dialog({
+      title: 'Confirmation',
+      body: [<div key={1}>You are check out at {moment(d).format('YYYY-MM-DD HH:mm:ss')}</div>],
+      buttons: [
+        {
+          title: 'Confirm',
+          onPress: () => {
+            attendance({
+              variables: {
+                userId: Number(user?.id),
+                date: moment(d).format('YYYY-MM-DD HH:mm:ss'),
+              },
+            });
+          },
+        },
+      ],
     });
-  }, [attandance]);
+  }, [attendance, user]);
 
-  if (setting.length <= 0) {
+  if (setting.length <= 0 && !user?.id) {
     return <></>;
   }
 
@@ -72,7 +95,6 @@ export function CheckAttandance() {
   if (loading) {
     return <></>;
   }
-  console.log(data?.getAttendanceStaffToday);
 
   return (
     <Card>

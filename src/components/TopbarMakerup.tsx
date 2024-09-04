@@ -63,6 +63,7 @@ export function TopbarMarkup(props: Props) {
         .join('')}
       open={userMenuActive}
       onToggle={toggleUserMenuActive}
+      avatar={user?.profile || ''}
     />
   );
 

@@ -222,9 +222,12 @@ export function OrderListItem({ item }: Props) {
           </div>
         </IndexTable.Cell>
         <IndexTable.Cell>
-          <Text as="p" variant="bodySm" tone="base">
-            TABLE: {Number(item?.set) < 10 ? '0' + item?.set : item?.set} (#{item?.code})
-          </Text>
+          <div className="flex flex-row items-center gap-2">
+            <Text as="p" variant="bodySm" tone="success">
+              TABLE: {Number(item?.set) < 10 ? '0' + item?.set : item?.set}
+            </Text>
+            (#{item?.code})
+          </div>
         </IndexTable.Cell>
         <IndexTable.Cell>
           {item?.delivery && (
