@@ -1,0 +1,99 @@
+mutation Login($username: String!, $password: String!) {
+  login(username: $username, password: $password)
+}
+
+mutation createProduct($data: ProductInput) {
+  createProduct(data: $data)
+}
+
+mutation updateProduct($updateProductId: Int!, $data: ProductInput) {
+  updateProduct(id: $updateProductId, data: $data)
+}
+
+mutation updateCategory($updateCategoryId: Int!, $data: CategoryInput, $isActive: Boolean) {
+  updateCategory(id: $updateCategoryId, data: $data, isActive: $isActive)
+}
+
+mutation createCategory($data: CategoryInput) {
+  createCategory(data: $data)
+}
+
+mutation createOrder($data: OrderInput) {
+  createOrder(data: $data)
+}
+
+mutation addOrderItem($orderId: Int!, $data: CartItemInput) {
+  addOrderItem(orderId: $orderId, data: $data)
+}
+
+mutation markOrderItemStatus($markOrderItemStatusId: Int!, $status: StatusOrderItem) {
+  markOrderItemStatus(id: $markOrderItemStatusId, status: $status)
+}
+
+mutation increaseOrderItem($increaseOrderItemId: Int!) {
+  increaseOrderItem(id: $increaseOrderItemId)
+}
+
+mutation decreaseOrderItem($decreaseOrderItemId: Int!) {
+  decreaseOrderItem(id: $decreaseOrderItemId)
+}
+
+mutation changeOrderStatus($data: ChangeOrderInput) {
+  changeOrderStatus(data: $data)
+}
+
+mutation generateTokenOrder($set: Int!) {
+  generateTokenOrder(set: $set)
+}
+
+mutation verifyOtpOrder($token: String!, $code: String!) {
+  verifyOtpOrder(token: $token, code: $code)
+}
+
+mutation signatureOrder($signatureOrderId: Int!, $password: String!, $username: String!) {
+  signatureOrder(id: $signatureOrderId, password: $password, username: $username)
+}
+
+mutation updateSetting($option: String, $value: String) {
+  updateSetting(option: $option, value: $value)
+}
+
+mutation generateTableSet($sets: Int!) {
+  generateTableSet(sets: $sets)
+}
+
+mutation createDelivery($data: DeliveryInput) {
+  createDelivery(data: $data)
+}
+
+mutation updateDelivery($updateDeliveryId: Int!, $data: DeliveryInput) {
+  updateDelivery(id: $updateDeliveryId, data: $data)
+}
+
+mutation createUser($data: UserInput) {
+  createUser(data: $data)
+}
+
+mutation updateUser($id: Int!, $data: UserInput) {
+  updateUser(id: $id, data: $data)
+}
+
+mutation createPosition($name: String!) {
+  createPosition(name: $name)
+}
+
+mutation updatePosition($name: String!, $updatePositionId: Int!) {
+  updatePosition(name: $name, id: $updatePositionId)
+}
+
+mutation createBank($name: String!, $phone: String) {
+  createBank(name: $name, phone: $phone)
+}
+
+mutation updateBank($updateBankId: Int!, $name: String!, $phone: String) {
+  updateBank(id: $updateBankId, name: $name, phone: $phone)
+}
+
+mutation checkAttendance($userId: Int!, $date: String!) {
+  checkAttendance(userId: $userId, date: $date)
+}

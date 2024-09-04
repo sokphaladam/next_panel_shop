@@ -1,0 +1,375 @@
+query me {
+  me {
+    id
+    display
+    contact
+    gender
+    role {
+      name
+      id
+    }
+    createdDate
+    isActive
+    ownerId
+    startingAt
+    bankName
+    bankAcc
+    bankType
+    position
+    baseSalary
+    type
+    profile
+  }
+}
+
+query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct) {
+  productList(offset: $offset, limit: $limit, code: $code, filter: $filter) {
+    id
+    title
+    description
+    type
+    category {
+      id
+      name
+      root
+    }
+    sku {
+      id
+      name
+      price
+      discount
+      unit
+    }
+    code
+    images
+    addons {
+      value
+      name
+      isRequired
+      id
+    }
+  }
+}
+
+query product($productId: Int!) {
+  product(id: $productId) {
+    id
+    title
+    description
+    type
+    stockAlter
+    category {
+      id
+      name
+      root
+    }
+    sku {
+      id
+      name
+      price
+      discount
+      unit
+    }
+    code
+    images
+    integrates {
+      qty
+      product {
+        title
+        images
+        id
+      }
+      integrate {
+        id
+        images
+        title
+      }
+      id
+    }
+    addons {
+      value
+      name
+      isRequired
+      id
+    }
+  }
+}
+
+query categoryList {
+  categoryList
+}
+
+query category($categoryId: Int!) {
+  category(id: $categoryId) {
+    id
+    name
+    root
+  }
+}
+
+query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [StatusOrder], $orderId: String) {
+  orderList(offset: $offset, limit: $limit, viewBy: $viewBy, status: $status, orderId: $orderId) {
+    id
+    code
+    deliveryCode
+    delivery {
+      id
+      name
+      contact
+    }
+    items {
+      id
+      price
+      product {
+        id
+        images
+        title
+        code
+      }
+      qty
+      discount
+      addons
+      remark
+      sku {
+        name
+      }
+      status
+    }
+    status
+    name
+    paid
+    set
+    total
+    uuid
+    note
+    vat
+    invoice
+    log {
+      date
+      text
+      by {
+        id
+        display
+      }
+    }
+  }
+}
+
+query order($token: String, $orderId: Int) {
+  order(token: $token, id: $orderId) {
+    id
+    address
+    status
+    name
+    paid
+    set
+    total
+    uuid
+    note
+    code
+    vat
+    invoice
+    log {
+      date
+      text
+      by {
+        id
+        display
+      }
+    }
+    deliveryCode
+    delivery {
+      id
+      name
+      contact
+    }
+    items {
+      id
+      qty
+      sku {
+        price
+        discount
+        id
+        unit
+        name
+      }
+      product {
+        title
+        images
+        code
+        description
+        id
+      }
+      price
+      discount
+      status
+      addons
+      remark
+    }
+  }
+}
+
+query settingList {
+  settingList {
+    value
+    type
+    option
+  }
+}
+
+query deliveryList($offset: Int, $limit: Int) {
+  deliveryList(offset: $offset, limit: $limit) {
+    contact
+    id
+    name
+  }
+}
+
+query tableSetList($limit: Int, $offset: Int) {
+  tableSetList(limit: $limit, offset: $offset) {
+    set
+    order {
+      id
+      uuid
+      status
+      code
+    }
+  }
+}
+
+query deliveryById($deliveryByIdId: Int!) {
+  deliveryById(id: $deliveryByIdId) {
+    contact
+    id
+    name
+  }
+}
+
+query getPositionList($offset: Int = 0, $limit: Int = 30) {
+  getPositionList(offset: $offset, limit: $limit) {
+    createdDate
+    id
+    name
+    updatedDate
+  }
+}
+
+query position($positionId: Int!) {
+  position(id: $positionId) {
+    createdDate
+    id
+    name
+    updatedDate
+  }
+}
+
+query bankInfo($bankInfoId: Int!) {
+  bankInfo(id: $bankInfoId) {
+    createdDate
+    id
+    name
+    phone
+    updatedDate
+  }
+}
+
+query getbankList($offset: Int = 0, $limit: Int = 30) {
+  getbankList(offset: $offset, limit: $limit) {
+    createdDate
+    id
+    name
+    phone
+    updatedDate
+  }
+}
+
+query user($userId: Int!) {
+  user(id: $userId) {
+    id
+    display
+    gender
+    dob
+    contact
+    ownerId
+    position
+    role {
+      id
+      name
+    }
+    startingAt
+    type
+    username
+    password
+    profile
+    baseSalary
+    createdDate
+    bankType
+    bankName
+    bankAcc
+    isActive
+  }
+}
+
+query userList($offset: Int, $limit: Int, $roles: [Int]) {
+  userList(offset: $offset, limit: $limit, roles: $roles) {
+    id
+    display
+    gender
+    dob
+    contact
+    ownerId
+    position
+    role {
+      id
+      name
+    }
+    startingAt
+    type
+    username
+    password
+    profile
+    baseSalary
+    createdDate
+    bankType
+    bankName
+    bankAcc
+    isActive
+  }
+}
+
+query roleList {
+  roleList {
+    id
+    name
+  }
+}
+
+query getAttendanceStaffToday($date: String!) {
+  getAttendanceStaffToday(date: $date) {
+    user {
+      id
+      display
+    }
+    id
+    checkIn
+    checkOut
+    overTimeIn
+    overTimeOut
+    checkDate
+  }
+}
+
+query getAttendanceStaff($limit: Int, $offset: Int, $from: String, $to: String) {
+  getAttendanceStaff(limit: $limit, offset: $offset, from: $from, to: $to) {
+    id
+    user {
+      id
+      display
+    }
+    checkIn
+    checkOut
+    overTimeIn
+    overTimeOut
+    checkDate
+  }
+}
