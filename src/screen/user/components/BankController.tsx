@@ -7,6 +7,7 @@ interface Props {
   value: any;
   onChange: any;
   hidelabel?: boolean;
+  needId?: boolean;
 }
 
 export function BankController(props: Props) {
@@ -26,7 +27,7 @@ export function BankController(props: Props) {
   for (const d of data.getbankList || []) {
     options.push({
       label: d?.name || '',
-      value: d?.name || '',
+      value: props.needId ? `${d?.name},${d?.id}` : d?.name || '',
     });
   }
 

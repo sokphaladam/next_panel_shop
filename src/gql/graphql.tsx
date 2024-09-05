@@ -96,7 +96,9 @@ export type CategoryInput = {
 
 export type ChangeOrderInput = {
   amount?: InputMaybe<Scalars['String']['input']>;
+  bankId?: InputMaybe<Scalars['Int']['input']>;
   bankType?: InputMaybe<Scalars['String']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
   deliverPickupCode?: InputMaybe<Scalars['String']['input']>;
   deliverPickupId?: InputMaybe<Scalars['Int']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -105,6 +107,17 @@ export type ChangeOrderInput = {
   orderId: Scalars['Int']['input'];
   reason?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<StatusOrder>;
+};
+
+export type CurrencyShift = {
+  __typename?: 'CurrencyShift';
+  khr?: Maybe<Scalars['Float']['output']>;
+  usd?: Maybe<Scalars['Float']['output']>;
+};
+
+export type CurrencyShiftInput = {
+  khr?: InputMaybe<Scalars['Float']['input']>;
+  usd?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Delivery = {
@@ -159,6 +172,7 @@ export type Mutation = {
   createPosition?: Maybe<Scalars['Boolean']['output']>;
   createProduct?: Maybe<Scalars['Boolean']['output']>;
   createProductStock?: Maybe<Scalars['Boolean']['output']>;
+  createShift?: Maybe<Scalars['Boolean']['output']>;
   createUser?: Maybe<Scalars['Boolean']['output']>;
   decreaseOrderItem?: Maybe<Scalars['Boolean']['output']>;
   generateTableSet?: Maybe<Scalars['Boolean']['output']>;
@@ -176,6 +190,7 @@ export type Mutation = {
   updateProduct?: Maybe<Scalars['Boolean']['output']>;
   updateProductStock?: Maybe<Scalars['Boolean']['output']>;
   updateSetting?: Maybe<Scalars['Boolean']['output']>;
+  updateShift?: Maybe<Scalars['Boolean']['output']>;
   updateUser?: Maybe<Scalars['Boolean']['output']>;
   verifyOtpOrder?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -236,6 +251,11 @@ export type MutationCreateProductArgs = {
 
 export type MutationCreateProductStockArgs = {
   data?: InputMaybe<ProductStockInput>;
+};
+
+
+export type MutationCreateShiftArgs = {
+  data?: InputMaybe<ShiftInput>;
 };
 
 
@@ -337,6 +357,13 @@ export type MutationUpdateProductStockArgs = {
 export type MutationUpdateSettingArgs = {
   option?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateShiftArgs = {
+  data?: InputMaybe<ShiftInput>;
+  expected?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 
@@ -483,6 +510,7 @@ export type Query = {
   productStockList?: Maybe<Array<Maybe<ProductStock>>>;
   roleList?: Maybe<Array<Maybe<Role>>>;
   settingList?: Maybe<Array<Maybe<Setting>>>;
+  shiftList?: Maybe<Array<Maybe<Shift>>>;
   tableSet?: Maybe<TableSet>;
   tableSetList?: Maybe<Array<Maybe<TableSet>>>;
   user?: Maybe<User>;
@@ -560,10 +588,12 @@ export type QueryOrderArgs = {
 
 
 export type QueryOrderListArgs = {
+  fromDate?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Array<InputMaybe<StatusOrder>>>;
+  toDate?: InputMaybe<Scalars['String']['input']>;
   viewBy?: InputMaybe<OrderViewBy>;
 };
 
@@ -597,6 +627,15 @@ export type QueryProductStockListArgs = {
 };
 
 
+export type QueryShiftListArgs = {
+  fromDate?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  toDate?: InputMaybe<Scalars['String']['input']>;
+  users?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+};
+
+
 export type QueryTableSetArgs = {
   id: Scalars['Int']['input'];
 };
@@ -616,7 +655,9 @@ export type QueryUserArgs = {
 export type QueryUserListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  position?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   roles?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  search?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Role = {
@@ -647,6 +688,32 @@ export type Setting = {
   option?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   value?: Maybe<Scalars['String']['output']>;
+};
+
+export type Shift = {
+  __typename?: 'Shift';
+  bank?: Maybe<Scalars['JSON']['output']>;
+  bill?: Maybe<Scalars['Int']['output']>;
+  card?: Maybe<Scalars['Int']['output']>;
+  close?: Maybe<Scalars['String']['output']>;
+  closeCurrency?: Maybe<CurrencyShift>;
+  deposit?: Maybe<Scalars['String']['output']>;
+  expectedCurrency?: Maybe<CurrencyShift>;
+  id?: Maybe<Scalars['Int']['output']>;
+  note?: Maybe<Scalars['String']['output']>;
+  open?: Maybe<Scalars['String']['output']>;
+  openCurrency?: Maybe<CurrencyShift>;
+  user?: Maybe<User>;
+};
+
+export type ShiftInput = {
+  close?: InputMaybe<Scalars['String']['input']>;
+  closeCurrency?: InputMaybe<CurrencyShiftInput>;
+  deposit?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  open?: InputMaybe<Scalars['String']['input']>;
+  openCurrency?: InputMaybe<CurrencyShiftInput>;
+  userId: Scalars['Int']['input'];
 };
 
 export enum StatusOrder {

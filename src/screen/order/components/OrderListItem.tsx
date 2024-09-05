@@ -223,10 +223,9 @@ export function OrderListItem({ item }: Props) {
         </IndexTable.Cell>
         <IndexTable.Cell>
           <div className="flex flex-row items-center gap-2">
-            <Text as="p" variant="bodySm" tone="success">
+            <div className="bg-emerald-800 p-1 text-white">
               TABLE: {Number(item?.set) < 10 ? '0' + item?.set : item?.set}
-            </Text>
-            (#{item?.code})
+            </div>
           </div>
         </IndexTable.Cell>
         <IndexTable.Cell>
@@ -275,7 +274,7 @@ export function OrderListItem({ item }: Props) {
             </Tooltip>
           </div>
         </IndexTable.Cell>
-        <IndexTable.Cell className="text-center">
+        {/* <IndexTable.Cell className="text-center">
           <div className="flex flex-row justify-end">
             <Popover
               activator={
@@ -292,7 +291,7 @@ export function OrderListItem({ item }: Props) {
               <ActionList items={menus} />
             </Popover>
           </div>
-        </IndexTable.Cell>
+        </IndexTable.Cell> */}
       </IndexTable.Row>
     </React.Fragment>
   );

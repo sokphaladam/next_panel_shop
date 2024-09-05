@@ -16,8 +16,10 @@ import {
   Modal as Modals,
   TextField,
   Icon,
+  Select,
 } from '@shopify/polaris';
 import {
+  ChangeOrderInput,
   StatusOrder,
   StatusOrderItem,
   useChangeOrderStatusMutation,
@@ -85,6 +87,7 @@ export function OrderDetailScreen(props: Props) {
   const toggleActive = useCallback(() => setActive(!active), [active]);
   const togglePaid = useCallback(() => setPaid(!paid), [paid]);
   const [bank, setBank] = useState('CASH');
+  const [currency, setCurrency] = useState('USD');
 
   const { data, loading, refetch } = useOrderQuery({
     variables: {
@@ -248,26 +251,36 @@ export function OrderDetailScreen(props: Props) {
         open={paid}
         onClose={togglePaid}
         title={`Checkout Order #${data?.order?.id}`}
-        secondaryActions={[
-          {
-            content: (<BankController hidelabel value={bank} onChange={setBank} />) as any,
-            plain: true,
-          },
-        ]}
+        // secondaryActions={[
+        //   {
+        //     content: (<BankController hidelabel value={bank} onChange={setBank} />) as any,
+        //     plain: true,
+        //   },
+        // ]}
         primaryAction={{
           content: 'Checkout',
           destructive: true,
           onAction: () => {
+            let amount = amountInput ? Number(amountInput) : Number(total.toFixed(2));
+
+            if (amount > Number(total.toFixed(2))) {
+              amount = total;
+            }
+
+            const input: ChangeOrderInput = {
+              orderId: Number(data?.order?.id),
+              status: StatusOrder.Checkout,
+              reason: reasonInput || '',
+              amount: String(Number(amount).toFixed(2)),
+              invoice: Number(invoice.count),
+              bankType: String(bank.split(',')[0]),
+              bankId: Number(bank.split(',')[1]),
+              currency: currency,
+            };
+
             change({
               variables: {
-                data: {
-                  orderId: Number(data?.order?.id),
-                  status: StatusOrder.Checkout,
-                  reason: reasonInput || '',
-                  amount: amountInput ? String(amountInput) : String(total.toFixed(2)),
-                  invoice: Number(invoice.count),
-                  bankType: bank,
-                },
+                data: input,
               },
             })
               .then((res) => {
@@ -307,6 +320,19 @@ export function OrderDetailScreen(props: Props) {
         }
       >
         <Modals.Section>
+          <div className="flex flex-row items-center gap-2">
+            <BankController value={bank} onChange={setBank} needId />
+            <Select
+              label="Currency"
+              options={[
+                { label: 'USD', value: 'USD' },
+                { label: 'KHR', value: 'KHR' },
+              ]}
+              value={currency}
+              onChange={setCurrency}
+            />
+          </div>
+          <br />
           <TextField
             type="number"
             autoComplete="off"

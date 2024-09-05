@@ -1,8 +1,31 @@
-'use client'
+'use client';
 import { StatusOrder, useOrderListQuery, useOrderSubscriptSubscription } from '@/gql/graphql';
 import { usePagination } from '@/hook/usePagination';
-import { ActionList, Badge, Box, Card, Icon, IndexFilters, IndexTable, Layout, Page, Popover, TabProps, Tabs, Text, Tooltip, useSetIndexFiltersMode } from '@shopify/polaris';
-import { CheckCircleIcon, ClipboardCheckFilledIcon, DeliveryIcon, InfoIcon, MenuVerticalIcon, XCircleIcon } from '@shopify/polaris-icons';
+import {
+  ActionList,
+  Badge,
+  Box,
+  Card,
+  Icon,
+  IndexFilters,
+  IndexTable,
+  Layout,
+  Page,
+  Popover,
+  TabProps,
+  Tabs,
+  Text,
+  Tooltip,
+  useSetIndexFiltersMode,
+} from '@shopify/polaris';
+import {
+  CheckCircleIcon,
+  ClipboardCheckFilledIcon,
+  DeliveryIcon,
+  InfoIcon,
+  MenuVerticalIcon,
+  XCircleIcon,
+} from '@shopify/polaris-icons';
 import React, { useState } from 'react';
 import { OrderListItem } from './components/OrderListItem';
 import { useCustomToast } from '@/components/custom/CustomToast';
@@ -10,32 +33,30 @@ import { useCustomToast } from '@/components/custom/CustomToast';
 const tabs: TabProps[] = [
   {
     content: 'PENDING',
-    id: 'PENDING'
+    id: 'PENDING',
   },
   {
     content: 'VERIFY',
-    id: 'VERIFY'
+    id: 'VERIFY',
   },
   {
     content: 'DELIVER',
-    id: 'DELIVERY'
+    id: 'DELIVERY',
   },
   {
     content: 'CHECKOUT',
-    id: 'CHECKOUT'
+    id: 'CHECKOUT',
   },
   {
     content: 'CANCELLED',
-    id: 'CANCELLED'
-  }
-]
-
-
+    id: 'CANCELLED',
+  },
+];
 
 export function OrderListScreen() {
   const { setToasts, toasts } = useCustomToast();
-  const [select, setSelect] = useState(0)
-  const [searchInput, setSearchInput] = useState('')
+  const [select, setSelect] = useState(0);
+  const [searchInput, setSearchInput] = useState('');
   const { offset, setOffset, limit, setLimit } = usePagination();
   const { mode, setMode } = useSetIndexFiltersMode();
   const { data, loading, refetch } = useOrderListQuery({
@@ -43,19 +64,19 @@ export function OrderListScreen() {
       offset,
       limit,
       status: [tabs[select].id as any],
-      orderId: searchInput
-    }
+      orderId: searchInput,
+    },
   });
   useOrderSubscriptSubscription({
     onData: (res) => {
       if (res.data.data?.orderSubscript.status === 2 || !!res.data.data?.orderSubscript.uuid) {
         refetch();
       }
-    }
+    },
   });
 
   return (
-    <Page title='Order List' fullWidth>
+    <Page title="Order List" fullWidth>
       <Layout>
         <Layout.Section>
           <Card padding={'0'}>
@@ -70,33 +91,33 @@ export function OrderListScreen() {
                 onClearAll={() => {
                   //
                 }}
-                onQueryChange={v => {
+                onQueryChange={(v) => {
                   setSearchInput(v);
                 }}
                 onQueryClear={() => {
-                  setSearchInput('')
+                  setSearchInput('');
                 }}
                 selected={select}
                 onSelect={setSelect}
                 loading={loading}
-                queryPlaceholder='Enter order number...'
+                queryPlaceholder="Enter order number..."
               />
             </Box>
             <Box padding={'0'}>
               <IndexTable
                 headings={[
                   { title: 'Order' },
-                  { title: "Items", alignment: 'start' },
+                  { title: 'Items', alignment: 'start' },
                   { title: 'Info', alignment: 'start' },
                   { title: 'Delivery Pickup', alignment: 'start' },
-                  { title: "Status", alignment: 'center' },
-                  { title: "Qty", alignment: 'end' },
-                  { title: "Amount", alignment: 'end' },
-                  { title: "Vat.", alignment: 'end' },
-                  { title: "Total", alignment: 'end' },
-                  { title: "Paid", alignment: 'end' },
+                  { title: 'Status', alignment: 'center' },
+                  { title: 'Qty', alignment: 'end' },
+                  { title: 'Amount', alignment: 'end' },
+                  { title: 'Vat.', alignment: 'end' },
+                  { title: 'Total', alignment: 'end' },
+                  { title: 'Paid', alignment: 'end' },
                   { title: 'Note', alignment: 'start' },
-                  { title: 'Controls', alignment: 'end' }
+                  // { title: 'Controls', alignment: 'end' }
                 ]}
                 loading={loading}
                 itemCount={data?.orderList?.length || 0}
@@ -106,17 +127,15 @@ export function OrderListScreen() {
                   hasNext: (data?.orderList?.length || 0) >= limit,
                   hasPrevious: offset > 0,
                   onNext: () => setOffset(offset + 1),
-                  onPrevious: () => setOffset(offset - 1)
+                  onPrevious: () => setOffset(offset - 1),
                 }}
               >
-                {
-                  data && data.orderList?.map((x, i) => <OrderListItem item={x} key={i} />)
-                }
+                {data && data.orderList?.map((x, i) => <OrderListItem item={x} key={i} />)}
               </IndexTable>
             </Box>
           </Card>
         </Layout.Section>
       </Layout>
     </Page>
-  )
+  );
 }
