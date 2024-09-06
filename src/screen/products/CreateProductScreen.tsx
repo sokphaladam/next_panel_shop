@@ -1,7 +1,7 @@
-'use client'
+'use client';
 import React, { useCallback, useState } from 'react';
 import { UploadProduct } from './UploadProduct';
-import { ProductInput, useCreateProductMutation } from '@/gql/graphql';
+import { ProductInput, Type_Product, useCreateProductMutation } from '@/gql/graphql';
 import { useCustomToast } from '@/components/custom/CustomToast';
 import { useRouter } from 'next/navigation';
 
@@ -9,7 +9,7 @@ export function CreateProductScreen() {
   const { push } = useRouter();
   const { toasts, setToasts } = useCustomToast();
   const [create, { loading }] = useCreateProductMutation({
-    refetchQueries: ['productList']
+    refetchQueries: ['productList'],
   });
   const [value, setValue] = useState<ProductInput>({
     title: '',
@@ -17,34 +17,40 @@ export function CreateProductScreen() {
     category: 0,
     description: '',
     images: '',
-    sku: [{
-      name: '',
-      discount: 0,
-      price: 0,
-      unit: ''
-    }],
-    type: [],
+    sku: [
+      {
+        name: '',
+        discount: 0,
+        price: 0,
+        unit: '',
+      },
+    ],
+    type: [Type_Product.Production],
     integrate: [],
-    stockAlter: 0
+    stockAlter: 0,
   });
 
-  const handleSubmit = useCallback((v: ProductInput) => {
-    create({
-      variables: {
-        data: v
-      }
-    }).then(res => {
-      if (res.data?.createProduct) {
-        setToasts([...toasts, { content: 'Create new product was success', status: 'success' }]);
-        push('/products')
-      }
-      else {
-        setToasts([...toasts, { content: 'Somthing was wrong with create product', status: 'error' }])
-      }
-    }).catch(() => {
-      setToasts([...toasts, { content: 'Somthing was wrong with create product', status: 'error' }])
-    })
-  }, [create, push, setToasts, toasts])
+  const handleSubmit = useCallback(
+    (v: ProductInput) => {
+      create({
+        variables: {
+          data: v,
+        },
+      })
+        .then((res) => {
+          if (res.data?.createProduct) {
+            setToasts([...toasts, { content: 'Create new product was success', status: 'success' }]);
+            push('/products');
+          } else {
+            setToasts([...toasts, { content: 'Somthing was wrong with create product', status: 'error' }]);
+          }
+        })
+        .catch(() => {
+          setToasts([...toasts, { content: 'Somthing was wrong with create product', status: 'error' }]);
+        });
+    },
+    [create, push, setToasts, toasts],
+  );
 
-  return <UploadProduct value={value} setValue={setValue} onSubmit={handleSubmit} loading={loading} />
+  return <UploadProduct value={value} setValue={setValue} onSubmit={handleSubmit} loading={loading} />;
 }

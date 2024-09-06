@@ -20,12 +20,14 @@ import React, { useCallback, useState } from 'react';
 import { LogStatus } from './LogStatus';
 import Link from 'next/link';
 import { useSetting } from '@/service/useSettingProvider';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   item: Order | null;
 }
 
 export function OrderListItem({ item }: Props) {
+  const { push } = useRouter();
   const { setToasts, toasts } = useCustomToast();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
@@ -181,7 +183,7 @@ export function OrderListItem({ item }: Props) {
           />
         </Modals.Section>
       </Modals>
-      <IndexTable.Row id={item?.id + ''} position={item?.id || 0}>
+      <IndexTable.Row id={item?.id + ''} position={item?.id || 0} onClick={() => push(`/order/detail/${item?.id}`)}>
         <IndexTable.Cell>
           <div className="flex flex-row items-center justify-start">
             <Link href={`/order/detail/${item?.id}`}>
