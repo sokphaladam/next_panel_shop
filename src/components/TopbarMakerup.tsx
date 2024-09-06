@@ -1,11 +1,12 @@
 'use client';
 import React, { useCallback, useState } from 'react';
 import { Icon, IconableAction, Text, TopBar } from '@shopify/polaris';
-import { CheckSmallIcon, ExitIcon } from '@shopify/polaris-icons';
+import { CheckSmallIcon, ExitIcon, ButtonPressIcon, ContractFilledIcon } from '@shopify/polaris-icons';
 import { deleteCookie } from 'cookies-next';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/service/UserProvider';
 import { useLanguage } from '@/service/LanguageProvider';
+import { FormShift } from './polaris/form/FormShift';
 
 interface Props {
   mobileNavigationActive: any;
@@ -14,6 +15,7 @@ interface Props {
 
 export function TopbarMarkup(props: Props) {
   const user = useUser();
+  const [shift, setShift] = useState(false);
   const { push, refresh } = useRouter();
   const pathname = usePathname();
   const { lng, setLng } = useLanguage();
@@ -35,6 +37,13 @@ export function TopbarMarkup(props: Props) {
   const userMenuActions: { items: IconableAction[] }[] = [
     {
       items: [
+        // {
+        //   content: shift ? 'Close Shift' : 'Open Shift',
+        //   icon: shift ? ContractFilledIcon : ButtonPressIcon,
+        //   onAction: () => {
+        //     setShift(!shift);
+        //   },
+        // },
         {
           content: 'Logout',
           icon: ExitIcon,
@@ -97,11 +106,14 @@ export function TopbarMarkup(props: Props) {
   );
 
   return (
-    <TopBar
-      showNavigationToggle
-      userMenu={userMenuMarkup}
-      onNavigationToggle={toggleMobileNavigationActive}
-      secondaryMenu={secondaryMenuMarkup}
-    />
+    <React.Fragment>
+      <FormShift open={shift} setOpen={setShift} />
+      <TopBar
+        showNavigationToggle
+        userMenu={userMenuMarkup}
+        onNavigationToggle={toggleMobileNavigationActive}
+        secondaryMenu={secondaryMenuMarkup}
+      />
+    </React.Fragment>
   );
 }
