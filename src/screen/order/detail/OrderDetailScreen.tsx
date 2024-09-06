@@ -44,6 +44,7 @@ import { DeliveryPickup } from '../components/DeliveryPickup';
 import { PrintOrderToKitchen } from '../components/PrintOrderToKitchen';
 import moment from 'moment';
 import { BankController } from '@/screen/user/components/BankController';
+import { FormCheckout } from '../components/FormCheckout';
 
 interface Props {
   id: number;
@@ -247,7 +248,15 @@ export function OrderDetailScreen(props: Props) {
         </Modals.Section>
       </Modals>
       {/* Checkout */}
-      <Modals
+      <FormCheckout
+        data={data?.order || {}}
+        open={paid}
+        setOpen={setPaid}
+        invoice={invoice}
+        setInvoice={setInvoice}
+        total={total}
+      />
+      {/* <Modals
         open={paid}
         onClose={togglePaid}
         title={`Checkout Order #${data?.order?.id}`}
@@ -352,7 +361,7 @@ export function OrderDetailScreen(props: Props) {
             onChange={setReasonInput}
           />
         </Modals.Section>
-      </Modals>
+      </Modals> */}
       <Layout>
         <Layout.Section variant="oneHalf">
           <Card padding={'0'}>

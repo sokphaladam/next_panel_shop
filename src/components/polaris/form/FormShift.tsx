@@ -127,7 +127,7 @@ export function FormShift(props: Props) {
     <Modal
       open={props.open}
       title="Shift"
-      onClose={toggleOpen}
+      onClose={propCreate.loading || propUpdate.loading ? () => {} : () => toggleOpen()}
       primaryAction={{
         content: data?.shiftById ? 'Close Shift' : 'Open Shift',
         onAction: data?.shiftById ? handleShiftClose : handleShiftOpen,
@@ -143,6 +143,7 @@ export function FormShift(props: Props) {
           </FooterHelp>
         )
       }
+      loading={propCreate.loading || propUpdate.loading}
     >
       <Modal.Section>
         <Text as="h4" variant="headingMd">

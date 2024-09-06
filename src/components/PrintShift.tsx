@@ -177,12 +177,12 @@ export function PrintShift(props: Props) {
             <hr style={{ borderColor: 'black' }} />
             <RenderItemList text="Handover amount" value={props.data.closeCurrency?.khr + '$'} bold />
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="✔️ Credit/Debit card" value={bankTotal + '$'} bold />
+            <RenderItemList text="✔️ Credit/Debit card" value={Number(bankTotal).toFixed(2) + '$'} bold />
             <hr style={{ borderColor: 'black' }} />
             {banks.map((x) => {
               return (
                 <div key={x.name}>
-                  <RenderItemList value={x.value + '$'} text={x.name} />
+                  <RenderItemList value={Number(x.value).toFixed(2) + '$'} text={`${x.name}(${x.qty})`} />
                   <hr style={{ borderColor: 'black' }} />
                 </div>
               );
