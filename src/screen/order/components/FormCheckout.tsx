@@ -1,7 +1,7 @@
 'use client';
 
 import { useCustomToast } from '@/components/custom/CustomToast';
-import { ChangeOrderInput, OrderQuery, StatusOrder, useChangeOrderStatusMutation } from '@/gql/graphql';
+import { ChangeOrderInput, Order, OrderQuery, StatusOrder, useChangeOrderStatusMutation } from '@/gql/graphql';
 import { BankController } from '@/screen/user/components/BankController';
 import { useSetting } from '@/service/useSettingProvider';
 import { Modal, Select, TextField } from '@shopify/polaris';
@@ -9,21 +9,23 @@ import moment from 'moment';
 import { useCallback, useState } from 'react';
 
 interface Props {
-  data: OrderQuery;
+  data: Order;
   total: number;
   invoice: any;
   setInvoice: any;
+  open: boolean;
+  setOpen: (v: any) => void;
 }
 
-export function FormCheckout({ data, total, invoice, setInvoice }: Props) {
+export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }: Props) {
   const { setToasts, toasts } = useCustomToast();
   const [reasonInput, setReasonInput] = useState('');
   const [amountInput, setAmountInput] = useState('');
-  const [paid, setPaid] = useState(false);
-  const [bank, setBank] = useState('CASH');
+  // const [paid, setPaid] = useState(false);
+  const [bank, setBank] = useState('');
   const [currency, setCurrency] = useState('USD');
   const setting = useSetting();
-  const togglePaid = useCallback(() => setPaid(!paid), [paid]);
+  const togglePaid = useCallback(() => setOpen(!open), [open]);
 
   const [change] = useChangeOrderStatusMutation({
     refetchQueries: ['order', 'orderList'],
@@ -33,9 +35,9 @@ export function FormCheckout({ data, total, invoice, setInvoice }: Props) {
 
   return (
     <Modal
-      open={paid}
+      open={open}
       onClose={togglePaid}
-      title={`Checkout Order #${data?.order?.id}`}
+      title={`Checkout Order #${data?.id}`}
       // secondaryActions={[
       //   {
       //     content: (<BankController hidelabel value={bank} onChange={setBank} />) as any,
@@ -52,8 +54,13 @@ export function FormCheckout({ data, total, invoice, setInvoice }: Props) {
             amount = total;
           }
 
+          if (!bank || bank.split(',').length === 1) {
+            setToasts([...toasts, { content: 'Please select type bank', status: 'error' }]);
+            return;
+          }
+
           const input: ChangeOrderInput = {
-            orderId: Number(data?.order?.id),
+            orderId: Number(data?.id),
             status: StatusOrder.Checkout,
             reason: reasonInput || '',
             amount: String(Number(amount).toFixed(2)),

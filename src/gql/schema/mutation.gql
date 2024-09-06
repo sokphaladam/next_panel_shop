@@ -97,3 +97,11 @@ mutation updateBank($updateBankId: Int!, $name: String!, $phone: String) {
 mutation checkAttendance($userId: Int!, $date: String!) {
   checkAttendance(userId: $userId, date: $date)
 }
+
+mutation createShift($data: ShiftInput) {
+  createShift(data: $data)
+}
+
+mutation updateShift($updateShiftId: Int!, $expected: Boolean, $data: ShiftInput) {
+  updateShift(id: $updateShiftId, expected: $expected, data: $data)
+}

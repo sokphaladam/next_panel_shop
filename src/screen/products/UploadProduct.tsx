@@ -1,18 +1,15 @@
-"use client";
-import {
-  PolarisLayout,
-  role_permission,
-} from "@/components/polaris/PolarisLayout";
-import { prefix } from "@/lib/prefix";
-import { Box, Card, Divider, Layout, Text, TextField } from "@shopify/polaris";
-import { useCallback, useState } from "react";
-import { UploadProductType } from "./components/upload/UploadProductType";
-import { PolarisUpload } from "@/components/polaris/PolarisUpload";
-import { UploadProductSku } from "./components/upload/UploadProductSku";
-import { ProductInput, Sku } from "@/gql/graphql";
-import { PolarisCategory } from "@/components/polaris/PolarisCategory";
-import { UploadProductAddon } from "./components/upload/UploadProductAddon";
-import { UploadIntegration } from "./components/upload/UploadIntegration";
+'use client';
+import { PolarisLayout, role_permission } from '@/components/polaris/PolarisLayout';
+import { prefix } from '@/lib/prefix';
+import { Box, Card, Divider, Layout, Text, TextField } from '@shopify/polaris';
+import { useCallback, useState } from 'react';
+import { UploadProductType } from './components/upload/UploadProductType';
+import { PolarisUpload } from '@/components/polaris/PolarisUpload';
+import { UploadProductSku } from './components/upload/UploadProductSku';
+import { ProductInput, Sku } from '@/gql/graphql';
+import { PolarisCategory } from '@/components/polaris/PolarisCategory';
+import { UploadProductAddon } from './components/upload/UploadProductAddon';
+import { UploadIntegration } from './components/upload/UploadIntegration';
 
 interface Props {
   value: ProductInput;
@@ -22,11 +19,11 @@ interface Props {
 }
 
 export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
-  const [unit, setUnit] = useState((value.sku as any)[0]?.unit || "");
+  const [unit, setUnit] = useState((value.sku as any)[0]?.unit || '');
   const [error, setError] = useState<
     {
-      type: "";
-      message: "";
+      type: '';
+      message: '';
     }[]
   >([]);
 
@@ -45,7 +42,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
       }),
     };
 
-    const allow = ["description", "integrate", "stockAlter"];
+    const allow = ['description', 'integrate', 'stockAlter'];
 
     let errors: any[] = Object.keys(input)
       .filter((x) => !allow.includes(x))
@@ -61,7 +58,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
       errors = [
         ...errors,
         {
-          type: "sku",
+          type: 'sku',
           message: `sku is the most importan required.`,
         },
       ];
@@ -76,7 +73,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
     onSubmit(input);
   }, [error, onSubmit, unit, value]);
 
-  const allow = ["description", "integrate", "stockAlter"];
+  const allow = ['description', 'integrate', 'stockAlter'];
 
   let errors: any[] = Object.keys(value)
     .filter((x) => !allow.includes(x))
@@ -92,7 +89,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
     errors = [
       ...errors,
       {
-        type: "sku",
+        type: 'sku',
         message: `sku is the most importan required.`,
       },
     ];
@@ -105,7 +102,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
       title="Upload Product"
       permission={[role_permission.SUPER_ADMIN, role_permission.ADMIN]}
       primaryAction={{
-        content: "Save",
+        content: 'Save',
         onAction: handleSave,
         disabled: errors.length > 0 || loading,
         loading: loading,
@@ -121,16 +118,16 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
               <br />
               <TextField
                 disabled={loading || uploading}
-                error={error.find((f: any) => f.type === "title")?.message}
+                error={error.find((f: any) => f.type === 'title')?.message}
                 autoComplete="off"
                 label="Title"
                 placeholder="Enter the product title"
-                value={value.title || ""}
+                value={value.title || ''}
                 onChange={(v) => {
                   setValue({
                     ...value,
                     title: v,
-                    code: v === "" ? "" : prefix(v),
+                    code: v === '' ? '' : prefix(v),
                   });
                 }}
                 requiredIndicator
@@ -142,7 +139,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
                 label="Description"
                 placeholder="Enter the details of the product"
                 multiline={5}
-                value={value.description || ""}
+                value={value.description || ''}
                 onChange={(v) => {
                   setValue({ ...value, description: v });
                 }}
@@ -155,9 +152,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
               <Text as="h3" variant="headingMd">
                 2. Product SKU*
               </Text>
-              <small className="text-red-500">
-                {error.find((f: any) => f.type === "sku")?.message}
-              </small>
+              <small className="text-red-500">{error.find((f: any) => f.type === 'sku')?.message}</small>
               <br />
               <TextField
                 disabled={loading || uploading}
@@ -169,9 +164,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
                 onChange={(v) => setUnit(v)}
               />
               <br />
-              {!uploading && (
-                <UploadProductSku value={value} setValue={setValue} />
-              )}
+              {!uploading && <UploadProductSku value={value} setValue={setValue} />}
             </Box>
           </Card>
           <br />
@@ -184,7 +177,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
               <UploadProductAddon value={value} setValue={setValue} />
             </Box>
           </Card>
-          {(value.type as any)?.includes("PRODUCTION") && (
+          {/* {(value.type as any)?.includes("PRODUCTION") && (
             <>
               <br />
               <Card>
@@ -197,7 +190,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
                 </Box>
               </Card>
             </>
-          )}
+          )} */}
         </Layout.Section>
         <Layout.Section variant="oneThird">
           <Card>
@@ -207,7 +200,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
               </Text>
               <br />
               <PolarisUpload
-                url={value.images + ""}
+                url={value.images + ''}
                 setUrl={(url) => {
                   setValue({
                     ...value,
@@ -223,19 +216,17 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
                 autoComplete="off"
                 label="Code"
                 placeholder="Enter the product code"
-                value={value.code || ""}
+                value={value.code || ''}
                 onChange={(v) => setValue({ ...value, code: v })}
               />
               <br />
-              {!uploading && (
+              {/* {!uploading && (
                 <UploadProductType value={value} setValue={setValue} />
-              )}
+              )} */}
               <br />
-              {!uploading && (
-                <PolarisCategory value={value} onChange={setValue} created />
-              )}
+              {!uploading && <PolarisCategory value={value} onChange={setValue} created />}
               <br />
-              <TextField
+              {/* <TextField
                 value={value.stockAlter + ""}
                 onChange={(v) => {
                   setValue({
@@ -248,7 +239,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
                 label="Quantity Alert"
                 placeholder="How many is minimum quantity for alter?"
                 type="number"
-              />
+              /> */}
             </Box>
           </Card>
         </Layout.Section>

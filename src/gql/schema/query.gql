@@ -377,3 +377,65 @@ query getAttendanceStaff($limit: Int, $offset: Int, $from: String, $to: String) 
     checkDate
   }
 }
+
+query shiftList($limit: Int, $offset: Int, $users: [Int], $fromDate: String, $toDate: String) {
+  shiftList(limit: $limit, offset: $offset, users: $users, fromDate: $fromDate, toDate: $toDate) {
+    id
+    open
+    openCurrency {
+      khr
+      usd
+    }
+    close
+    closeCurrency {
+      usd
+      khr
+    }
+    card
+    bill
+    bank
+    deposit
+    expectedCurrency {
+      usd
+      khr
+    }
+    note
+    user {
+      id
+      username
+      display
+      profile
+    }
+  }
+}
+
+query shiftById($id: Int, $date: String, $userId: Int) {
+  shiftById(id: $id, date: $date, userId: $userId) {
+    id
+    open
+    openCurrency {
+      khr
+      usd
+    }
+    close
+    closeCurrency {
+      usd
+      khr
+    }
+    card
+    bill
+    bank
+    deposit
+    expectedCurrency {
+      usd
+      khr
+    }
+    note
+    user {
+      id
+      username
+      display
+      profile
+    }
+  }
+}

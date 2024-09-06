@@ -8,9 +8,11 @@ import {
 } from '@/gql/graphql';
 import { Modal } from '@/hook/modal';
 import { Box, Card, Frame, Grid, Layout, Loading, Page, Spinner, Text } from '@shopify/polaris';
+import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
 export function SetScreen() {
+  const { push } = useRouter();
   const { data, loading, refetch } = useTableSetListQuery({
     variables: {
       offset: 0,
@@ -32,14 +34,19 @@ export function SetScreen() {
   });
 
   const handleGenerate = useCallback(
-    (value: string) => {
+    (value: string, x: any) => {
+      if (propsUpdate.loading || x.order) {
+        push('/order/detail/' + x?.order.id);
+        return;
+      }
+
       generate({
         variables: {
           set: Number(value),
         },
       });
     },
-    [generate],
+    [generate, propsUpdate.loading, push],
   );
 
   const handleGenerateTable = useCallback(() => {
@@ -83,10 +90,7 @@ export function SetScreen() {
               data?.tableSetList?.map((x) => {
                 return (
                   <Grid.Cell key={x?.set}>
-                    <div
-                      className="cursor-pointer"
-                      onClick={() => (propsUpdate.loading || x?.order ? {} : handleGenerate(x?.set + ''))}
-                    >
+                    <div className="cursor-pointer" onClick={() => handleGenerate(x?.set + '', x)}>
                       <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
                         <Box>
                           <div className="flex flex-col justify-center items-center">

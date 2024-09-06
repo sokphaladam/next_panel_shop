@@ -37,13 +37,13 @@ export function TopbarMarkup(props: Props) {
   const userMenuActions: { items: IconableAction[] }[] = [
     {
       items: [
-        // {
-        //   content: shift ? 'Close Shift' : 'Open Shift',
-        //   icon: shift ? ContractFilledIcon : ButtonPressIcon,
-        //   onAction: () => {
-        //     setShift(!shift);
-        //   },
-        // },
+        {
+          content: shift ? 'Close Shift' : 'Open Shift',
+          icon: shift ? ContractFilledIcon : ButtonPressIcon,
+          onAction: () => {
+            setShift(!shift);
+          },
+        },
         {
           content: 'Logout',
           icon: ExitIcon,
@@ -107,7 +107,7 @@ export function TopbarMarkup(props: Props) {
 
   return (
     <React.Fragment>
-      <FormShift open={shift} setOpen={setShift} />
+      {shift && <FormShift open={shift} setOpen={setShift} />}
       <TopBar
         showNavigationToggle
         userMenu={userMenuMarkup}

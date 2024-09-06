@@ -14,6 +14,7 @@ import {
   PageClockIcon,
   StarIcon,
   CreditCardIcon,
+  MoneyFilledIcon,
 } from '@shopify/polaris-icons';
 
 export function MenuItems(user: User | null) {
@@ -83,6 +84,11 @@ export function MenuItems(user: User | null) {
           label: 'Overtime',
           icon: PageClockIcon,
           url: '#',
+        },
+        {
+          label: 'Shift Handover',
+          icon: MoneyFilledIcon,
+          url: '/shift',
         },
       ],
     },
@@ -180,6 +186,11 @@ export function MenuItems(user: User | null) {
                 icon: PageClockIcon,
                 url: '#',
               },
+              {
+                label: 'Shift Handover',
+                icon: MoneyFilledIcon,
+                url: '/shift',
+              },
             ],
           },
           {
@@ -233,6 +244,11 @@ export function MenuItems(user: User | null) {
                 label: 'Attendance',
                 icon: AttachmentIcon,
                 url: '/employee/attendance',
+              },
+              {
+                label: 'Shift Handover',
+                icon: MoneyFilledIcon,
+                url: '/shift',
               },
             ],
           },

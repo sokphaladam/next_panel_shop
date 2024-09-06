@@ -510,6 +510,7 @@ export type Query = {
   productStockList?: Maybe<Array<Maybe<ProductStock>>>;
   roleList?: Maybe<Array<Maybe<Role>>>;
   settingList?: Maybe<Array<Maybe<Setting>>>;
+  shiftById?: Maybe<Shift>;
   shiftList?: Maybe<Array<Maybe<Shift>>>;
   tableSet?: Maybe<TableSet>;
   tableSetList?: Maybe<Array<Maybe<TableSet>>>;
@@ -624,6 +625,13 @@ export type QueryProductStockArgs = {
 export type QueryProductStockListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryShiftByIdArgs = {
+  date?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -1001,6 +1009,22 @@ export type CheckAttendanceMutationVariables = Exact<{
 
 export type CheckAttendanceMutation = { __typename?: 'Mutation', checkAttendance?: boolean | null };
 
+export type CreateShiftMutationVariables = Exact<{
+  data?: InputMaybe<ShiftInput>;
+}>;
+
+
+export type CreateShiftMutation = { __typename?: 'Mutation', createShift?: boolean | null };
+
+export type UpdateShiftMutationVariables = Exact<{
+  updateShiftId: Scalars['Int']['input'];
+  expected?: InputMaybe<Scalars['Boolean']['input']>;
+  data?: InputMaybe<ShiftInput>;
+}>;
+
+
+export type UpdateShiftMutation = { __typename?: 'Mutation', updateShift?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1149,6 +1173,26 @@ export type GetAttendanceStaffQueryVariables = Exact<{
 
 
 export type GetAttendanceStaffQuery = { __typename?: 'Query', getAttendanceStaff?: Array<{ __typename?: 'Attendance', id?: number | null, checkIn?: string | null, checkOut?: string | null, overTimeIn?: string | null, overTimeOut?: string | null, checkDate?: string | null, user?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null };
+
+export type ShiftListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  users?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>> | InputMaybe<Scalars['Int']['input']>>;
+  fromDate?: InputMaybe<Scalars['String']['input']>;
+  toDate?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ShiftListQuery = { __typename?: 'Query', shiftList?: Array<{ __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null> | null };
+
+export type ShiftByIdQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['Int']['input']>;
+  date?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ShiftByIdQuery = { __typename?: 'Query', shiftById?: { __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -1963,6 +2007,70 @@ export function useCheckAttendanceMutation(baseOptions?: Apollo.MutationHookOpti
 export type CheckAttendanceMutationHookResult = ReturnType<typeof useCheckAttendanceMutation>;
 export type CheckAttendanceMutationResult = Apollo.MutationResult<CheckAttendanceMutation>;
 export type CheckAttendanceMutationOptions = Apollo.BaseMutationOptions<CheckAttendanceMutation, CheckAttendanceMutationVariables>;
+export const CreateShiftDocument = gql`
+    mutation createShift($data: ShiftInput) {
+  createShift(data: $data)
+}
+    `;
+export type CreateShiftMutationFn = Apollo.MutationFunction<CreateShiftMutation, CreateShiftMutationVariables>;
+
+/**
+ * __useCreateShiftMutation__
+ *
+ * To run a mutation, you first call `useCreateShiftMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateShiftMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createShiftMutation, { data, loading, error }] = useCreateShiftMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateShiftMutation(baseOptions?: Apollo.MutationHookOptions<CreateShiftMutation, CreateShiftMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateShiftMutation, CreateShiftMutationVariables>(CreateShiftDocument, options);
+      }
+export type CreateShiftMutationHookResult = ReturnType<typeof useCreateShiftMutation>;
+export type CreateShiftMutationResult = Apollo.MutationResult<CreateShiftMutation>;
+export type CreateShiftMutationOptions = Apollo.BaseMutationOptions<CreateShiftMutation, CreateShiftMutationVariables>;
+export const UpdateShiftDocument = gql`
+    mutation updateShift($updateShiftId: Int!, $expected: Boolean, $data: ShiftInput) {
+  updateShift(id: $updateShiftId, expected: $expected, data: $data)
+}
+    `;
+export type UpdateShiftMutationFn = Apollo.MutationFunction<UpdateShiftMutation, UpdateShiftMutationVariables>;
+
+/**
+ * __useUpdateShiftMutation__
+ *
+ * To run a mutation, you first call `useUpdateShiftMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateShiftMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateShiftMutation, { data, loading, error }] = useUpdateShiftMutation({
+ *   variables: {
+ *      updateShiftId: // value for 'updateShiftId'
+ *      expected: // value for 'expected'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateShiftMutation(baseOptions?: Apollo.MutationHookOptions<UpdateShiftMutation, UpdateShiftMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateShiftMutation, UpdateShiftMutationVariables>(UpdateShiftDocument, options);
+      }
+export type UpdateShiftMutationHookResult = ReturnType<typeof useUpdateShiftMutation>;
+export type UpdateShiftMutationResult = Apollo.MutationResult<UpdateShiftMutation>;
+export type UpdateShiftMutationOptions = Apollo.BaseMutationOptions<UpdateShiftMutation, UpdateShiftMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3042,6 +3150,148 @@ export type GetAttendanceStaffQueryHookResult = ReturnType<typeof useGetAttendan
 export type GetAttendanceStaffLazyQueryHookResult = ReturnType<typeof useGetAttendanceStaffLazyQuery>;
 export type GetAttendanceStaffSuspenseQueryHookResult = ReturnType<typeof useGetAttendanceStaffSuspenseQuery>;
 export type GetAttendanceStaffQueryResult = Apollo.QueryResult<GetAttendanceStaffQuery, GetAttendanceStaffQueryVariables>;
+export const ShiftListDocument = gql`
+    query shiftList($limit: Int, $offset: Int, $users: [Int], $fromDate: String, $toDate: String) {
+  shiftList(
+    limit: $limit
+    offset: $offset
+    users: $users
+    fromDate: $fromDate
+    toDate: $toDate
+  ) {
+    id
+    open
+    openCurrency {
+      khr
+      usd
+    }
+    close
+    closeCurrency {
+      usd
+      khr
+    }
+    card
+    bill
+    bank
+    deposit
+    expectedCurrency {
+      usd
+      khr
+    }
+    note
+    user {
+      id
+      username
+      display
+      profile
+    }
+  }
+}
+    `;
+
+/**
+ * __useShiftListQuery__
+ *
+ * To run a query within a React component, call `useShiftListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useShiftListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useShiftListQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      users: // value for 'users'
+ *      fromDate: // value for 'fromDate'
+ *      toDate: // value for 'toDate'
+ *   },
+ * });
+ */
+export function useShiftListQuery(baseOptions?: Apollo.QueryHookOptions<ShiftListQuery, ShiftListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ShiftListQuery, ShiftListQueryVariables>(ShiftListDocument, options);
+      }
+export function useShiftListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ShiftListQuery, ShiftListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ShiftListQuery, ShiftListQueryVariables>(ShiftListDocument, options);
+        }
+export function useShiftListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ShiftListQuery, ShiftListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ShiftListQuery, ShiftListQueryVariables>(ShiftListDocument, options);
+        }
+export type ShiftListQueryHookResult = ReturnType<typeof useShiftListQuery>;
+export type ShiftListLazyQueryHookResult = ReturnType<typeof useShiftListLazyQuery>;
+export type ShiftListSuspenseQueryHookResult = ReturnType<typeof useShiftListSuspenseQuery>;
+export type ShiftListQueryResult = Apollo.QueryResult<ShiftListQuery, ShiftListQueryVariables>;
+export const ShiftByIdDocument = gql`
+    query shiftById($id: Int, $date: String, $userId: Int) {
+  shiftById(id: $id, date: $date, userId: $userId) {
+    id
+    open
+    openCurrency {
+      khr
+      usd
+    }
+    close
+    closeCurrency {
+      usd
+      khr
+    }
+    card
+    bill
+    bank
+    deposit
+    expectedCurrency {
+      usd
+      khr
+    }
+    note
+    user {
+      id
+      username
+      display
+      profile
+    }
+  }
+}
+    `;
+
+/**
+ * __useShiftByIdQuery__
+ *
+ * To run a query within a React component, call `useShiftByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useShiftByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useShiftByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      date: // value for 'date'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useShiftByIdQuery(baseOptions?: Apollo.QueryHookOptions<ShiftByIdQuery, ShiftByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ShiftByIdQuery, ShiftByIdQueryVariables>(ShiftByIdDocument, options);
+      }
+export function useShiftByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ShiftByIdQuery, ShiftByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ShiftByIdQuery, ShiftByIdQueryVariables>(ShiftByIdDocument, options);
+        }
+export function useShiftByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ShiftByIdQuery, ShiftByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ShiftByIdQuery, ShiftByIdQueryVariables>(ShiftByIdDocument, options);
+        }
+export type ShiftByIdQueryHookResult = ReturnType<typeof useShiftByIdQuery>;
+export type ShiftByIdLazyQueryHookResult = ReturnType<typeof useShiftByIdLazyQuery>;
+export type ShiftByIdSuspenseQueryHookResult = ReturnType<typeof useShiftByIdSuspenseQuery>;
+export type ShiftByIdQueryResult = Apollo.QueryResult<ShiftByIdQuery, ShiftByIdQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)
