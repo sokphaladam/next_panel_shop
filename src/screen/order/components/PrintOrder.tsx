@@ -91,13 +91,24 @@ export function PrintOrder(props: Props) {
                 <p className="flex flex-row items-center justify-end">
                   <div className="w-[45px] text-left">Table</div>
                   <div className="mx-1">:</div>
-                  <div className="text-end">{props.order?.set}</div>
+                  <div className="text-end">
+                    {props.order?.set} ({props.order?.person || 0})
+                  </div>
                 </p>
                 <p className="flex flex-row items-center justify-between">
                   <div className="w-[45px] text-left">Cashier</div>
                   <div className="mx-1">:</div>
                   <div className="text-end">{user?.display || ''}</div>
                 </p>
+                {props.order?.delivery && (
+                  <p className="flex flex-row items-center justify-between">
+                    <div className="w-[45px] text-left">Delivery</div>
+                    <div className="mx-1">:</div>
+                    <div className="text-end">
+                      {props.order.delivery.name} ({props.order.deliveryCode})
+                    </div>
+                  </p>
+                )}
               </div>
               <div>
                 <p className="flex flex-row items-center justify-between">
@@ -114,6 +125,11 @@ export function PrintOrder(props: Props) {
                   <div className="w-[25px] text-left">Date</div>
                   <div className="mx-2">:</div>
                   <div className="w-[90px] text-end">{moment(new Date(created_date + '')).format('DD-MMM-YYYY')}</div>
+                </p>
+                <p className="flex flex-row items-center justify-between">
+                  <div className="w-[25px] text-left">Paid</div>
+                  <div className="mx-2">:</div>
+                  <div className="w-[90px] text-end">{props.order?.bankType}</div>
                 </p>
               </div>
             </div>

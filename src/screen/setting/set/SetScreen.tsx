@@ -44,6 +44,13 @@ export function SetScreen() {
         variables: {
           set: Number(value),
         },
+      }).then((res) => {
+        setTimeout(() => {
+          const doc = document.getElementById(`table_${value}`);
+          if (doc) {
+            doc.click();
+          }
+        }, 500);
       });
     },
     [generate, propsUpdate.loading, push],
@@ -90,7 +97,11 @@ export function SetScreen() {
               data?.tableSetList?.map((x) => {
                 return (
                   <Grid.Cell key={x?.set}>
-                    <div className="cursor-pointer" onClick={() => handleGenerate(x?.set + '', x)}>
+                    <div
+                      id={`table_${x?.set}`}
+                      className="cursor-pointer"
+                      onClick={() => handleGenerate(x?.set + '', x)}
+                    >
                       <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
                         <Box>
                           <div className="flex flex-col justify-center items-center">

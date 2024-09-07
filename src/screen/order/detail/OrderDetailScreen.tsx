@@ -17,6 +17,7 @@ import {
   TextField,
   Icon,
   Select,
+  ButtonGroup,
 } from '@shopify/polaris';
 import {
   ChangeOrderInput,
@@ -45,6 +46,9 @@ import { PrintOrderToKitchen } from '../components/PrintOrderToKitchen';
 import moment from 'moment';
 import { BankController } from '@/screen/user/components/BankController';
 import { FormCheckout } from '../components/FormCheckout';
+import { PolarisProductPickerAddCart } from '@/components/polaris/PolarisProductPickerAddCart';
+import { ControllChangeQty } from './ControllChangeQty';
+import { ControllPerson } from './ControllPerson';
 
 interface Props {
   id: number;
@@ -256,112 +260,6 @@ export function OrderDetailScreen(props: Props) {
         setInvoice={setInvoice}
         total={total}
       />
-      {/* <Modals
-        open={paid}
-        onClose={togglePaid}
-        title={`Checkout Order #${data?.order?.id}`}
-        // secondaryActions={[
-        //   {
-        //     content: (<BankController hidelabel value={bank} onChange={setBank} />) as any,
-        //     plain: true,
-        //   },
-        // ]}
-        primaryAction={{
-          content: 'Checkout',
-          destructive: true,
-          onAction: () => {
-            let amount = amountInput ? Number(amountInput) : Number(total.toFixed(2));
-
-            if (amount > Number(total.toFixed(2))) {
-              amount = total;
-            }
-
-            const input: ChangeOrderInput = {
-              orderId: Number(data?.order?.id),
-              status: StatusOrder.Checkout,
-              reason: reasonInput || '',
-              amount: String(Number(amount).toFixed(2)),
-              invoice: Number(invoice.count),
-              bankType: String(bank.split(',')[0]),
-              bankId: Number(bank.split(',')[1]),
-              currency: currency,
-            };
-
-            change({
-              variables: {
-                data: input,
-              },
-            })
-              .then((res) => {
-                if (res.data?.changeOrderStatus) {
-                  setToasts([...toasts, { content: 'Update status was success.', status: 'success' }]);
-                  setReasonInput('');
-                  setAmountInput('');
-                  togglePaid();
-                  const inv = {
-                    date: moment(new Date()),
-                    count: Number(invoice.count) >= 50 ? 1 : Number(invoice.count) + 1,
-                  };
-                  localStorage.setItem('invoice', JSON.stringify(inv));
-                  setInvoice(inv);
-                } else {
-                  setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
-                }
-              })
-              .catch(() => {
-                setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
-              });
-          },
-        }}
-        footer={
-          <div className="flex flex-row gap-4 items-center">
-            <div className="font-bold">
-              Exchange Rate: <span className="pl-2">$1 = ៛{exchangeRate?.value}</span>
-              <br />
-              Total: <span className="pl-2">${(total || 0).toFixed(2)}</span>
-              <br />
-              Paid: <span className="pl-2">${Number(amountInput || total).toFixed(2)}</span>
-              <br />
-              Return to customer:{' '}
-              <span className="pl-2">${(Number(amountInput || total) - Number(total)).toFixed(2)}</span>
-            </div>
-          </div>
-        }
-      >
-        <Modals.Section>
-          <div className="flex flex-row items-center gap-2">
-            <BankController value={bank} onChange={setBank} needId />
-            <Select
-              label="Currency"
-              options={[
-                { label: 'USD', value: 'USD' },
-                { label: 'KHR', value: 'KHR' },
-              ]}
-              value={currency}
-              onChange={setCurrency}
-            />
-          </div>
-          <br />
-          <TextField
-            type="number"
-            autoComplete="off"
-            value={amountInput || (total || 0).toFixed(2)}
-            onChange={setAmountInput}
-            label="Amount cutomer paid"
-            placeholder="Please input amount of customer are paid for order here"
-            requiredIndicator
-          />
-          <br />
-          <TextField
-            autoComplete="off"
-            label="Do you have remark?"
-            multiline={5}
-            placeholder="comment here..."
-            value={reasonInput}
-            onChange={setReasonInput}
-          />
-        </Modals.Section>
-      </Modals> */}
       <Layout>
         <Layout.Section variant="oneHalf">
           <Card padding={'0'}>
@@ -448,91 +346,117 @@ export function OrderDetailScreen(props: Props) {
             <Divider />
             <Box>
               <IndexTable
-                headings={[{ title: '#' }, { title: 'Info' }, { title: 'Price' }, { title: 'Amount' }]}
-                itemCount={data?.order?.items?.length || 0}
+                headings={[
+                  { title: '#' },
+                  { title: 'Info' },
+                  { title: 'Price' },
+                  { title: 'Amount' },
+                  { title: '' },
+                  { title: '' },
+                ]}
+                itemCount={data?.order?.items?.length || 1}
                 selectable={false}
               >
+                <IndexTable.Row position={-1} id="New">
+                  <IndexTable.Cell colSpan={6}>
+                    <PolarisProductPickerAddCart refetch={refetch} order={data?.order || {}} />
+                  </IndexTable.Cell>
+                </IndexTable.Row>
                 {data?.order?.items?.map((item, index) => {
                   const priceAfterDis = Number(item?.price) - (Number(item?.price) * Number(item?.discount)) / 100;
                   return (
-                    <IndexTable.Row key={index} position={index} id={item?.id + ''}>
-                      <IndexTable.Cell>{index + 1}</IndexTable.Cell>
-                      <IndexTable.Cell>
-                        <div className="flex flex-row gap-2">
-                          <Thumbnail alt="" source={item?.product?.images + ''} size="small" />
-                          <div className="flex flex-col justify-between">
-                            <Text as="p" variant="bodySm" truncate>
-                              {item?.product?.title}{' '}
-                              <small>
-                                <strong>({item?.status})</strong>
-                              </small>
-                            </Text>
-                            <div className="flex flex-row">
-                              <Text as="strong" variant="bodySm" tone="base">
-                                x{item?.qty}
+                    <React.Fragment key={index}>
+                      <IndexTable.Row position={index} id={item?.id + ''}>
+                        <IndexTable.Cell>{index + 1}</IndexTable.Cell>
+                        <IndexTable.Cell>
+                          <div className="flex flex-row gap-2">
+                            <Thumbnail alt="" source={item?.product?.images + ''} size="small" />
+                            <div className="flex flex-col justify-between">
+                              <Text as="p" variant="bodySm" truncate>
+                                {item?.product?.title}{' '}
+                                <small>
+                                  <strong>({item?.status})</strong>
+                                </small>
                               </Text>
-                            </div>
-                            <div>
-                              <small className="text-pink-700">
-                                From last updated ({moment(new Date(lastUpdate as any)).fromNow(true)})
-                              </small>
+                              <div className="flex flex-row">
+                                <Text as="strong" variant="bodySm" tone="base">
+                                  {item?.sku?.name} x{item?.qty}
+                                </Text>
+                              </div>
+                              <div>
+                                <small className="text-pink-700">
+                                  From last updated ({moment(new Date(lastUpdate as any)).fromNow(true)})
+                                </small>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell>
-                        <Text as="strong" variant="bodySm">
-                          ${priceAfterDis.toFixed(2)}
-                        </Text>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell>
-                        <Text as="strong" variant="bodySm" fontWeight="bold" tone="success">
-                          ${(priceAfterDis * Number(item?.qty)).toFixed(2)}
-                        </Text>
-                      </IndexTable.Cell>
-                      {item?.status === StatusOrderItem.Pending ||
-                        (item?.status === StatusOrderItem.Making && (
-                          <IndexTable.Cell>
-                            <div className="flex flex-col items-center">
-                              <Button
-                                size="slim"
-                                variant="primary"
-                                tone="critical"
-                                onClick={() => {
-                                  Modal.dialog({
-                                    title: 'Confirmation',
-                                    body: [
-                                      <div key={1}>{'Are you sure to remove this item: ' + item.product?.title}</div>,
-                                    ],
-                                    buttons: [
-                                      {
-                                        title: 'Yes',
-                                        onPress: () => {
-                                          mark({
-                                            variables: {
-                                              markOrderItemStatusId: Number(item.id),
-                                              status: StatusOrderItem.Deleted,
-                                            },
-                                          });
+                        </IndexTable.Cell>
+                        <IndexTable.Cell>
+                          <Text as="strong" variant="bodySm">
+                            ${priceAfterDis.toFixed(2)}
+                          </Text>
+                        </IndexTable.Cell>
+                        <IndexTable.Cell>
+                          <Text as="strong" variant="bodySm" fontWeight="bold" tone="success">
+                            ${(priceAfterDis * Number(item?.qty)).toFixed(2)}
+                          </Text>
+                        </IndexTable.Cell>
+                        <IndexTable.Cell>
+                          <ControllChangeQty item={item || {}} />
+                        </IndexTable.Cell>
+                        {item?.status === StatusOrderItem.Pending ||
+                          (item?.status === StatusOrderItem.Making && (
+                            <IndexTable.Cell>
+                              <div className="flex flex-col items-center">
+                                <Button
+                                  size="slim"
+                                  variant="primary"
+                                  tone="critical"
+                                  onClick={() => {
+                                    Modal.dialog({
+                                      title: 'Confirmation',
+                                      body: [
+                                        <div key={1}>{'Are you sure to remove this item: ' + item.product?.title}</div>,
+                                      ],
+                                      buttons: [
+                                        {
+                                          title: 'Yes',
+                                          onPress: () => {
+                                            mark({
+                                              variables: {
+                                                markOrderItemStatusId: Number(item.id),
+                                                status: StatusOrderItem.Deleted,
+                                              },
+                                            });
+                                          },
                                         },
-                                      },
-                                    ],
-                                  });
-                                }}
-                              >
-                                {(<Icon source={DeleteIcon} />) as any}
-                              </Button>
-                              {item.isPrint ? (
-                                <div>
-                                  <small className="text-pink-700">Already to kitchen</small>
-                                </div>
-                              ) : (
-                                <></>
-                              )}
-                            </div>
+                                      ],
+                                    });
+                                  }}
+                                >
+                                  {(<Icon source={DeleteIcon} />) as any}
+                                </Button>
+                                {item.isPrint ? (
+                                  <div>
+                                    <small className="text-pink-700">Already to kitchen</small>
+                                  </div>
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
+                            </IndexTable.Cell>
+                          ))}
+                      </IndexTable.Row>
+                      {(item?.addons || item?.remark) && (
+                        <IndexTable.Row position={index} id={item?.id + ''}>
+                          <IndexTable.Cell></IndexTable.Cell>
+                          <IndexTable.Cell colSpan={5} className="bg-yellow-200">
+                            {item.addons && <div>Addon: {item.addons}</div>}
+                            {item.remark && <div>Remark: {item.remark}</div>}
                           </IndexTable.Cell>
-                        ))}
-                    </IndexTable.Row>
+                        </IndexTable.Row>
+                      )}
+                    </React.Fragment>
                   );
                 })}
               </IndexTable>
@@ -628,6 +552,15 @@ export function OrderDetailScreen(props: Props) {
                   </IndexTable.Cell>
                 </IndexTable.Row>
               </IndexTable>
+            </Box>
+          </Card>
+          <br />
+          <Card padding={'0'}>
+            <Box padding={'400'}>
+              <div className="flex flex-row justify-between items-center">
+                <div>People in order: {data?.order?.person || 0}</div>
+                <ControllPerson orderId={data?.order?.id || 0} />
+              </div>
             </Box>
           </Card>
           <br />

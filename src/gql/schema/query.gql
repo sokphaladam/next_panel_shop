@@ -146,6 +146,7 @@ query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [Statu
     vat
     bankType
     invoice
+    person
     log {
       date
       text
@@ -170,6 +171,7 @@ query order($token: String, $orderId: Int) {
     note
     code
     vat
+    person
     invoice
     bankType
     log {
