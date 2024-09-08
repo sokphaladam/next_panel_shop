@@ -6,7 +6,7 @@ import { BankController } from '@/screen/user/components/BankController';
 import { useSetting } from '@/service/useSettingProvider';
 import { Modal, Select, TextField } from '@shopify/polaris';
 import moment from 'moment';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface Props {
   data: Order;
@@ -20,16 +20,23 @@ interface Props {
 export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }: Props) {
   const { setToasts, toasts } = useCustomToast();
   const [reasonInput, setReasonInput] = useState('');
-  const [amountInput, setAmountInput] = useState<string>(total + '');
-  // const [paid, setPaid] = useState(false);
+  const [amountInput, setAmountInput] = useState<string>('');
+  const [loading, setLoading] = useState(true);
   const [bank, setBank] = useState('');
   const [currency, setCurrency] = useState('USD');
   const setting = useSetting();
-  const togglePaid = useCallback(() => setOpen(!open), [open]);
+  const togglePaid = useCallback(() => setOpen(!open), [open, setOpen]);
 
   const [change] = useChangeOrderStatusMutation({
     refetchQueries: ['order', 'orderList'],
   });
+
+  useEffect(() => {
+    if (total && !!loading) {
+      setAmountInput(total + '');
+      setLoading(false);
+    }
+  }, [total, loading]);
 
   const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value || '4000';
 
@@ -153,7 +160,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
         <TextField
           type="number"
           autoComplete="off"
-          value={amountInput || (total || 0).toFixed(2)}
+          value={amountInput}
           onChange={setAmountInput}
           label="Amount cutomer paid"
           placeholder="Please input amount of customer are paid for order here"
@@ -168,6 +175,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
               ? 'Amount input lower.'
               : ''
           }
+          selectTextOnFocus
         />
         <br />
         <TextField
