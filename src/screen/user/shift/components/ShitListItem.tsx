@@ -42,7 +42,9 @@ export function ShiftListItem(props: Props) {
         <small>KHR: {props.data.closeCurrency?.khr}</small>
       </IndexTable.Cell>
       <IndexTable.Cell>
-        <small>${Number(props.data.bank.reduce((a: any, b: any) => (a = a + Number(b.value)), 0)).toFixed(2)}</small>
+        {props.data.bank && (
+          <small>${Number(props.data.bank.reduce((a: any, b: any) => (a = a + Number(b.value)), 0)).toFixed(2)}</small>
+        )}
       </IndexTable.Cell>
       <IndexTable.Cell>
         <small>{props.data.bill}</small>

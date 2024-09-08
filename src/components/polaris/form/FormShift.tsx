@@ -18,6 +18,7 @@ interface Props {
   open: boolean;
   setOpen: (v: boolean) => void;
   type?: 'OPEN' | 'CLOSE';
+  onShift?: any;
 }
 
 export function FormShift(props: Props) {
@@ -38,6 +39,7 @@ export function FormShift(props: Props) {
       if (res.shiftById) {
         setUsdInput(String(res.shiftById.openCurrency?.usd || '0'));
         setKhrInput(String(res.shiftById.openCurrency?.khr || '0'));
+        props.onShift(true);
       } else {
         setUsdInput('0');
         setKhrInput('0');
@@ -119,7 +121,7 @@ export function FormShift(props: Props) {
       });
   }, [create, data, dateInput, khrInput, props, setToasts, toasts, usdInput, user?.id]);
 
-  if (loading || propCreate.loading) {
+  if (propCreate.loading) {
     return <></>;
   }
 
@@ -147,7 +149,7 @@ export function FormShift(props: Props) {
     >
       <Modal.Section>
         <Text as="h4" variant="headingMd">
-          Open Date
+          {data?.shiftById ? 'Close Date' : 'Open Date'}
         </Text>
         <br />
         <TextField
@@ -175,6 +177,7 @@ export function FormShift(props: Props) {
             align="right"
             type="currency"
             selectTextOnFocus
+            disabled={!!data?.shiftById}
           />
           <TextField
             value={khrInput}
@@ -186,6 +189,7 @@ export function FormShift(props: Props) {
             align="right"
             type="currency"
             selectTextOnFocus
+            disabled={!!data?.shiftById}
           />
         </InlineGrid>
       </Modal.Section>

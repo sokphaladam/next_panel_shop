@@ -16,6 +16,7 @@ interface Props {
 export function TopbarMarkup(props: Props) {
   const user = useUser();
   const [shift, setShift] = useState(false);
+  const [isShift, setIsShift] = useState(false);
   const { push, refresh } = useRouter();
   const pathname = usePathname();
   const { lng, setLng } = useLanguage();
@@ -38,8 +39,8 @@ export function TopbarMarkup(props: Props) {
     {
       items: [
         {
-          content: shift ? 'Close Shift' : 'Open Shift',
-          icon: shift ? ContractFilledIcon : ButtonPressIcon,
+          content: !!isShift ? 'Close Shift' : 'Open Shift',
+          icon: !!shift ? ContractFilledIcon : ButtonPressIcon,
           onAction: () => {
             setShift(!shift);
           },
@@ -107,7 +108,7 @@ export function TopbarMarkup(props: Props) {
 
   return (
     <React.Fragment>
-      {shift && <FormShift open={shift} setOpen={setShift} />}
+      <FormShift open={shift} setOpen={setShift} onShift={setIsShift} />
       <TopBar
         showNavigationToggle
         userMenu={userMenuMarkup}
