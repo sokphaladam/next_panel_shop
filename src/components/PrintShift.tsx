@@ -132,17 +132,17 @@ export function PrintShift(props: Props) {
           <br />
           <div style={{ fontWeight: 'bold', textAlign: 'center' }}>{'Minutes of shift handover'.toUpperCase()}</div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <small>Shift on {moment(new Date(props.data.open + '')).format('DD/MM/YYYY')}</small>
+            <small>Shift on {moment(new Date(props.data.open + '')).format('DD/MMM/YYYY')}</small>
           </div>
           <br />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: 11, width: '70mm' }}>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <div style={{ width: 100, textAlign: 'left' }}>Opening shift:</div>
-              <small>{props.data.open}</small>
+              <small>{moment(new Date(props.data.open as any)).format('YYYY-MMM-DD HH:mm:ss')}</small>
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <div style={{ width: 100, textAlign: 'left' }}>Closing shift:</div>
-              <small>{props.data.close}</small>
+              <small>{moment(new Date(props.data.close as any)).format('YYYY-MMM-DD HH:mm:ss')}</small>
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               <div style={{ width: 100, textAlign: 'left' }}>Handover person:</div>
