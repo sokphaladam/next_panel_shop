@@ -69,7 +69,7 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
           )}
           <div className="w-full text-center">
             <div>
-              Wifi: <b>MooD-WiFi</b>
+              Wifi: <b>Staff-GF</b>
             </div>
             <div>
               Password: <b>{pwdwifi}</b>

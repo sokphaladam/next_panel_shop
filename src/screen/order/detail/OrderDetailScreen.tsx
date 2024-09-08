@@ -403,48 +403,49 @@ export function OrderDetailScreen(props: Props) {
                         <IndexTable.Cell>
                           <ControllChangeQty item={item || {}} />
                         </IndexTable.Cell>
-                        {item?.status === StatusOrderItem.Pending ||
-                          (item?.status === StatusOrderItem.Making && (
-                            <IndexTable.Cell>
-                              <div className="flex flex-col items-center">
-                                <Button
-                                  size="slim"
-                                  variant="primary"
-                                  tone="critical"
-                                  onClick={() => {
-                                    Modal.dialog({
-                                      title: 'Confirmation',
-                                      body: [
-                                        <div key={1}>{'Are you sure to remove this item: ' + item.product?.title}</div>,
-                                      ],
-                                      buttons: [
-                                        {
-                                          title: 'Yes',
-                                          onPress: () => {
-                                            mark({
-                                              variables: {
-                                                markOrderItemStatusId: Number(item.id),
-                                                status: StatusOrderItem.Deleted,
-                                              },
-                                            });
-                                          },
+                        {[StatusOrderItem.Pending, StatusOrderItem.Making, StatusOrderItem.Completed].includes(
+                          item?.status as any,
+                        ) && (
+                          <IndexTable.Cell>
+                            <div className="flex flex-col items-center">
+                              <Button
+                                size="slim"
+                                variant="primary"
+                                tone="critical"
+                                onClick={() => {
+                                  Modal.dialog({
+                                    title: 'Confirmation',
+                                    body: [
+                                      <div key={1}>{'Are you sure to remove this item: ' + item?.product?.title}</div>,
+                                    ],
+                                    buttons: [
+                                      {
+                                        title: 'Yes',
+                                        onPress: () => {
+                                          mark({
+                                            variables: {
+                                              markOrderItemStatusId: Number(item?.id),
+                                              status: StatusOrderItem.Deleted,
+                                            },
+                                          });
                                         },
-                                      ],
-                                    });
-                                  }}
-                                >
-                                  {(<Icon source={DeleteIcon} />) as any}
-                                </Button>
-                                {item.isPrint ? (
-                                  <div>
-                                    <small className="text-pink-700">Already to kitchen</small>
-                                  </div>
-                                ) : (
-                                  <></>
-                                )}
-                              </div>
-                            </IndexTable.Cell>
-                          ))}
+                                      },
+                                    ],
+                                  });
+                                }}
+                              >
+                                {(<Icon source={DeleteIcon} />) as any}
+                              </Button>
+                              {item?.isPrint ? (
+                                <div>
+                                  <small className="text-pink-700">Already to kitchen</small>
+                                </div>
+                              ) : (
+                                <></>
+                              )}
+                            </div>
+                          </IndexTable.Cell>
+                        )}
                       </IndexTable.Row>
                       {(item?.addons || item?.remark) && (
                         <IndexTable.Row position={index} id={item?.id + ''}>
