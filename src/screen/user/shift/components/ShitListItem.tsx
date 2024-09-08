@@ -17,13 +17,16 @@ export function ShiftListItem(props: Props) {
         <small>{props.data.id}</small>
       </IndexTable.Cell>
       <IndexTable.Cell>
-        <Avatar
-          source={props.data.user?.profile || ''}
-          initials={props.data.user?.display
-            ?.split(' ')
-            .map((s) => s.charAt(0).toUpperCase())
-            .join('')}
-        />
+        <div className="flex flex-row items-center">
+          <Avatar
+            source={props.data.user?.profile || ''}
+            initials={props.data.user?.display
+              ?.split(' ')
+              .map((s) => s.charAt(0).toUpperCase())
+              .join('')}
+          />
+          <small className="ml-2">{props.data.user?.display}</small>
+        </div>
       </IndexTable.Cell>
       <IndexTable.Cell>
         <small>{props.data.open}</small>

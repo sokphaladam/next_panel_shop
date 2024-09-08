@@ -35,6 +35,7 @@ import {
   ClipboardCheckFilledIcon,
   XCircleIcon,
   DeleteIcon,
+  StatusActiveIcon,
 } from '@shopify/polaris-icons';
 import { useCustomToast } from '@/components/custom/CustomToast';
 import { Modal } from '@/hook/modal';
@@ -65,7 +66,7 @@ const toneStatus: any = {
 const toneIcon: any = {
   [StatusOrder.Pending]: InfoIcon,
   [StatusOrder.Verify]: CheckCircleIcon,
-  [StatusOrder.Delivery]: DeliveryIcon,
+  [StatusOrder.Delivery]: StatusActiveIcon,
   [StatusOrder.Checkout]: ClipboardCheckFilledIcon,
   [StatusOrder.Cancelled]: XCircleIcon,
 };
@@ -332,12 +333,17 @@ export function OrderDetailScreen(props: Props) {
                       TABLE: {data?.order?.set} (#{data?.order?.code})
                     </small>
                   </b>
-                  <Badge
-                    tone={toneStatus[data?.order?.status || '']}
-                    icon={toneIcon[data?.order?.status || '']}
-                    size="small"
-                  >
-                    {(<small>{data?.order?.status || ''}</small>) as any}
+                  <Badge tone={toneStatus[data?.order?.status || '']} size="small">
+                    {
+                      (
+                        <small className="flex flex-row justify-between items-center p-1">
+                          <div className="mr-1">
+                            <Icon source={toneIcon[data?.order?.status || '']} />
+                          </div>
+                          {data?.order?.status === 'DELIVERY' ? 'Deliver' : data?.order?.status || ''}
+                        </small>
+                      ) as any
+                    }
                   </Badge>
                 </div>
               </div>

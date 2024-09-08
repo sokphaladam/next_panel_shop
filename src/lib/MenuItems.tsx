@@ -245,11 +245,11 @@ export function MenuItems(user: User | null) {
                 icon: AttachmentIcon,
                 url: '/employee/attendance',
               },
-              {
-                label: 'Shift Handover',
-                icon: MoneyFilledIcon,
-                url: '/shift',
-              },
+              // {
+              //   label: 'Shift Handover',
+              //   icon: MoneyFilledIcon,
+              //   url: '/shift',
+              // },
             ],
           },
           {
