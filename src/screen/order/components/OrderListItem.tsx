@@ -14,6 +14,7 @@ import {
   Modal as Modals,
   TextField,
   ActionListItemDescriptor,
+  Button,
 } from '@shopify/polaris';
 import { DeliveryFilledIcon, MenuVerticalIcon, StarFilledIcon, StarIcon } from '@shopify/polaris-icons';
 import React, { useCallback, useState } from 'react';
@@ -225,9 +226,9 @@ export function OrderListItem({ item }: Props) {
         </IndexTable.Cell>
         <IndexTable.Cell>
           <div className="flex flex-row items-center gap-2">
-            <div className="bg-emerald-800 p-1 text-white">
-              TABLE: {Number(item?.set) < 10 ? '0' + item?.set : item?.set}
-            </div>
+            <Button variant="primary" tone="success">
+              {`TABLE: ${Number(item?.set) < 10 ? '0' + item?.set : item?.set}`}
+            </Button>
           </div>
         </IndexTable.Cell>
         <IndexTable.Cell>

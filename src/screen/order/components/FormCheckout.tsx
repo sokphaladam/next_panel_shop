@@ -128,16 +128,21 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             Exchange Rate: <span className="pl-2">$1 = ៛{exchangeRate}</span>
             <br />
             Total:{' '}
-            <span className="pl-2">${currency === 'USD' ? (total || 0).toFixed(2) : (totalKhr || 0).toFixed(2)}</span>
+            <span className="pl-2">
+              {currency === 'USD' ? '$' + (total || 0).toFixed(2) : '៛' + (totalKhr || 0).toFixed(2)}
+            </span>
             <br />
-            Paid: <span className="pl-2">${Number(amountInput || total).toFixed(2)}</span>
+            Paid:{' '}
+            <span className="pl-2">
+              {currency === 'USD' ? '$' : '៛'}
+              {Number(amountInput || total).toFixed(2)}
+            </span>
             <br />
             Return to customer:{' '}
             <span className="pl-2">
-              $
               {currency === 'USD'
-                ? Number(amountInput || total) - Number(total)
-                : Number(amountInput) - Number(totalKhr)}
+                ? '$' + (Number(amountInput || total) - Number(total))
+                : '៛' + (Number(amountInput) - Number(totalKhr))}
             </span>
           </div>
         </div>

@@ -38,13 +38,15 @@ export function TopbarMarkup(props: Props) {
   const userMenuActions: { items: IconableAction[] }[] = [
     {
       items: [
-        {
-          content: !!isShift ? 'Close Shift' : 'Open Shift',
-          icon: !!shift ? ContractFilledIcon : ButtonPressIcon,
-          onAction: () => {
-            setShift(!shift);
-          },
-        },
+        user?.role?.id === 6
+          ? {
+              content: !!isShift ? 'Close Shift' : 'Open Shift',
+              icon: !!shift ? ContractFilledIcon : ButtonPressIcon,
+              onAction: () => {
+                setShift(!shift);
+              },
+            }
+          : {},
         {
           content: 'Logout',
           icon: ExitIcon,

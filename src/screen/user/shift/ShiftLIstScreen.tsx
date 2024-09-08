@@ -6,19 +6,29 @@ import { usePagination } from '@/hook/usePagination';
 import { Box, Card, IndexTable, Layout } from '@shopify/polaris';
 import { ShiftListItem } from './components/ShitListItem';
 import { useUser } from '@/service/UserProvider';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ShiftListScreen() {
   const user = useUser();
-  const [userids, setUserIds] = useState((user?.role?.id || 0) > 2 ? [user?.id] : []);
+  const [loadi, setloading] = useState(true);
+  const [userids, setUserIds] = useState<any[]>([]);
   const { limit, offset, setOffset } = usePagination();
   const { data, loading } = useShiftListQuery({
     variables: {
       offset,
       limit,
-      users: userids.length > 0 ? userids : (undefined as any),
+      users: userids,
     },
   });
+
+  useEffect(() => {
+    if (user && !!loadi) {
+      if ((user.role?.id || 0) > 2) {
+        setUserIds([user?.id || 0]);
+      }
+      setloading(false);
+    }
+  }, [loadi, user]);
 
   return (
     <PolarisLayout title="Shift">
