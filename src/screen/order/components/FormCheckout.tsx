@@ -20,7 +20,7 @@ interface Props {
 export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }: Props) {
   const { setToasts, toasts } = useCustomToast();
   const [reasonInput, setReasonInput] = useState('');
-  const [amountInput, setAmountInput] = useState('');
+  const [amountInput, setAmountInput] = useState<string>(total + '');
   // const [paid, setPaid] = useState(false);
   const [bank, setBank] = useState('');
   const [currency, setCurrency] = useState('USD');
@@ -31,7 +31,9 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     refetchQueries: ['order', 'orderList'],
   });
 
-  const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE');
+  const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value || '4000';
+
+  const totalKhr = (total || 0) * Number(exchangeRate);
 
   return (
     <Modal
@@ -54,6 +56,20 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             amount = total;
           }
 
+          if (currency === 'USD') {
+            if (Number(amountInput) < total) {
+              setToasts([...toasts, { content: 'Amount input lower', status: 'error' }]);
+              return;
+            }
+          }
+
+          if (currency === 'KHR') {
+            if (Number(amountInput) < totalKhr) {
+              setToasts([...toasts, { content: 'Amount input lower', status: 'error' }]);
+              return;
+            }
+          }
+
           if (!bank || bank.split(',').length === 1) {
             setToasts([...toasts, { content: 'Please select type bank', status: 'error' }]);
             return;
@@ -63,7 +79,10 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             orderId: Number(data?.id),
             status: StatusOrder.Checkout,
             reason: reasonInput || '',
-            amount: String(Number(amount).toFixed(2)),
+            amount:
+              currency === 'USD'
+                ? String(Number(amount).toFixed(2))
+                : String((Number(amountInput) / Number(exchangeRate)).toFixed(2)),
             invoice: Number(invoice.count),
             bankType: String(bank.split(',')[0]),
             bankId: Number(bank.split(',')[1]),
@@ -99,14 +118,20 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       footer={
         <div className="flex flex-row gap-4 items-center">
           <div className="font-bold">
-            Exchange Rate: <span className="pl-2">$1 = ៛{exchangeRate?.value}</span>
+            Exchange Rate: <span className="pl-2">$1 = ៛{exchangeRate}</span>
             <br />
-            Total: <span className="pl-2">${(total || 0).toFixed(2)}</span>
+            Total:{' '}
+            <span className="pl-2">${currency === 'USD' ? (total || 0).toFixed(2) : (totalKhr || 0).toFixed(2)}</span>
             <br />
             Paid: <span className="pl-2">${Number(amountInput || total).toFixed(2)}</span>
             <br />
             Return to customer:{' '}
-            <span className="pl-2">${(Number(amountInput || total) - Number(total)).toFixed(2)}</span>
+            <span className="pl-2">
+              $
+              {currency === 'USD'
+                ? Number(amountInput || total) - Number(total)
+                : Number(amountInput) - Number(totalKhr)}
+            </span>
           </div>
         </div>
       }
@@ -133,6 +158,16 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
           label="Amount cutomer paid"
           placeholder="Please input amount of customer are paid for order here"
           requiredIndicator
+          prefix={currency === 'USD' ? '$' : '៛'}
+          error={
+            currency === 'USD'
+              ? Number(amountInput) < total
+                ? 'Amount input lower.'
+                : ''
+              : Number(amountInput) < totalKhr
+              ? 'Amount input lower.'
+              : ''
+          }
         />
         <br />
         <TextField

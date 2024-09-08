@@ -1,15 +1,91 @@
 'use client';
 
 import {
+  TableSet,
   useGenerateTableSetMutation,
   useGenerateTokenOrderMutation,
   useOrderSubscriptSubscription,
   useTableSetListQuery,
 } from '@/gql/graphql';
 import { Modal } from '@/hook/modal';
+import useLongPress from '@/hook/useLongPress';
 import { Box, Card, Frame, Grid, Layout, Loading, Page, Spinner, Text } from '@shopify/polaris';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+
+function TableItem({ x }: { x: TableSet }) {
+  const { push } = useRouter();
+  const [table, propsTable] = useGenerateTableSetMutation({
+    refetchQueries: ['tableSetList'],
+  });
+  const [generate, propsUpdate] = useGenerateTokenOrderMutation({
+    refetchQueries: ['tableSetList'],
+  });
+  const handleLogPress = () => {
+    console.log('long press');
+
+    generate({
+      variables: {
+        set: Number(x.set),
+      },
+    }).then((res) => {
+      setTimeout(() => {
+        const doc = document.getElementById(`table_${x.set}`);
+        if (doc) {
+          doc.click();
+        }
+      }, 500);
+    });
+  };
+
+  const handleClick = () => {};
+
+  const defaultOptions = {
+    shouldPreventDefault: true,
+    delay: 1000,
+  };
+
+  const handleGenerate = useCallback(
+    (value: string, x: any) => {
+      if (propsUpdate.loading || x.order) {
+        push('/order/detail/' + x?.order.id);
+        return;
+      }
+    },
+    [propsUpdate.loading, push],
+  );
+
+  const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
+  return (
+    <div
+      id={`table_${x?.set}`}
+      className="cursor-pointer"
+      onClick={() => handleGenerate(x?.set + '', x)}
+      {...logPressEvent}
+    >
+      <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
+        <Box>
+          <div className="flex flex-col justify-center items-center">
+            <Text as="h3" variant="bodyLg" fontWeight="bold" tone={x?.order ? 'text-inverse' : 'base'}>
+              {x?.set}
+            </Text>
+            {/* {x?.order && (
+                              <Text
+                                as="h3"
+                                variant="bodyLg"
+                                fontWeight="bold"
+                                tone={x?.order ? 'text-inverse' : 'base'}
+                              >
+                                #{x?.order?.code}
+                              </Text>
+                            )} */}
+            {(propsUpdate.loading || propsTable.loading) && <Spinner size="small" />}
+          </div>
+        </Box>
+      </Card>
+    </div>
+  );
+}
 
 export function SetScreen() {
   const { push } = useRouter();
@@ -32,29 +108,6 @@ export function SetScreen() {
       }
     },
   });
-
-  const handleGenerate = useCallback(
-    (value: string, x: any) => {
-      if (propsUpdate.loading || x.order) {
-        push('/order/detail/' + x?.order.id);
-        return;
-      }
-
-      generate({
-        variables: {
-          set: Number(value),
-        },
-      }).then((res) => {
-        setTimeout(() => {
-          const doc = document.getElementById(`table_${value}`);
-          if (doc) {
-            doc.click();
-          }
-        }, 500);
-      });
-    },
-    [generate, propsUpdate.loading, push],
-  );
 
   const handleGenerateTable = useCallback(() => {
     const pr = window.prompt('How many table for generate?');
@@ -97,32 +150,7 @@ export function SetScreen() {
               data?.tableSetList?.map((x) => {
                 return (
                   <Grid.Cell key={x?.set}>
-                    <div
-                      id={`table_${x?.set}`}
-                      className="cursor-pointer"
-                      onClick={() => handleGenerate(x?.set + '', x)}
-                    >
-                      <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
-                        <Box>
-                          <div className="flex flex-col justify-center items-center">
-                            <Text as="h3" variant="bodyLg" fontWeight="bold" tone={x?.order ? 'text-inverse' : 'base'}>
-                              {x?.set}
-                            </Text>
-                            {/* {x?.order && (
-                              <Text
-                                as="h3"
-                                variant="bodyLg"
-                                fontWeight="bold"
-                                tone={x?.order ? 'text-inverse' : 'base'}
-                              >
-                                #{x?.order?.code}
-                              </Text>
-                            )} */}
-                            {(propsUpdate.loading || propsTable.loading) && <Spinner size="small" />}
-                          </div>
-                        </Box>
-                      </Card>
-                    </div>
+                    <TableItem key={x?.set} x={x || {}} />
                   </Grid.Cell>
                 );
               })}

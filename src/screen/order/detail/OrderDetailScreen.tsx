@@ -202,8 +202,7 @@ export function OrderDetailScreen(props: Props) {
         onClose={toggleActive}
         title={`Cancel Order #${data?.order?.id}`}
         primaryAction={{
-          content: 'Cancel',
-          destructive: true,
+          content: 'Yes',
           onAction: () => {
             if (!reasonInput) {
               setToasts([...toasts, { content: 'Please input the reason!', status: 'error' }]);

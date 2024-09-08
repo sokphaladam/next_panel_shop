@@ -283,6 +283,104 @@ export function MenuItems(user: User | null) {
           },
         ];
         break;
+      case 5:
+        MenuItem = [
+          {
+            title: 'Orders',
+            items: [
+              {
+                label: 'Order',
+                icon: CartFilledIcon,
+                url: '/order/list',
+              },
+            ],
+          },
+          {
+            title: 'Employee',
+            items: [
+              {
+                label: 'Attendance',
+                icon: AttachmentIcon,
+                url: '/employee/attendance',
+              },
+              {
+                label: 'Shift Handover',
+                icon: MoneyFilledIcon,
+                url: '/shift',
+              },
+            ],
+          },
+          {
+            title: 'Setting',
+            items: [
+              {
+                label: 'Table',
+                icon: TabletIcon,
+                url: '/set',
+              },
+              {
+                label: 'Delivery',
+                icon: DeliveryIcon,
+                url: '/delivery',
+              },
+              {
+                label: 'Position',
+                icon: StarIcon,
+                url: '/position',
+              },
+              {
+                label: 'Payment Info',
+                icon: CreditCardIcon,
+                url: '/payment',
+              },
+            ],
+          },
+        ];
+        break;
+      case 6:
+        MenuItem = [
+          {
+            title: 'Orders',
+            items: [
+              {
+                label: 'Order',
+                icon: CartFilledIcon,
+                url: '/order/list',
+              },
+            ],
+          },
+          {
+            title: 'Employee',
+            items: [
+              {
+                label: 'Attendance',
+                icon: AttachmentIcon,
+                url: '/employee/attendance',
+              },
+              {
+                label: 'Shift Handover',
+                icon: MoneyFilledIcon,
+                url: '/shift',
+              },
+            ],
+          },
+          {
+            title: 'Setting',
+            items: [
+              {
+                label: 'Table',
+                icon: TabletIcon,
+                url: '/set',
+              },
+              {
+                label: 'Delivery',
+                icon: DeliveryIcon,
+                url: '/delivery',
+              },
+            ],
+          },
+        ];
+        break;
       default:
         MenuItem = [];
         break;
