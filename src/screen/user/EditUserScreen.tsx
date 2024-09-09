@@ -7,6 +7,7 @@ import { PolarisLayout } from '@/components/polaris/PolarisLayout';
 import moment from 'moment';
 import { useCustomToast } from '@/components/custom/CustomToast';
 import { useParams, useRouter } from 'next/navigation';
+import { validInput } from '@/lib/valid';
 
 export function EditUserScreen() {
   const { toasts, setToasts } = useCustomToast();
@@ -14,6 +15,7 @@ export function EditUserScreen() {
   const params = useParams<{ id: string }>();
   const [value, setValue] = useState<UserInput | null>(null);
   const [error, setError] = useState<any>([]);
+  const [load, setLoading] = useState(true);
   const { data, loading } = useUserQuery({
     variables: {
       userId: Number(params.id),
@@ -46,6 +48,7 @@ export function EditUserScreen() {
     refetchQueries: ['userList', 'user'],
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const allow = ['bankName', 'bankType', 'bankAcc', 'password', 'createdDate', 'type', 'isActive'];
 
   const checkValid = useCallback(() => {
@@ -56,6 +59,29 @@ export function EditUserScreen() {
       }
     }
 
+    const checkPwd = validInput.checkString(value?.password + '');
+    const checkuser = validInput.checkString(value?.username + '');
+
+    if (value?.password) {
+      let isPassword = !!checkPwd.hasUppercase && !!checkPwd.hasNumeric && !!checkPwd.hasLowercase ? true : false;
+
+      if (!isPassword) {
+        x.push({
+          field: 'password',
+          msg: `Invalid password`,
+        });
+      }
+    }
+
+    const isUser = !!checkuser.hasUppercase || !!checkuser.hasSpace ? false : true;
+
+    if (!isUser) {
+      x.push({
+        field: 'username',
+        msg: `Invalid username`,
+      });
+    }
+
     if (x.length > 0) {
       setError(x);
     }
@@ -63,7 +89,7 @@ export function EditUserScreen() {
   }, [value, allow]);
 
   const handleSave = useCallback(() => {
-    const err = checkValid();
+    const err: any = checkValid();
 
     if (err.length > 0) {
       for (const e of err) {
@@ -113,10 +139,11 @@ export function EditUserScreen() {
   }, [checkValid, update, setToasts, toasts, value, push, params]);
 
   useEffect(() => {
-    if (value) {
+    if (value && !!load) {
       checkValid();
+      setLoading(false);
     }
-  }, [checkValid, value]);
+  }, [checkValid, value, load]);
 
   if (loading || !data || !value) {
     return <></>;
@@ -131,7 +158,7 @@ export function EditUserScreen() {
 
   return (
     <PolarisLayout
-      title="Create Staff"
+      title={'Edit Staff #' + params.id}
       fullWidth={false}
       primaryAction={{ content: 'Save', onAction: handleSave, disabled: x.length > 0 }}
     >

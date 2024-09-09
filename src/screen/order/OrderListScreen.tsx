@@ -1,34 +1,9 @@
 'use client';
-import { StatusOrder, useOrderListQuery, useOrderSubscriptSubscription } from '@/gql/graphql';
+import { useOrderListQuery, useOrderSubscriptSubscription } from '@/gql/graphql';
 import { usePagination } from '@/hook/usePagination';
-import {
-  ActionList,
-  Badge,
-  Box,
-  Card,
-  Icon,
-  IndexFilters,
-  IndexTable,
-  Layout,
-  Page,
-  Popover,
-  TabProps,
-  Tabs,
-  Text,
-  Tooltip,
-  useSetIndexFiltersMode,
-} from '@shopify/polaris';
-import {
-  CheckCircleIcon,
-  ClipboardCheckFilledIcon,
-  DeliveryIcon,
-  InfoIcon,
-  MenuVerticalIcon,
-  XCircleIcon,
-} from '@shopify/polaris-icons';
+import { Box, Card, IndexFilters, IndexTable, Layout, Page, TabProps, useSetIndexFiltersMode } from '@shopify/polaris';
 import React, { useState } from 'react';
 import { OrderListItem } from './components/OrderListItem';
-import { useCustomToast } from '@/components/custom/CustomToast';
 
 const tabs: TabProps[] = [
   {
@@ -54,7 +29,6 @@ const tabs: TabProps[] = [
 ];
 
 export function OrderListScreen() {
-  const { setToasts, toasts } = useCustomToast();
   const [select, setSelect] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const { offset, setOffset, limit, setLimit } = usePagination();
@@ -113,7 +87,7 @@ export function OrderListScreen() {
                   { title: 'Status', alignment: 'center' },
                   { title: 'Qty', alignment: 'end' },
                   { title: 'Amount', alignment: 'end' },
-                  { title: 'Vat.', alignment: 'end' },
+                  { title: 'Discount', alignment: 'end' },
                   { title: 'Total', alignment: 'end' },
                   { title: 'Paid', alignment: 'end' },
                   { title: 'Note', alignment: 'start' },

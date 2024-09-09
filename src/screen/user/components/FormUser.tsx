@@ -21,6 +21,7 @@ import { RoleController } from './RoleController';
 import { PositionController } from './PositionController';
 import React, { useState } from 'react';
 import { HideIcon, ViewIcon } from '@shopify/polaris-icons';
+import { validInput } from '@/lib/valid';
 
 interface Props {
   user: UserInput;
@@ -41,6 +42,8 @@ export function FormUser(props: Props) {
     !!passwordInput.match(lowerCaseLetters) && !!passwordInput.match(upperCaseLetters) && !!passwordInput.match(numbers)
       ? true
       : false;
+
+  const checkuser = validInput.checkString(props.user.username + '');
 
   return (
     <React.Fragment>
@@ -81,6 +84,9 @@ export function FormUser(props: Props) {
                       username: v,
                     });
                   }}
+                  error={
+                    !!checkuser.hasUppercase || !!checkuser.hasSpace ? 'Username should be use lower and no space' : ''
+                  }
                 />
               </InlineGrid>
               <br />
@@ -196,6 +202,8 @@ export function FormUser(props: Props) {
                   passwordInput !== ''
                     ? !checkPwd
                       ? 'Your password needs Upper and lower case letters, numbers and a minimum 8 chars. it will save information without change password.'
+                      : passwordInput.length < 8
+                      ? 'Minimum 8 chars of password input'
                       : ''
                     : ''
                 }

@@ -16,11 +16,8 @@ import {
   Modal as Modals,
   TextField,
   Icon,
-  Select,
-  ButtonGroup,
 } from '@shopify/polaris';
 import {
-  ChangeOrderInput,
   StatusOrder,
   StatusOrderItem,
   useChangeOrderStatusMutation,
@@ -31,7 +28,6 @@ import {
 import {
   InfoIcon,
   CheckCircleIcon,
-  DeliveryIcon,
   ClipboardCheckFilledIcon,
   XCircleIcon,
   DeleteIcon,
@@ -45,15 +41,11 @@ import { SignatureOrder } from '../components/SignatureOrder';
 import { DeliveryPickup } from '../components/DeliveryPickup';
 import { PrintOrderToKitchen } from '../components/PrintOrderToKitchen';
 import moment from 'moment';
-import { BankController } from '@/screen/user/components/BankController';
 import { FormCheckout } from '../components/FormCheckout';
 import { PolarisProductPickerAddCart } from '@/components/polaris/PolarisProductPickerAddCart';
 import { ControllChangeQty } from './ControllChangeQty';
 import { ControllPerson } from './ControllPerson';
-
-interface Props {
-  id: number;
-}
+import { useParams } from 'next/navigation';
 
 const toneStatus: any = {
   [StatusOrder.Pending]: 'attention-strong',
@@ -71,7 +63,8 @@ const toneIcon: any = {
   [StatusOrder.Cancelled]: XCircleIcon,
 };
 
-export function OrderDetailScreen(props: Props) {
+export function OrderDetailScreen() {
+  const params = useParams<{ id: string }>();
   const local = process.browser
     ? localStorage.getItem('invoice')
       ? JSON.parse(localStorage.getItem('invoice') || '')
@@ -88,16 +81,13 @@ export function OrderDetailScreen(props: Props) {
   const [paid, setPaid] = useState(false);
   const setting = useSetting();
   const [reasonInput, setReasonInput] = useState('');
-  const [amountInput, setAmountInput] = useState('');
   const toggelOpen = useCallback(() => setOpen(!open), [open]);
   const toggleActive = useCallback(() => setActive(!active), [active]);
   const togglePaid = useCallback(() => setPaid(!paid), [paid]);
-  const [bank, setBank] = useState('CASH');
-  const [currency, setCurrency] = useState('USD');
 
   const { data, loading, refetch } = useOrderQuery({
     variables: {
-      orderId: Number(props.id),
+      orderId: Number(params.id),
     },
   });
   const [mark] = useMarkOrderItemStatusMutation();
@@ -178,12 +168,11 @@ export function OrderDetailScreen(props: Props) {
   }, 0);
 
   const vatPer = setting.find((f) => f.option === 'TAX')?.value;
-  const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE');
   const lastUpdate = data?.order?.log?.find((f) => f?.text === 'Last Updated')?.date;
 
   return (
     <Page
-      title={`Order Detail #${props.id}`}
+      title={`Order Detail #${params.id}`}
       subtitle={
         data?.order?.status === StatusOrder.Checkout && Number(data?.order?.paid || 0)
           ? ((
@@ -209,12 +198,6 @@ export function OrderDetailScreen(props: Props) {
               setToasts([...toasts, { content: 'Please input the reason!', status: 'error' }]);
               return;
             }
-
-            if (!bank) {
-              setToasts([...toasts, { content: 'Please choose type payment one!', status: 'error' }]);
-              return;
-            }
-
             change({
               variables: {
                 data: {
@@ -541,6 +524,24 @@ export function OrderDetailScreen(props: Props) {
                     )}
                   </IndexTable.Cell>
                 </IndexTable.Row>
+                <IndexTable.Row id="1" position={1}>
+                  <IndexTable.Cell>
+                    <div className="ml-1">
+                      <Text as="strong" variant="bodySm">
+                        Discount
+                      </Text>
+                    </div>
+                  </IndexTable.Cell>
+                  <IndexTable.Cell>
+                    {data && (
+                      <div className="mr-1">
+                        <Text as="strong" variant="bodySm" alignment="end">
+                          ${((Number(data.order?.total || 0) * Number(data.order?.discount)) / 100).toFixed(2)}
+                        </Text>
+                      </div>
+                    )}
+                  </IndexTable.Cell>
+                </IndexTable.Row>
                 <IndexTable.Row id={'1'} position={1}>
                   <IndexTable.Cell>
                     <div className="ml-1">
@@ -552,7 +553,11 @@ export function OrderDetailScreen(props: Props) {
                   <IndexTable.Cell>
                     <div className="mr-1">
                       <Text as="strong" variant="bodySm" alignment="end" tone="critical" fontWeight="bold">
-                        ${(total || 0).toFixed(2)}
+                        $
+                        {(
+                          (total || 0) -
+                          (Number(data?.order?.total || 0) * Number(data?.order?.discount)) / 100
+                        ).toFixed(2)}
                       </Text>
                     </div>
                   </IndexTable.Cell>
