@@ -62,7 +62,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
   const handleChangeBank = useCallback(
     (v: any) => {
       const x = TotalStrategy(total, currency, 0, typeDiscount, Number(exchangeRate));
-      setAmountInput(x + '');
+      setAmountInput(x.toFixed(2) + '');
       setBank(v);
       setDiscountInput('0');
     },
@@ -72,7 +72,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
   const handleChangeCurrency = useCallback(
     (v: any) => {
       const x = TotalStrategy(total, v, 0, typeDiscount, Number(exchangeRate));
-      setAmountInput(x + '');
+      setAmountInput(x.toFixed(2) + '');
       setCurrency(v);
       setDiscountInput('0');
     },
@@ -82,7 +82,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
   const handleChangeDiscount = useCallback(
     (v: any) => {
       const x = TotalStrategy(total, currency, Number(v || 0), typeDiscount, Number(exchangeRate));
-      setAmountInput(x + '');
+      setAmountInput(x.toFixed(2) + '');
       setDiscountInput(v);
     },
     [currency, exchangeRate, total, typeDiscount],
@@ -92,7 +92,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     (v: any) => {
       if (v !== '') {
         const x = TotalStrategy(total, currency, 0, v, Number(exchangeRate));
-        setAmountInput(x + '');
+        setAmountInput(x.toFixed(2) + '');
       }
       setTypeDiscount(v);
       setDiscountInput('0');
@@ -117,7 +117,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     }
 
     if (currency === 'KHR') {
-      if (Number(amountInput) < totalKhr) {
+      if (Number(amountInput) < xTotal) {
         setToasts([...toasts, { content: 'Amount input lower', status: 'error' }]);
         return;
       }
@@ -128,10 +128,10 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       return;
     }
 
-    let discount = (Number(discountInput) / total) * 100;
+    let discount = (Number(discountInput) / xTotal) * 100;
 
     if (currency === 'KHR') {
-      discount = (Number(discountInput) / totalKhr) * 100;
+      discount = (Number(discountInput) / xTotal) * 100;
     }
 
     if (typeDiscount === 'PERCENTAGE') {
@@ -142,10 +142,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       orderId: Number(data?.id),
       status: StatusOrder.Checkout,
       reason: reasonInput || '',
-      amount:
-        currency === 'USD'
-          ? String(Number(amount).toFixed(2))
-          : String((Number(amountInput) / Number(exchangeRate)).toFixed(2)),
+      amount: total.toFixed(2),
       invoice: Number(invoice.count),
       bankType: String(bank.split(',')[0]),
       bankId: Number(bank.split(',')[1]),
@@ -184,7 +181,6 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     currency,
     data?.id,
     discountInput,
-    exchangeRate,
     invoice.count,
     reasonInput,
     setInvoice,
@@ -192,7 +188,6 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     toasts,
     togglePaid,
     total,
-    totalKhr,
     typeDiscount,
     xTotal,
   ]);
@@ -265,10 +260,10 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             prefix={currency === 'USD' ? '$' : '៛'}
             error={
               currency === 'USD'
-                ? Number(amountInput) < xTotal
+                ? Number(amountInput) < Number(xTotal.toFixed(2))
                   ? 'Amount input lower.'
                   : ''
-                : Number(amountInput) < xTotal
+                : Number(amountInput) < Number(xTotal.toFixed(2))
                 ? 'Amount input lower.'
                 : ''
             }
