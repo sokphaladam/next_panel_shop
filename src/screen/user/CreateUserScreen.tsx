@@ -6,10 +6,12 @@ import { PolarisLayout } from '@/components/polaris/PolarisLayout';
 import { useCustomToast } from '@/components/custom/CustomToast';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
+import { validInput } from '@/lib/valid';
 
 export function CreateUserScreen() {
   const { toasts, setToasts } = useCustomToast();
   const { push } = useRouter();
+  const [load, setLoading] = useState(true);
   const [value, setValue] = useState<UserInput>({
     gender: 'Male',
     isActive: true,
@@ -33,6 +35,7 @@ export function CreateUserScreen() {
     refetchQueries: ['userList', 'user'],
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const allow = ['bankName', 'bankType', 'bankAcc', 'createdDate', 'type', 'isActive'];
 
   const checkValid = useCallback(() => {
@@ -43,6 +46,29 @@ export function CreateUserScreen() {
       }
     }
 
+    const checkPwd = validInput.checkString(value?.password + '');
+    const checkuser = validInput.checkString(value?.username + '');
+
+    if (value?.password) {
+      let isPassword = !!checkPwd.hasUppercase && !!checkPwd.hasNumeric && !!checkPwd.hasLowercase ? true : false;
+
+      if (!isPassword) {
+        x.push({
+          field: 'password',
+          msg: `Invalid password`,
+        });
+      }
+    }
+
+    const isUser = !!checkuser.hasUppercase || !!checkuser.hasSpace ? false : true;
+
+    if (!isUser) {
+      x.push({
+        field: 'username',
+        msg: `Invalid username`,
+      });
+    }
+
     if (x.length > 0) {
       setError(x);
     }
@@ -50,8 +76,11 @@ export function CreateUserScreen() {
   }, [value, allow]);
 
   useEffect(() => {
-    checkValid();
-  }, [checkValid]);
+    if (value && !!load) {
+      checkValid();
+      setLoading(false);
+    }
+  }, [checkValid, value, load]);
 
   const handleSave = useCallback(() => {
     const err = checkValid();

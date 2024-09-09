@@ -1,5 +1,5 @@
-import { OrderDetailScreen } from "@/screen/order/detail/OrderDetailScreen";
+import { OrderDetailScreen } from '@/screen/order/detail/OrderDetailScreen';
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
-  return <OrderDetailScreen id={Number(params.id)} />
+export default function OrderDetailPage() {
+  return <OrderDetailScreen />;
 }

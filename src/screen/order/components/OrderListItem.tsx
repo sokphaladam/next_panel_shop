@@ -33,6 +33,7 @@ export function OrderListItem({ item }: Props) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
   const [reasonInput, setReasonInput] = useState('');
+  // const setting = useSetting();
 
   const toggelOpen = useCallback(() => setOpen(!open), [open]);
   const toggleActive = useCallback(() => setActive(!active), [active]);
@@ -122,10 +123,12 @@ export function OrderListItem({ item }: Props) {
     return (a = a + amount);
   }, 0);
 
-  const vatPer = item?.vat || '0';
-  const vat = (total * Number(vatPer || 0)) / 100;
+  // const vatPer = item?.vat || '0';
+  // const vat = setting.find((f) => f.option === 'TAX')?.value;
 
-  const totalAfterVat = total + vat;
+  // const totalAfterVat = total + vat;
+
+  const discount = (total * Number(item?.discount || 0)) / 100;
 
   const text = item?.items
     ?.filter((_, i) => i > 2)
@@ -255,12 +258,12 @@ export function OrderListItem({ item }: Props) {
         </IndexTable.Cell>
         <IndexTable.Cell className="text-end">
           <Text as="p" variant="bodySm" tone="base" alignment="end">
-            $ {Number(vat).toFixed(2)} ({vatPer || 0}%)
+            ${discount.toFixed(2) || 0}
           </Text>
         </IndexTable.Cell>
         <IndexTable.Cell className="text-end">
           <Text as="p" variant="bodyMd" fontWeight="bold" tone="success" alignment="end">
-            $ {Number(totalAfterVat).toFixed(2)}
+            $ {(Number(total) - discount).toFixed(2)}
           </Text>
         </IndexTable.Cell>
         <IndexTable.Cell className="text-end">

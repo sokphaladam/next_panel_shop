@@ -16,6 +16,10 @@ export function BankController(props: Props) {
       limit: 1000,
       offset: 0,
     },
+    onCompleted: (data) => {
+      const d = (data.getbankList || [])[0];
+      props.onChange(props.needId ? `${d?.name},${d?.id}` : d?.name || '');
+    },
   });
 
   if (loading || !data) {

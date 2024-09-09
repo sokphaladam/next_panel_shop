@@ -113,6 +113,7 @@ query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [Statu
     id
     code
     deliveryCode
+    discount
     delivery {
       id
       name
@@ -170,6 +171,7 @@ query order($token: String, $orderId: Int) {
     uuid
     note
     code
+    discount
     vat
     person
     invoice

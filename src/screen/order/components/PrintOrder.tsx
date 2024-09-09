@@ -55,6 +55,7 @@ export function PrintOrder(props: Props) {
   const verify_date = props.order ? props.order?.log?.find((f) => f?.text === 'Verifed')?.by?.display : '';
   const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value;
   const vat = setting.find((f) => f.option === 'TAX')?.value;
+  const discount = (Number(props.order?.total || 0) * Number(props.order?.discount)) / 100;
 
   return (
     <Modal
@@ -190,18 +191,34 @@ export function PrintOrder(props: Props) {
                     <tr>
                       <td colSpan={2} className="text-right border-none">
                         <div className="flex flex-col justify-between">
-                          {/* <div className="h-8">Sub Total</div> */}
+                          {discount > 0 && (
+                            <>
+                              <div className="h-8">Sub Total</div>
+                              <div className="h-8">Discount</div>
+                            </>
+                          )}
                           <div className="h-8">TOTAL</div>
                           <div className="h-8">VAT (Include.)</div>
                         </div>
                       </td>
                       <td colSpan={2} suppressHydrationWarning className="text-right border-none">
                         <div className="flex flex-col justify-between">
-                          {/* <div className="h-8">
-                            {formatKHR(Math.round(Number(exchangeRate) * Number(props.subtotal)))}
-                          </div> */}
+                          {discount > 0 && (
+                            <>
+                              <div className="h-8">
+                                {formatKHR(Math.round(Number(exchangeRate) * Number(props.subtotal)))}
+                              </div>
+                              <div className="h-8">
+                                {formatKHR(Math.round(Number(exchangeRate) * Number(discount)))}
+                              </div>
+                            </>
+                          )}
                           <div className="font-bold h-8" style={{ marginLeft: '20%' }}>
-                            {formatKHR(Math.round(Number(exchangeRate) * Number(props.total)))}
+                            {formatKHR(
+                              Math.round(
+                                Number(exchangeRate) * Number(props.total) - Number(exchangeRate) * Number(discount),
+                              ),
+                            )}
                           </div>
                           <div className="h-8"></div>
                         </div>
@@ -209,7 +226,13 @@ export function PrintOrder(props: Props) {
                       <td className="text-right border-none">
                         <div className="flex flex-col justify-between">
                           {/* <div className="h-8">${Number(props.subtotal).toFixed(2)}</div> */}
-                          <div className="h-8">${Number(props.total).toFixed(2)}</div>
+                          {discount > 0 && (
+                            <>
+                              <div className="h-8">${Number(props.total).toFixed(2)}</div>
+                              <div className="h-8">${Number(discount).toFixed(2)}</div>
+                            </>
+                          )}
+                          <div className="h-8">${(Number(props.total) - Number(discount)).toFixed(2)}</div>
                           <div className="h-8">$({vat}%)</div>
                         </div>
                       </td>
