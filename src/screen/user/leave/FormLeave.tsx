@@ -4,9 +4,11 @@ import { useCustomToast } from '@/components/custom/CustomToast';
 import { PolarisLayout } from '@/components/polaris/PolarisLayout';
 import { PolarisUser } from '@/components/polaris/PolarisUser';
 import { LeaveInput, LeaveStatus, useCreateLeaveMutation, useLeaveQuery, useUpdateLeaveMutation } from '@/gql/graphql';
+import { Modal } from '@/hook/modal';
 import { useUser } from '@/service/UserProvider';
 import { Box, Card, ChoiceList, InlineGrid, Layout, Select, Text, TextField } from '@shopify/polaris';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 function getTodayFrom0to24() {
@@ -33,6 +35,7 @@ function getDateDifference(fromDate: any, endDate: any) {
 
 export function FormLeave({ id }: { id?: number }) {
   const [load, setLoad] = useState(true);
+  const { push } = useRouter();
   const user = useUser();
   const date = getTodayFrom0to24();
   const { toasts, setToasts } = useCustomToast();
@@ -69,11 +72,13 @@ export function FormLeave({ id }: { id?: number }) {
   });
 
   useEffect(() => {
-    if (user && !!load) {
-      setSelectUser(user?.id || 0);
-      setLoad(false);
+    if (!id) {
+      if (user && !!load) {
+        setSelectUser(user?.id || 0);
+        setLoad(false);
+      }
     }
-  }, [load, user]);
+  }, [load, user, id]);
 
   const handleSave = useCallback(() => {
     if ([1, 2, 5].includes(user?.role?.id || 0)) {
@@ -110,39 +115,65 @@ export function FormLeave({ id }: { id?: number }) {
     const userId = [1, 2, 5].includes(user?.role?.id || 0) ? selectUser : user?.id || 0;
 
     if (!id) {
-      create({
-        variables: {
-          userId,
-          data: input,
-        },
-      })
-        .then((res) => {
-          if (res.data?.createLeave) {
-            setToasts([...toasts, { content: 'Create new request leave was success', status: 'success' }]);
-          } else {
-            setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
-          }
-        })
-        .catch(() => {
-          setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
-        });
+      Modal.dialog({
+        title: 'Confirmation',
+        body: [<div key={1}>Are you user want to create new request leave?</div>],
+        buttons: [
+          {
+            title: 'Yes',
+            class: 'primary',
+            onPress: () => {
+              create({
+                variables: {
+                  userId,
+                  data: input,
+                },
+              })
+                .then((res) => {
+                  if (res.data?.createLeave) {
+                    setToasts([...toasts, { content: 'Create new request leave was success', status: 'success' }]);
+                    push('/leave');
+                  } else {
+                    setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
+                  }
+                })
+                .catch(() => {
+                  setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
+                });
+            },
+          },
+        ],
+      });
     } else {
-      update({
-        variables: {
-          updateLeaveId: id,
-          data: input,
-        },
-      })
-        .then((res) => {
-          if (res.data?.updateLeave) {
-            setToasts([...toasts, { content: 'Create new request leave was success', status: 'success' }]);
-          } else {
-            setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
-          }
-        })
-        .catch(() => {
-          setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
-        });
+      Modal.dialog({
+        title: 'Confirmation',
+        body: [<div key={1}>Are you user want to update request leave?</div>],
+        buttons: [
+          {
+            title: 'Yes',
+            class: 'primary',
+            onPress: () => {
+              update({
+                variables: {
+                  updateLeaveId: id,
+                  data: input,
+                },
+              })
+                .then((res) => {
+                  if (res.data?.updateLeave) {
+                    setToasts([...toasts, { content: 'Update request leave was success', status: 'success' }]);
+                    push('/leave');
+                  } else {
+                    setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
+                  }
+                })
+                .catch(() => {
+                  setToasts([...toasts, { content: 'Oop! something was wrong please try again', status: 'error' }]);
+                });
+            },
+          },
+        ],
+      });
     }
   }, [
     create,
