@@ -20,7 +20,7 @@ export function useScriptLanguage() {
 }
 
 export function LanguageProvider(props: PropsWithChildren<unknown>) {
-  const local = process.browser ? (localStorage.getItem('lng') ? localStorage.getItem('lng') : 'en') : 'en';
+  const local = process.browser ? (localStorage.getItem('lng') ? localStorage.getItem('lng') : 'km') : 'km';
   const [lng, setLng] = useState<any>(local);
 
   return (

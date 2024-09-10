@@ -109,3 +109,15 @@ mutation updateShift($updateShiftId: Int!, $expected: Boolean, $data: ShiftInput
 mutation peopleInOrder($peopleInOrderId: Int!, $count: Int!) {
   peopleInOrder(id: $peopleInOrderId, count: $count)
 }
+
+mutation createLeave($userId: Int!, $data: LeaveInput) {
+  createLeave(userId: $userId, data: $data)
+}
+
+mutation updateLeave($updateLeaveId: Int!, $data: LeaveInput) {
+  updateLeave(id: $updateLeaveId, data: $data)
+}
+
+mutation updateLeaveStatus($updateLeaveStatusId: Int!, $status: LeaveStatus) {
+  updateLeaveStatus(id: $updateLeaveStatusId, status: $status)
+}

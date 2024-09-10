@@ -160,6 +160,41 @@ export type IntegrateInput = {
   qty?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Leave = {
+  __typename?: 'Leave';
+  approvedBy?: Maybe<User>;
+  approvedDate?: Maybe<Scalars['String']['output']>;
+  cancelledBy?: Maybe<User>;
+  cancelledDate?: Maybe<Scalars['String']['output']>;
+  duration?: Maybe<Scalars['String']['output']>;
+  endDate?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  leaveReason?: Maybe<Scalars['String']['output']>;
+  leaveType?: Maybe<Scalars['String']['output']>;
+  rejectedBy?: Maybe<User>;
+  rejectedDate?: Maybe<Scalars['String']['output']>;
+  requestedBy?: Maybe<User>;
+  requestedDate?: Maybe<Scalars['String']['output']>;
+  startDate?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<LeaveStatus>;
+};
+
+export type LeaveInput = {
+  duration?: InputMaybe<Scalars['String']['input']>;
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  leaveReason?: InputMaybe<Scalars['String']['input']>;
+  leaveType?: InputMaybe<Scalars['String']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<LeaveStatus>;
+};
+
+export enum LeaveStatus {
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Rejected = 'REJECTED',
+  Request = 'REQUEST'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   addDiscountOrder?: Maybe<Scalars['Boolean']['output']>;
@@ -170,6 +205,7 @@ export type Mutation = {
   createBrand?: Maybe<Scalars['Boolean']['output']>;
   createCategory?: Maybe<Scalars['Boolean']['output']>;
   createDelivery?: Maybe<Scalars['Boolean']['output']>;
+  createLeave?: Maybe<Scalars['Boolean']['output']>;
   createOrder?: Maybe<Scalars['Boolean']['output']>;
   createPosition?: Maybe<Scalars['Boolean']['output']>;
   createProduct?: Maybe<Scalars['Boolean']['output']>;
@@ -189,6 +225,8 @@ export type Mutation = {
   updateBrand?: Maybe<Scalars['Boolean']['output']>;
   updateCategory?: Maybe<Scalars['Boolean']['output']>;
   updateDelivery?: Maybe<Scalars['Boolean']['output']>;
+  updateLeave?: Maybe<Scalars['Boolean']['output']>;
+  updateLeaveStatus?: Maybe<Scalars['Boolean']['output']>;
   updatePosition?: Maybe<Scalars['Boolean']['output']>;
   updateProduct?: Maybe<Scalars['Boolean']['output']>;
   updateProductStock?: Maybe<Scalars['Boolean']['output']>;
@@ -240,6 +278,12 @@ export type MutationCreateCategoryArgs = {
 
 export type MutationCreateDeliveryArgs = {
   data?: InputMaybe<DeliveryInput>;
+};
+
+
+export type MutationCreateLeaveArgs = {
+  data?: InputMaybe<LeaveInput>;
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -348,6 +392,18 @@ export type MutationUpdateCategoryArgs = {
 export type MutationUpdateDeliveryArgs = {
   data?: InputMaybe<DeliveryInput>;
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateLeaveArgs = {
+  data?: InputMaybe<LeaveInput>;
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateLeaveStatusArgs = {
+  id: Scalars['Int']['input'];
+  status?: InputMaybe<LeaveStatus>;
 };
 
 
@@ -517,6 +573,8 @@ export type Query = {
   getLeaveAdmin?: Maybe<Scalars['JSON']['output']>;
   getPositionList?: Maybe<Array<Maybe<Position>>>;
   getbankList?: Maybe<Array<Maybe<BankInfo>>>;
+  leave?: Maybe<Leave>;
+  leaveList?: Maybe<Array<Maybe<Leave>>>;
   me?: Maybe<User>;
   order?: Maybe<Order>;
   orderList?: Maybe<Array<Maybe<Order>>>;
@@ -596,6 +654,21 @@ export type QueryGetPositionListArgs = {
 export type QueryGetbankListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryLeaveArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryLeaveListArgs = {
+  admin?: InputMaybe<Scalars['Boolean']['input']>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Array<InputMaybe<LeaveStatus>>>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1050,6 +1123,30 @@ export type PeopleInOrderMutationVariables = Exact<{
 
 export type PeopleInOrderMutation = { __typename?: 'Mutation', peopleInOrder?: boolean | null };
 
+export type CreateLeaveMutationVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  data?: InputMaybe<LeaveInput>;
+}>;
+
+
+export type CreateLeaveMutation = { __typename?: 'Mutation', createLeave?: boolean | null };
+
+export type UpdateLeaveMutationVariables = Exact<{
+  updateLeaveId: Scalars['Int']['input'];
+  data?: InputMaybe<LeaveInput>;
+}>;
+
+
+export type UpdateLeaveMutation = { __typename?: 'Mutation', updateLeave?: boolean | null };
+
+export type UpdateLeaveStatusMutationVariables = Exact<{
+  updateLeaveStatusId: Scalars['Int']['input'];
+  status?: InputMaybe<LeaveStatus>;
+}>;
+
+
+export type UpdateLeaveStatusMutation = { __typename?: 'Mutation', updateLeaveStatus?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1218,6 +1315,24 @@ export type ShiftByIdQueryVariables = Exact<{
 
 
 export type ShiftByIdQuery = { __typename?: 'Query', shiftById?: { __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null };
+
+export type LeaveListQueryVariables = Exact<{
+  to?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Array<InputMaybe<LeaveStatus>> | InputMaybe<LeaveStatus>>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type LeaveListQuery = { __typename?: 'Query', leaveList?: Array<{ __typename?: 'Leave', id?: number | null, startDate?: string | null, endDate?: string | null, duration?: string | null, leaveReason?: string | null, leaveType?: string | null, status?: LeaveStatus | null, rejectedDate?: string | null, requestedDate?: string | null, approvedDate?: string | null, cancelledDate?: string | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null> | null };
+
+export type LeaveQueryVariables = Exact<{
+  leaveId: Scalars['Int']['input'];
+}>;
+
+
+export type LeaveQuery = { __typename?: 'Query', leave?: { __typename?: 'Leave', id?: number | null, startDate?: string | null, endDate?: string | null, duration?: string | null, leaveReason?: string | null, leaveType?: string | null, status?: LeaveStatus | null, rejectedDate?: string | null, requestedDate?: string | null, approvedDate?: string | null, cancelledDate?: string | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -2128,6 +2243,102 @@ export function usePeopleInOrderMutation(baseOptions?: Apollo.MutationHookOption
 export type PeopleInOrderMutationHookResult = ReturnType<typeof usePeopleInOrderMutation>;
 export type PeopleInOrderMutationResult = Apollo.MutationResult<PeopleInOrderMutation>;
 export type PeopleInOrderMutationOptions = Apollo.BaseMutationOptions<PeopleInOrderMutation, PeopleInOrderMutationVariables>;
+export const CreateLeaveDocument = gql`
+    mutation createLeave($userId: Int!, $data: LeaveInput) {
+  createLeave(userId: $userId, data: $data)
+}
+    `;
+export type CreateLeaveMutationFn = Apollo.MutationFunction<CreateLeaveMutation, CreateLeaveMutationVariables>;
+
+/**
+ * __useCreateLeaveMutation__
+ *
+ * To run a mutation, you first call `useCreateLeaveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLeaveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLeaveMutation, { data, loading, error }] = useCreateLeaveMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateLeaveMutation(baseOptions?: Apollo.MutationHookOptions<CreateLeaveMutation, CreateLeaveMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateLeaveMutation, CreateLeaveMutationVariables>(CreateLeaveDocument, options);
+      }
+export type CreateLeaveMutationHookResult = ReturnType<typeof useCreateLeaveMutation>;
+export type CreateLeaveMutationResult = Apollo.MutationResult<CreateLeaveMutation>;
+export type CreateLeaveMutationOptions = Apollo.BaseMutationOptions<CreateLeaveMutation, CreateLeaveMutationVariables>;
+export const UpdateLeaveDocument = gql`
+    mutation updateLeave($updateLeaveId: Int!, $data: LeaveInput) {
+  updateLeave(id: $updateLeaveId, data: $data)
+}
+    `;
+export type UpdateLeaveMutationFn = Apollo.MutationFunction<UpdateLeaveMutation, UpdateLeaveMutationVariables>;
+
+/**
+ * __useUpdateLeaveMutation__
+ *
+ * To run a mutation, you first call `useUpdateLeaveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLeaveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLeaveMutation, { data, loading, error }] = useUpdateLeaveMutation({
+ *   variables: {
+ *      updateLeaveId: // value for 'updateLeaveId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateLeaveMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLeaveMutation, UpdateLeaveMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLeaveMutation, UpdateLeaveMutationVariables>(UpdateLeaveDocument, options);
+      }
+export type UpdateLeaveMutationHookResult = ReturnType<typeof useUpdateLeaveMutation>;
+export type UpdateLeaveMutationResult = Apollo.MutationResult<UpdateLeaveMutation>;
+export type UpdateLeaveMutationOptions = Apollo.BaseMutationOptions<UpdateLeaveMutation, UpdateLeaveMutationVariables>;
+export const UpdateLeaveStatusDocument = gql`
+    mutation updateLeaveStatus($updateLeaveStatusId: Int!, $status: LeaveStatus) {
+  updateLeaveStatus(id: $updateLeaveStatusId, status: $status)
+}
+    `;
+export type UpdateLeaveStatusMutationFn = Apollo.MutationFunction<UpdateLeaveStatusMutation, UpdateLeaveStatusMutationVariables>;
+
+/**
+ * __useUpdateLeaveStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateLeaveStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLeaveStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLeaveStatusMutation, { data, loading, error }] = useUpdateLeaveStatusMutation({
+ *   variables: {
+ *      updateLeaveStatusId: // value for 'updateLeaveStatusId'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateLeaveStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateLeaveStatusMutation, UpdateLeaveStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateLeaveStatusMutation, UpdateLeaveStatusMutationVariables>(UpdateLeaveStatusDocument, options);
+      }
+export type UpdateLeaveStatusMutationHookResult = ReturnType<typeof useUpdateLeaveStatusMutation>;
+export type UpdateLeaveStatusMutationResult = Apollo.MutationResult<UpdateLeaveStatusMutation>;
+export type UpdateLeaveStatusMutationOptions = Apollo.BaseMutationOptions<UpdateLeaveStatusMutation, UpdateLeaveStatusMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3353,6 +3564,150 @@ export type ShiftByIdQueryHookResult = ReturnType<typeof useShiftByIdQuery>;
 export type ShiftByIdLazyQueryHookResult = ReturnType<typeof useShiftByIdLazyQuery>;
 export type ShiftByIdSuspenseQueryHookResult = ReturnType<typeof useShiftByIdSuspenseQuery>;
 export type ShiftByIdQueryResult = Apollo.QueryResult<ShiftByIdQuery, ShiftByIdQueryVariables>;
+export const LeaveListDocument = gql`
+    query leaveList($to: String, $from: String, $status: [LeaveStatus], $offset: Int, $limit: Int) {
+  leaveList(to: $to, from: $from, status: $status, offset: $offset, limit: $limit) {
+    id
+    startDate
+    endDate
+    duration
+    leaveReason
+    leaveType
+    status
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    approvedDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+  }
+}
+    `;
+
+/**
+ * __useLeaveListQuery__
+ *
+ * To run a query within a React component, call `useLeaveListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLeaveListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLeaveListQuery({
+ *   variables: {
+ *      to: // value for 'to'
+ *      from: // value for 'from'
+ *      status: // value for 'status'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useLeaveListQuery(baseOptions?: Apollo.QueryHookOptions<LeaveListQuery, LeaveListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LeaveListQuery, LeaveListQueryVariables>(LeaveListDocument, options);
+      }
+export function useLeaveListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LeaveListQuery, LeaveListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LeaveListQuery, LeaveListQueryVariables>(LeaveListDocument, options);
+        }
+export function useLeaveListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LeaveListQuery, LeaveListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<LeaveListQuery, LeaveListQueryVariables>(LeaveListDocument, options);
+        }
+export type LeaveListQueryHookResult = ReturnType<typeof useLeaveListQuery>;
+export type LeaveListLazyQueryHookResult = ReturnType<typeof useLeaveListLazyQuery>;
+export type LeaveListSuspenseQueryHookResult = ReturnType<typeof useLeaveListSuspenseQuery>;
+export type LeaveListQueryResult = Apollo.QueryResult<LeaveListQuery, LeaveListQueryVariables>;
+export const LeaveDocument = gql`
+    query leave($leaveId: Int!) {
+  leave(id: $leaveId) {
+    id
+    startDate
+    endDate
+    duration
+    leaveReason
+    leaveType
+    status
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    approvedDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+  }
+}
+    `;
+
+/**
+ * __useLeaveQuery__
+ *
+ * To run a query within a React component, call `useLeaveQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLeaveQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLeaveQuery({
+ *   variables: {
+ *      leaveId: // value for 'leaveId'
+ *   },
+ * });
+ */
+export function useLeaveQuery(baseOptions: Apollo.QueryHookOptions<LeaveQuery, LeaveQueryVariables> & ({ variables: LeaveQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LeaveQuery, LeaveQueryVariables>(LeaveDocument, options);
+      }
+export function useLeaveLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LeaveQuery, LeaveQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LeaveQuery, LeaveQueryVariables>(LeaveDocument, options);
+        }
+export function useLeaveSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LeaveQuery, LeaveQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<LeaveQuery, LeaveQueryVariables>(LeaveDocument, options);
+        }
+export type LeaveQueryHookResult = ReturnType<typeof useLeaveQuery>;
+export type LeaveLazyQueryHookResult = ReturnType<typeof useLeaveLazyQuery>;
+export type LeaveSuspenseQueryHookResult = ReturnType<typeof useLeaveSuspenseQuery>;
+export type LeaveQueryResult = Apollo.QueryResult<LeaveQuery, LeaveQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

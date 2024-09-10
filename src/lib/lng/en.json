@@ -4,5 +4,8 @@
   "menu_product": "Products",
   "menu_category": "Categories",
   "menu_customer_order": "Customer Order",
-  "menu_order": "Orders"
+  "menu_order": "Orders",
+  "title_leave": "Leave",
+  "request_leave": "Request Leave",
+  "proposal_leave": "Create Leave"
 }

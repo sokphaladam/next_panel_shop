@@ -33,6 +33,11 @@ export function PolarisUser(props: Props) {
           id: x?.display + '',
         })),
       );
+
+      if (props.id) {
+        const find = res.userList?.find((f) => f?.id === props.id);
+        setInputValue(find?.display + '');
+      }
     },
   });
 
