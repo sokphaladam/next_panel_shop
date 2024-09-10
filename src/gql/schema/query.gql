@@ -443,3 +443,75 @@ query shiftById($id: Int, $date: String, $userId: Int) {
     }
   }
 }
+
+query leaveList($to: String, $from: String, $status: [LeaveStatus], $offset: Int, $limit: Int) {
+  leaveList(to: $to, from: $from, status: $status, offset: $offset, limit: $limit) {
+    id
+    startDate
+    endDate
+    duration
+    leaveReason
+    leaveType
+    status
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    approvedDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+  }
+}
+
+query leave($leaveId: Int!) {
+  leave(id: $leaveId) {
+    id
+    startDate
+    endDate
+    duration
+    leaveReason
+    leaveType
+    status
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    approvedDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+  }
+}

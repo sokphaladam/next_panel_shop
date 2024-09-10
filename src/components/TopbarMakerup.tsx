@@ -94,12 +94,12 @@ export function TopbarMarkup(props: Props) {
           items: [
             {
               content: 'English',
-              prefix: lng === 'en' ? <Icon source={CheckSmallIcon} /> : '',
+              suffix: lng === 'en' ? <Icon source={CheckSmallIcon} /> : '',
               onAction: () => setLng('en'),
             },
             {
               content: 'Khmer',
-              prefix: lng === 'km' ? <Icon source={CheckSmallIcon} /> : '',
+              suffix: lng === 'km' ? <Icon source={CheckSmallIcon} /> : '',
               onAction: () => setLng('km'),
             },
           ],

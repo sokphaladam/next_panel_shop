@@ -73,7 +73,7 @@ export function MenuItems(user: User | null) {
         {
           label: 'Leave',
           icon: FileIcon,
-          url: '#',
+          url: '/leave',
         },
         {
           label: 'Staff',
@@ -174,7 +174,7 @@ export function MenuItems(user: User | null) {
               {
                 label: 'Leave',
                 icon: FileIcon,
-                url: '#',
+                url: '/leave',
               },
               {
                 label: 'Staff',
@@ -246,9 +246,9 @@ export function MenuItems(user: User | null) {
                 url: '/employee/attendance',
               },
               // {
-              //   label: 'Shift Handover',
-              //   icon: MoneyFilledIcon,
-              //   url: '/shift',
+              //   label: 'Leave',
+              //   icon: FileIcon,
+              //   url: '/leave',
               // },
             ],
           },
@@ -308,6 +308,11 @@ export function MenuItems(user: User | null) {
                 icon: MoneyFilledIcon,
                 url: '/shift',
               },
+              // {
+              //   label: 'Leave',
+              //   icon: FileIcon,
+              //   url: '/leave',
+              // },
             ],
           },
           {
@@ -362,6 +367,11 @@ export function MenuItems(user: User | null) {
                 icon: MoneyFilledIcon,
                 url: '/shift',
               },
+              // {
+              //   label: 'Leave',
+              //   icon: FileIcon,
+              //   url: '/leave',
+              // },
             ],
           },
           {
