@@ -9,7 +9,7 @@ import {
 } from '@/gql/graphql';
 import { Modal } from '@/hook/modal';
 import useLongPress from '@/hook/useLongPress';
-import { Box, Card, Frame, Grid, Layout, Loading, Page, Spinner, Text } from '@shopify/polaris';
+import { Badge, Box, Card, Frame, Grid, Layout, Loading, Page, Spinner, Text } from '@shopify/polaris';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 
@@ -31,14 +31,17 @@ function TableItem({ x }: { x: TableSet }) {
     }).then((res) => {
       setTimeout(() => {
         const doc = document.getElementById(`table_${x.set}`);
-        if (doc) {
-          doc.click();
-        }
+        doc?.click();
       }, 500);
     });
   };
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    if (propsUpdate.loading || x.order) {
+      push('/order/detail/' + x?.order?.id);
+      return;
+    }
+  };
 
   const defaultOptions = {
     shouldPreventDefault: true,
@@ -57,28 +60,14 @@ function TableItem({ x }: { x: TableSet }) {
 
   const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
   return (
-    <div
-      id={`table_${x?.set}`}
-      className="cursor-pointer"
-      onClick={() => handleGenerate(x?.set + '', x)}
-      {...logPressEvent}
-    >
+    <div className="cursor-pointer" {...logPressEvent}>
+      <div id={`table_${x?.set}`} onClick={() => handleGenerate(x.set + '', x)}></div>
       <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
         <Box>
           <div className="flex flex-col justify-center items-center">
             <Text as="h3" variant="bodyLg" fontWeight="bold" tone={x?.order ? 'text-inverse' : 'base'}>
-              {x?.set}
+              {!!x.fake ? 'D' + x.set : x?.set}
             </Text>
-            {/* {x?.order && (
-                              <Text
-                                as="h3"
-                                variant="bodyLg"
-                                fontWeight="bold"
-                                tone={x?.order ? 'text-inverse' : 'base'}
-                              >
-                                #{x?.order?.code}
-                              </Text>
-                            )} */}
             {(propsUpdate.loading || propsTable.loading) && <Spinner size="small" />}
           </div>
         </Box>
@@ -142,7 +131,34 @@ export function SetScreen() {
   }
 
   return (
-    <Page title="Table" primaryAction={{ content: 'GenerateTable', onAction: handleGenerateTable }}>
+    <Page
+      title="Table"
+      subtitle={
+        (
+          <div className="flex flex-row gap-4 items-center" suppressHydrationWarning>
+            <Badge tone="success">
+              {
+                (
+                  <div className="flex flex-row justify-between items-center p-1">
+                    Available = {data?.tableSetList?.filter((x) => !x?.order).length}
+                  </div>
+                ) as any
+              }
+            </Badge>
+            <Badge tone="attention">
+              {
+                (
+                  <div className="flex flex-row justify-between items-center p-1">
+                    In Order = {data?.tableSetList?.filter((x) => !!x?.order).length}
+                  </div>
+                ) as any
+              }
+            </Badge>
+          </div>
+        ) as any
+      }
+      primaryAction={{ content: 'GenerateTable', onAction: handleGenerateTable, destructive: true }}
+    >
       <Layout>
         <Layout.Section>
           <Grid columns={{ xs: 1, sm: 4, md: 4, lg: 6, xl: 6 }}>

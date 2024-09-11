@@ -68,7 +68,7 @@ export function MenuItems(user: User | null) {
         {
           label: 'Attendance (Admin)',
           icon: AttachmentIcon,
-          url: '#',
+          url: '/attendance',
         },
         {
           label: 'Leave',
@@ -169,7 +169,7 @@ export function MenuItems(user: User | null) {
               {
                 label: 'Attendance (Admin)',
                 icon: AttachmentIcon,
-                url: '#',
+                url: '/attendance',
               },
               {
                 label: 'Leave',
@@ -245,11 +245,11 @@ export function MenuItems(user: User | null) {
                 icon: AttachmentIcon,
                 url: '/employee/attendance',
               },
-              // {
-              //   label: 'Leave',
-              //   icon: FileIcon,
-              //   url: '/leave',
-              // },
+              {
+                label: 'Leave',
+                icon: FileIcon,
+                url: '/leave',
+              },
             ],
           },
           {
@@ -308,11 +308,16 @@ export function MenuItems(user: User | null) {
                 icon: MoneyFilledIcon,
                 url: '/shift',
               },
-              // {
-              //   label: 'Leave',
-              //   icon: FileIcon,
-              //   url: '/leave',
-              // },
+              {
+                label: 'Attendance (Admin)',
+                icon: AttachmentIcon,
+                url: '/attendance',
+              },
+              {
+                label: 'Leave',
+                icon: FileIcon,
+                url: '/leave',
+              },
             ],
           },
           {
@@ -367,11 +372,11 @@ export function MenuItems(user: User | null) {
                 icon: MoneyFilledIcon,
                 url: '/shift',
               },
-              // {
-              //   label: 'Leave',
-              //   icon: FileIcon,
-              //   url: '/leave',
-              // },
+              {
+                label: 'Leave',
+                icon: FileIcon,
+                url: '/leave',
+              },
             ],
           },
           {
