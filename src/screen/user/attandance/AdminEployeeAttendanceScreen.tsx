@@ -1,7 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { PolarisLayout } from '@/components/polaris/PolarisLayout';
-import { Avatar, Box, Card, Icon, IndexTable, Layout, Tooltip } from '@shopify/polaris';
+import { Avatar, Box, Card, Icon, IndexTable, Layout, Select, Tooltip } from '@shopify/polaris';
 import { useAttendanceListAdminQuery, useUserListQuery } from '@/gql/graphql';
 import { IndexTableHeading } from '@shopify/polaris/build/ts/src/components/IndexTable';
 import { NonEmptyArray } from '@shopify/polaris/build/ts/src/types';
@@ -24,11 +24,13 @@ function getDiffHour(start: any, end: any) {
 
 export function AdminEployeeAttendanceScreen() {
   const setting = useSetting();
-  const days = getDayOfMonth(2024, 9);
+  const today = moment(new Date());
+  const [selectMonth, setSelectMonth] = useState<any>(today.month());
+  const [selectYear, setSelectYear] = useState<any>(today.year());
   const { data, loading } = useAttendanceListAdminQuery({
     variables: {
-      month: 9,
-      year: 2024,
+      month: Number(selectMonth) + 1,
+      year: Number(selectYear),
     },
   });
   const queryUser = useUserListQuery({
@@ -40,7 +42,7 @@ export function AdminEployeeAttendanceScreen() {
 
   const heading: NonEmptyArray<IndexTableHeading> = [
     { title: '#' },
-    ...days.map((x) => {
+    ...getDayOfMonth(Number(selectYear), Number(selectMonth)).map((x) => {
       return {
         title: (x + 1).toString().padStart(2, '0') + '',
       };
@@ -58,7 +60,38 @@ export function AdminEployeeAttendanceScreen() {
   );
 
   return (
-    <PolarisLayout title="Attendance" fullWidth>
+    <PolarisLayout
+      title="Attendance"
+      fullWidth
+      subtitle={
+        (
+          <div suppressHydrationWarning className="flex flex-row gap-2 items-center">
+            <Select
+              options={[...new Array(12)].map((_, i) => {
+                return {
+                  label: (i + 1).toString().padStart(2, '0'),
+                  value: i + '',
+                };
+              })}
+              label="Month"
+              value={selectMonth + ''}
+              onChange={setSelectMonth}
+            />
+            <Select
+              options={[...new Array(5)].map((_, i) => {
+                return {
+                  label: (today.year() - i).toString(),
+                  value: (today.year() - i).toString(),
+                };
+              })}
+              label="Year"
+              value={selectYear + ''}
+              onChange={setSelectYear}
+            />
+          </div>
+        ) as any
+      }
+    >
       <Layout>
         <Layout.Section>
           <Card padding={'0'}>
@@ -74,6 +107,7 @@ export function AdminEployeeAttendanceScreen() {
                     ?.filter((x) => x?.type === 'STAFF')
                     .map((x) => {
                       const checklist = group[x?.id || 0] ? group[x?.id || 0] || [] : [];
+                      // console.log(x?.id, checklist);
                       return (
                         <IndexTable.Row key={x?.id} position={x?.id || 0} id={x?.id + ''}>
                           <IndexTable.Cell>
@@ -88,8 +122,13 @@ export function AdminEployeeAttendanceScreen() {
                               <div>{x?.display}</div>
                             </div>
                           </IndexTable.Cell>
-                          {days.map((d) => {
-                            const find = checklist.filter((f: any) => moment(f.checkDate).day() === d);
+                          {getDayOfMonth(Number(selectYear), Number(selectMonth)).map((d) => {
+                            const find = checklist.filter((f: any) => {
+                              const c = moment(f.checkDate).date();
+                              console.log(c);
+                              return c === d;
+                            });
+
                             const checkDiff = find.reduce((a: any, b: any) => {
                               const defaultEnd = moment(new Date(b.checkDate).setHours(Number(end?.replace(':', '.'))));
                               const defaultStart = moment(
@@ -118,7 +157,7 @@ export function AdminEployeeAttendanceScreen() {
 
                             return (
                               <IndexTable.Cell key={d}>
-                                {d <= moment(new Date()).day() && (
+                                {d <= moment(new Date()).date() && (
                                   <Tooltip
                                     content={
                                       <div>
