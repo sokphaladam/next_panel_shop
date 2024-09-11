@@ -7,7 +7,8 @@ import { IndexTableHeading } from '@shopify/polaris/build/ts/src/components/Inde
 import { NonEmptyArray } from '@shopify/polaris/build/ts/src/types';
 import moment from 'moment';
 import { useSetting } from '@/service/useSettingProvider';
-import { CheckSmallIcon, MinusCircleIcon, XSmallIcon } from '@shopify/polaris-icons';
+import { CheckSmallIcon, XSmallIcon } from '@shopify/polaris-icons';
+import { groupBy } from '@/lib/grouBy';
 
 function getDayOfMonth(year: number, month: number) {
   const last_day_of_month = new Date(year, month + 1, 0).getDate();
@@ -46,7 +47,7 @@ export function AdminEployeeAttendanceScreen() {
     }),
   ];
 
-  const group = Object.groupBy(data?.attendanceListAdmin || [], ({ user }: any) => user.id);
+  const group = groupBy(data?.attendanceListAdmin || [], ({ user }: any) => user.id);
 
   const start = setting.find((f) => f.option === 'DEFAULT_STARTWORK')?.value;
   const end = setting.find((f) => f.option === 'DEFAULT_ENDWORK')?.value;
@@ -88,8 +89,8 @@ export function AdminEployeeAttendanceScreen() {
                             </div>
                           </IndexTable.Cell>
                           {days.map((d) => {
-                            const find = checklist.filter((f) => moment(f.checkDate).day() === d);
-                            const checkDiff = find.reduce((a, b) => {
+                            const find = checklist.filter((f: any) => moment(f.checkDate).day() === d);
+                            const checkDiff = find.reduce((a: any, b: any) => {
                               const defaultEnd = moment(new Date(b.checkDate).setHours(Number(end?.replace(':', '.'))));
                               const defaultStart = moment(
                                 new Date(b.checkDate).setHours(Number(start?.replace(':', '.'))),
@@ -101,7 +102,7 @@ export function AdminEployeeAttendanceScreen() {
                               return (a = a + d);
                             }, 0);
 
-                            const logs = find.map((x) => {
+                            const logs = find.map((x: any) => {
                               const defaultEnd = moment(new Date(x.checkDate).setHours(Number(end?.replace(':', '.'))));
                               const defaultStart = moment(
                                 new Date(x.checkDate).setHours(Number(start?.replace(':', '.'))),
@@ -121,7 +122,7 @@ export function AdminEployeeAttendanceScreen() {
                                   <Tooltip
                                     content={
                                       <div>
-                                        {logs.map((log, i) => {
+                                        {logs.map((log: any, i: number) => {
                                           return (
                                             <div key={i} className="flex flex-row items-center gap-2">
                                               <small>{log.checkIn}</small>
