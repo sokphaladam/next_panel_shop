@@ -125,7 +125,6 @@ export function AdminEployeeAttendanceScreen() {
                           {getDayOfMonth(Number(selectYear), Number(selectMonth)).map((d) => {
                             const find = checklist.filter((f: any) => {
                               const c = moment(f.checkDate).date();
-                              console.log(c);
                               return c === d;
                             });
 
