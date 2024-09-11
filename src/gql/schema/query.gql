@@ -236,6 +236,7 @@ query deliveryList($offset: Int, $limit: Int) {
 query tableSetList($limit: Int, $offset: Int) {
   tableSetList(limit: $limit, offset: $offset) {
     set
+    fake
     order {
       id
       uuid
@@ -513,5 +514,24 @@ query leave($leaveId: Int!) {
       profile
     }
     cancelledDate
+  }
+}
+
+query attendanceListAdmin($month: Int!, $year: Int!) {
+  attendanceListAdmin(month: $month, year: $year) {
+    checkIn
+    checkOut
+    checkDate
+    id
+    user {
+      id
+      display
+      profile
+    }
+    leave {
+      id
+      leaveReason
+      leaveType
+    }
   }
 }

@@ -175,21 +175,7 @@ export function FormLeave({ id }: { id?: number }) {
         ],
       });
     }
-  }, [
-    create,
-    endDate,
-    fromDate,
-    id,
-    reason,
-    select,
-    selectType,
-    selectUser,
-    setToasts,
-    toasts,
-    update,
-    user?.id,
-    user?.role?.id,
-  ]);
+  }, [create, endDate, fromDate, id, push, reason, select, selectType, selectUser, setToasts, toasts, update, user]);
 
   return (
     <PolarisLayout

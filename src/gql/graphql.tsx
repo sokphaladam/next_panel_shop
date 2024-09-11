@@ -40,6 +40,7 @@ export type Attendance = {
   checkIn?: Maybe<Scalars['String']['output']>;
   checkOut?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  leave?: Maybe<Leave>;
   overTimeIn?: Maybe<Scalars['String']['output']>;
   overTimeOut?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
@@ -559,6 +560,7 @@ export type ProductStockInput = {
 
 export type Query = {
   __typename?: 'Query';
+  attendanceListAdmin?: Maybe<Array<Maybe<Attendance>>>;
   bankInfo?: Maybe<BankInfo>;
   books?: Maybe<Array<Maybe<Book>>>;
   brand?: Maybe<Brand>;
@@ -567,7 +569,6 @@ export type Query = {
   categoryList?: Maybe<Scalars['JSON']['output']>;
   deliveryById?: Maybe<Delivery>;
   deliveryList?: Maybe<Array<Maybe<Delivery>>>;
-  getAttendanceAdmin?: Maybe<Scalars['JSON']['output']>;
   getAttendanceStaff?: Maybe<Array<Maybe<Attendance>>>;
   getAttendanceStaffToday?: Maybe<Attendance>;
   getLeaveAdmin?: Maybe<Scalars['JSON']['output']>;
@@ -591,6 +592,14 @@ export type Query = {
   tableSetList?: Maybe<Array<Maybe<TableSet>>>;
   user?: Maybe<User>;
   userList?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryAttendanceListAdminArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  month: Scalars['Int']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  year: Scalars['Int']['input'];
 };
 
 
@@ -621,12 +630,6 @@ export type QueryDeliveryByIdArgs = {
 
 
 export type QueryDeliveryListArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryGetAttendanceAdminArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -858,6 +861,7 @@ export enum Type_Product {
 
 export type TableSet = {
   __typename?: 'TableSet';
+  fake?: Maybe<Scalars['Boolean']['output']>;
   order?: Maybe<Order>;
   set?: Maybe<Scalars['Int']['output']>;
 };
@@ -1219,7 +1223,7 @@ export type TableSetListQueryVariables = Exact<{
 }>;
 
 
-export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null } | null } | null> | null };
+export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null } | null } | null> | null };
 
 export type DeliveryByIdQueryVariables = Exact<{
   deliveryByIdId: Scalars['Int']['input'];
@@ -1333,6 +1337,14 @@ export type LeaveQueryVariables = Exact<{
 
 
 export type LeaveQuery = { __typename?: 'Query', leave?: { __typename?: 'Leave', id?: number | null, startDate?: string | null, endDate?: string | null, duration?: string | null, leaveReason?: string | null, leaveType?: string | null, status?: LeaveStatus | null, rejectedDate?: string | null, requestedDate?: string | null, approvedDate?: string | null, cancelledDate?: string | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null };
+
+export type AttendanceListAdminQueryVariables = Exact<{
+  month: Scalars['Int']['input'];
+  year: Scalars['Int']['input'];
+}>;
+
+
+export type AttendanceListAdminQuery = { __typename?: 'Query', attendanceListAdmin?: Array<{ __typename?: 'Attendance', checkIn?: string | null, checkOut?: string | null, checkDate?: string | null, id?: number | null, user?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, leaveReason?: string | null, leaveType?: string | null } | null } | null> | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -2896,6 +2908,7 @@ export const TableSetListDocument = gql`
     query tableSetList($limit: Int, $offset: Int) {
   tableSetList(limit: $limit, offset: $offset) {
     set
+    fake
     order {
       id
       uuid
@@ -3708,6 +3721,60 @@ export type LeaveQueryHookResult = ReturnType<typeof useLeaveQuery>;
 export type LeaveLazyQueryHookResult = ReturnType<typeof useLeaveLazyQuery>;
 export type LeaveSuspenseQueryHookResult = ReturnType<typeof useLeaveSuspenseQuery>;
 export type LeaveQueryResult = Apollo.QueryResult<LeaveQuery, LeaveQueryVariables>;
+export const AttendanceListAdminDocument = gql`
+    query attendanceListAdmin($month: Int!, $year: Int!) {
+  attendanceListAdmin(month: $month, year: $year) {
+    checkIn
+    checkOut
+    checkDate
+    id
+    user {
+      id
+      display
+      profile
+    }
+    leave {
+      id
+      leaveReason
+      leaveType
+    }
+  }
+}
+    `;
+
+/**
+ * __useAttendanceListAdminQuery__
+ *
+ * To run a query within a React component, call `useAttendanceListAdminQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAttendanceListAdminQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAttendanceListAdminQuery({
+ *   variables: {
+ *      month: // value for 'month'
+ *      year: // value for 'year'
+ *   },
+ * });
+ */
+export function useAttendanceListAdminQuery(baseOptions: Apollo.QueryHookOptions<AttendanceListAdminQuery, AttendanceListAdminQueryVariables> & ({ variables: AttendanceListAdminQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>(AttendanceListAdminDocument, options);
+      }
+export function useAttendanceListAdminLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>(AttendanceListAdminDocument, options);
+        }
+export function useAttendanceListAdminSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>(AttendanceListAdminDocument, options);
+        }
+export type AttendanceListAdminQueryHookResult = ReturnType<typeof useAttendanceListAdminQuery>;
+export type AttendanceListAdminLazyQueryHookResult = ReturnType<typeof useAttendanceListAdminLazyQuery>;
+export type AttendanceListAdminSuspenseQueryHookResult = ReturnType<typeof useAttendanceListAdminSuspenseQuery>;
+export type AttendanceListAdminQueryResult = Apollo.QueryResult<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)
