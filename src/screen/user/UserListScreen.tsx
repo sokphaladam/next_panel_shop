@@ -10,7 +10,7 @@ export function UserListScreen() {
   const { data, loading } = useUserListQuery({
     variables: {
       limit,
-      offset,
+      offset: offset * limit,
     },
   });
 
@@ -45,7 +45,7 @@ export function UserListScreen() {
               loading={loading}
               selectable={false}
               pagination={{
-                label: `${offset + 1} - ${limit * (offset + 1)}`,
+                label: `${offset * limit + 1} - ${limit * (offset + 1)}`,
                 hasNext: (data?.userList?.length || 0) >= limit,
                 hasPrevious: offset > 0,
                 onNext: () => setOffset(offset + 1),

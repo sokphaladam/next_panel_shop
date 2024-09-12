@@ -46,13 +46,13 @@ const tabs: TabProps[] = [
 
 export function LeaveListScreen() {
   const [select, setSelect] = useState(0);
-  const { limit, offset, setOffset } = usePagination();
+  const { limit, offset, setOffset, handleResetPage } = usePagination();
   const [searchInput, setSearchInput] = useState('');
   const { mode, setMode } = useSetIndexFiltersMode();
 
   const { data, loading } = useLeaveListQuery({
     variables: {
-      offset,
+      offset: offset * limit,
       limit,
       status: [tabs[select].id as any],
     },
@@ -81,7 +81,10 @@ export function LeaveListScreen() {
                   setSearchInput('');
                 }}
                 selected={select}
-                onSelect={setSelect}
+                onSelect={(v) => {
+                  setSelect(v);
+                  handleResetPage();
+                }}
                 loading={loading}
                 queryPlaceholder="Enter order number..."
               />
@@ -104,7 +107,7 @@ export function LeaveListScreen() {
                 selectable={false}
                 loading={loading}
                 pagination={{
-                  label: `${offset + 1} - ${limit * (offset + 1)}`,
+                  label: `${offset * limit + 1} - ${limit * (offset + 1)}`,
                   hasNext: (data?.leaveList?.length || 0) >= limit,
                   hasPrevious: offset > 0,
                   onNext: () => setOffset(offset + 1),

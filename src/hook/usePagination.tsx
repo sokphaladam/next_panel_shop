@@ -4,6 +4,11 @@ export function usePagination() {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState<25 | 50 | 75 | 100>(25);
 
+  const handleResetPage = () => {
+    setLimit(25);
+    setOffset(0);
+  };
+
   useEffect(() => {
     const handleRouteChange = (event: any) => {
       console.log('URL changed to:', event.href);
@@ -23,5 +28,6 @@ export function usePagination() {
     setOffset,
     limit,
     setLimit,
+    handleResetPage,
   };
 }

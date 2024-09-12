@@ -15,7 +15,7 @@ export function ShiftListScreen() {
   const { limit, offset, setOffset } = usePagination();
   const { data, loading } = useShiftListQuery({
     variables: {
-      offset,
+      offset: offset * limit,
       limit,
       users: userids,
     },
@@ -53,7 +53,7 @@ export function ShiftListScreen() {
                 loading={loading}
                 selectable={false}
                 pagination={{
-                  label: `${offset + 1} - ${limit * (offset + 1)}`,
+                  label: `${offset * limit + 1} - ${limit * (offset + 1)}`,
                   hasNext: (data?.shiftList?.length || 0) >= limit,
                   hasPrevious: offset > 0,
                   onNext: () => setOffset(offset + 1),

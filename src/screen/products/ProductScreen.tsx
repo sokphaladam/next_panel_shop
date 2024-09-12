@@ -11,7 +11,7 @@ export function ProductScreen() {
   const { data, loading } = useProductListQuery({
     fetchPolicy: 'no-cache',
     variables: {
-      offset,
+      offset: offset * limit,
       limit,
     },
   });
@@ -50,7 +50,7 @@ export function ProductScreen() {
                 itemCount={data?.productList?.length || 0}
                 selectable={false}
                 pagination={{
-                  label: `${offset + 1} - ${limit * (offset + 1)}`,
+                  label: `${offset * limit + 1} - ${limit * (offset + 1)}`,
                   hasNext: (data?.productList?.length || 0) >= limit,
                   hasPrevious: offset > 0,
                   onNext: () => setOffset(offset + 1),

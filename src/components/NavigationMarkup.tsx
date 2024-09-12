@@ -1,11 +1,15 @@
-"use client";
-import React from "react";
-import { Navigation } from "@shopify/polaris";
-import { usePathname, useRouter } from "next/navigation";
-import { MenuItems } from "@/lib/MenuItems";
-import { useUser } from "@/service/UserProvider";
+'use client';
+import React from 'react';
+import { Navigation } from '@shopify/polaris';
+import { usePathname, useRouter } from 'next/navigation';
+import { MenuItems } from '@/lib/MenuItems';
+import { useUser } from '@/service/UserProvider';
 
-export function NavigationMarkup() {
+interface Props {
+  onClick?: () => void;
+}
+
+export function NavigationMarkup(props: Props) {
   const user = useUser();
   const pathname = usePathname();
   const { push } = useRouter();
@@ -22,7 +26,10 @@ export function NavigationMarkup() {
               return {
                 label: x.label,
                 icon: x.icon as any,
-                onClick: () => push(x.url || ""),
+                onClick: () => {
+                  push(x.url || '');
+                  props.onClick && props.onClick();
+                },
                 exactMatch: true,
                 matches: pathname === x.url,
               };

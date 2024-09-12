@@ -31,11 +31,11 @@ const tabs: TabProps[] = [
 export function OrderListScreen() {
   const [select, setSelect] = useState(0);
   const [searchInput, setSearchInput] = useState('');
-  const { offset, setOffset, limit, setLimit } = usePagination();
+  const { offset, setOffset, limit, setLimit, handleResetPage } = usePagination();
   const { mode, setMode } = useSetIndexFiltersMode();
   const { data, loading, refetch } = useOrderListQuery({
     variables: {
-      offset,
+      offset: offset * limit,
       limit,
       status: [tabs[select].id as any],
       orderId: searchInput,
@@ -72,7 +72,10 @@ export function OrderListScreen() {
                   setSearchInput('');
                 }}
                 selected={select}
-                onSelect={setSelect}
+                onSelect={(v) => {
+                  setSelect(v);
+                  handleResetPage();
+                }}
                 loading={loading}
                 queryPlaceholder="Enter order number..."
               />
@@ -97,7 +100,7 @@ export function OrderListScreen() {
                 itemCount={data?.orderList?.length || 0}
                 selectable={false}
                 pagination={{
-                  label: `${offset + 1} - ${limit * (offset + 1)}`,
+                  label: `${offset * limit + 1} - ${limit * (offset + 1)}`,
                   hasNext: (data?.orderList?.length || 0) >= limit,
                   hasPrevious: offset > 0,
                   onNext: () => setOffset(offset + 1),

@@ -148,9 +148,10 @@ export function AdminEployeeAttendanceScreen() {
                               const checkIn = x.checkIn ? moment(new Date(x.checkIn)) : defaultStart;
                               const checkOut = x.checkOut ? moment(new Date(x.checkOut)) : defaultEnd;
                               return {
-                                checkIn: defaultStart.format('HH:mm'),
-                                checkOut: defaultEnd.format('HH:mm'),
+                                checkIn: checkIn.format('MM-DD HH:mm'),
+                                checkOut: checkOut.format('MM-DD HH:mm'),
                                 hour: checkOut.diff(checkIn, 'hour'),
+                                user: x.user.display,
                               };
                             });
 
@@ -162,22 +163,27 @@ export function AdminEployeeAttendanceScreen() {
                                       <div>
                                         {logs.map((log: any, i: number) => {
                                           return (
-                                            <div key={i} className="flex flex-row items-center gap-2">
-                                              <small>{log.checkIn}</small>
-                                              <small>-</small>
-                                              <small>{log.checkOut}</small>
-                                              <small>=</small>
-                                              <small
-                                                className={
-                                                  checkDiff >= 8
-                                                    ? 'text-green-700'
-                                                    : checkDiff === 0
-                                                    ? 'text-slate-500'
-                                                    : 'text-red-700'
-                                                }
-                                              >
-                                                {log.hour}
-                                              </small>
+                                            <div key={i}>
+                                              <div className="flex flex-row items-center gap-2">
+                                                <small>{log.checkIn}</small>
+                                                <small>-</small>
+                                                <small>{log.checkOut}</small>
+                                                <small>=</small>
+                                                <small
+                                                  className={
+                                                    checkDiff >= 8
+                                                      ? 'text-green-700'
+                                                      : checkDiff === 0
+                                                      ? 'text-slate-500'
+                                                      : 'text-red-700'
+                                                  }
+                                                >
+                                                  {log.hour}
+                                                </small>
+                                              </div>
+                                              <div className="border-collapse border-t-[0.5px] border-solid">
+                                                <small>{log.user}</small>
+                                              </div>
                                             </div>
                                           );
                                         })}

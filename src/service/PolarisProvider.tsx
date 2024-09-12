@@ -61,7 +61,7 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
         }
         showMobileNavigation={mobileNavigationActive && verify}
         onNavigationDismiss={toggleMobileNavigationActive}
-        navigation={verify ? <NavigationMarkup /> : null}
+        navigation={verify ? <NavigationMarkup onClick={toggleMobileNavigationActive} /> : null}
       >
         <div className="flex flex-col justify-between">
           {config_app.public.assets.dev === 'development' && (
