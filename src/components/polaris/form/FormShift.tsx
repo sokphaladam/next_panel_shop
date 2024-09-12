@@ -112,6 +112,9 @@ export function FormShift(props: Props) {
         if (res.data?.createShift) {
           setToasts([...toasts, { content: 'Open shift', status: 'success' }]);
           props.setOpen(false);
+          setTimeout(() => {
+            process.browser && window.location.reload();
+          }, 500);
         } else {
           setToasts([...toasts, { content: 'Oop! somthing wrong please try again.', status: 'error' }]);
         }

@@ -125,7 +125,7 @@ export function AdminEployeeAttendanceScreen() {
                           {getDayOfMonth(Number(selectYear), Number(selectMonth)).map((d) => {
                             const find = checklist.filter((f: any) => {
                               const c = moment(f.checkDate).date();
-                              return c === d;
+                              return c === d + 1;
                             });
 
                             const checkDiff = find.reduce((a: any, b: any) => {
@@ -156,7 +156,7 @@ export function AdminEployeeAttendanceScreen() {
 
                             return (
                               <IndexTable.Cell key={d}>
-                                {d <= moment(new Date()).date() && (
+                                {d < moment(new Date()).date() && (
                                   <Tooltip
                                     content={
                                       <div>
