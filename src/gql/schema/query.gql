@@ -535,3 +535,7 @@ query attendanceListAdmin($month: Int!, $year: Int!) {
     }
   }
 }
+
+query getSummaryAttendanceStaff($userId: Int!) {
+  getSummaryAttendanceStaff(userId: $userId)
+}

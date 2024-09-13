@@ -208,6 +208,7 @@ export type Mutation = {
   createDelivery?: Maybe<Scalars['Boolean']['output']>;
   createLeave?: Maybe<Scalars['Boolean']['output']>;
   createOrder?: Maybe<Scalars['Boolean']['output']>;
+  createOverTime?: Maybe<Scalars['Boolean']['output']>;
   createPosition?: Maybe<Scalars['Boolean']['output']>;
   createProduct?: Maybe<Scalars['Boolean']['output']>;
   createProductStock?: Maybe<Scalars['Boolean']['output']>;
@@ -228,6 +229,8 @@ export type Mutation = {
   updateDelivery?: Maybe<Scalars['Boolean']['output']>;
   updateLeave?: Maybe<Scalars['Boolean']['output']>;
   updateLeaveStatus?: Maybe<Scalars['Boolean']['output']>;
+  updateOverTime?: Maybe<Scalars['Boolean']['output']>;
+  updateOverTimeStatus?: Maybe<Scalars['Boolean']['output']>;
   updatePosition?: Maybe<Scalars['Boolean']['output']>;
   updateProduct?: Maybe<Scalars['Boolean']['output']>;
   updateProductStock?: Maybe<Scalars['Boolean']['output']>;
@@ -290,6 +293,12 @@ export type MutationCreateLeaveArgs = {
 
 export type MutationCreateOrderArgs = {
   data?: InputMaybe<OrderInput>;
+};
+
+
+export type MutationCreateOverTimeArgs = {
+  data?: InputMaybe<OverTimeInput>;
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -408,6 +417,18 @@ export type MutationUpdateLeaveStatusArgs = {
 };
 
 
+export type MutationUpdateOverTimeArgs = {
+  data?: InputMaybe<OverTimeInput>;
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateOverTimeStatusArgs = {
+  id: Scalars['Int']['input'];
+  status?: InputMaybe<OverTimeStatus>;
+};
+
+
 export type MutationUpdatePositionArgs = {
   id: Scalars['Int']['input'];
   name: Scalars['String']['input'];
@@ -508,6 +529,39 @@ export enum OrderViewBy {
   User = 'USER'
 }
 
+export type OverTime = {
+  __typename?: 'OverTime';
+  approvedBy?: Maybe<User>;
+  approvedDate?: Maybe<Scalars['String']['output']>;
+  cancelledBy?: Maybe<User>;
+  cancelledDate?: Maybe<Scalars['String']['output']>;
+  endAt?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  note?: Maybe<Scalars['String']['output']>;
+  otDate?: Maybe<Scalars['String']['output']>;
+  rejectedBy?: Maybe<User>;
+  rejectedDate?: Maybe<Scalars['String']['output']>;
+  requestedBy?: Maybe<User>;
+  requestedDate?: Maybe<Scalars['String']['output']>;
+  startat?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<OverTimeStatus>;
+};
+
+export type OverTimeInput = {
+  endAt?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  otDate?: InputMaybe<Scalars['String']['input']>;
+  startat?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<OverTimeStatus>;
+};
+
+export enum OverTimeStatus {
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Rejected = 'REJECTED',
+  Request = 'REQUEST'
+}
+
 export type Position = {
   __typename?: 'Position';
   createdDate?: Maybe<Scalars['String']['output']>;
@@ -573,12 +627,15 @@ export type Query = {
   getAttendanceStaffToday?: Maybe<Attendance>;
   getLeaveAdmin?: Maybe<Scalars['JSON']['output']>;
   getPositionList?: Maybe<Array<Maybe<Position>>>;
+  getSummaryAttendanceStaff?: Maybe<Scalars['JSON']['output']>;
   getbankList?: Maybe<Array<Maybe<BankInfo>>>;
   leave?: Maybe<Leave>;
   leaveList?: Maybe<Array<Maybe<Leave>>>;
   me?: Maybe<User>;
   order?: Maybe<Order>;
   orderList?: Maybe<Array<Maybe<Order>>>;
+  overTime?: Maybe<OverTime>;
+  overTimeList?: Maybe<Array<Maybe<OverTime>>>;
   position?: Maybe<Position>;
   product?: Maybe<Product>;
   productList?: Maybe<Array<Maybe<Product>>>;
@@ -654,6 +711,11 @@ export type QueryGetPositionListArgs = {
 };
 
 
+export type QueryGetSummaryAttendanceStaffArgs = {
+  userId: Scalars['Int']['input'];
+};
+
+
 export type QueryGetbankListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -689,6 +751,20 @@ export type QueryOrderListArgs = {
   status?: InputMaybe<Array<InputMaybe<StatusOrder>>>;
   toDate?: InputMaybe<Scalars['String']['input']>;
   viewBy?: InputMaybe<OrderViewBy>;
+};
+
+
+export type QueryOverTimeArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryOverTimeListArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Array<InputMaybe<OverTimeStatus>>>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1345,6 +1421,13 @@ export type AttendanceListAdminQueryVariables = Exact<{
 
 
 export type AttendanceListAdminQuery = { __typename?: 'Query', attendanceListAdmin?: Array<{ __typename?: 'Attendance', checkIn?: string | null, checkOut?: string | null, checkDate?: string | null, id?: number | null, user?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, leaveReason?: string | null, leaveType?: string | null } | null } | null> | null };
+
+export type GetSummaryAttendanceStaffQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+
+export type GetSummaryAttendanceStaffQuery = { __typename?: 'Query', getSummaryAttendanceStaff?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -3775,6 +3858,44 @@ export type AttendanceListAdminQueryHookResult = ReturnType<typeof useAttendance
 export type AttendanceListAdminLazyQueryHookResult = ReturnType<typeof useAttendanceListAdminLazyQuery>;
 export type AttendanceListAdminSuspenseQueryHookResult = ReturnType<typeof useAttendanceListAdminSuspenseQuery>;
 export type AttendanceListAdminQueryResult = Apollo.QueryResult<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>;
+export const GetSummaryAttendanceStaffDocument = gql`
+    query getSummaryAttendanceStaff($userId: Int!) {
+  getSummaryAttendanceStaff(userId: $userId)
+}
+    `;
+
+/**
+ * __useGetSummaryAttendanceStaffQuery__
+ *
+ * To run a query within a React component, call `useGetSummaryAttendanceStaffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSummaryAttendanceStaffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSummaryAttendanceStaffQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetSummaryAttendanceStaffQuery(baseOptions: Apollo.QueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables> & ({ variables: GetSummaryAttendanceStaffQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
+      }
+export function useGetSummaryAttendanceStaffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
+        }
+export function useGetSummaryAttendanceStaffSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
+        }
+export type GetSummaryAttendanceStaffQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffQuery>;
+export type GetSummaryAttendanceStaffLazyQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffLazyQuery>;
+export type GetSummaryAttendanceStaffSuspenseQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffSuspenseQuery>;
+export type GetSummaryAttendanceStaffQueryResult = Apollo.QueryResult<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

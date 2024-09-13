@@ -1,11 +1,13 @@
 'use client';
-import { useGetAttendanceStaffQuery } from '@/gql/graphql';
+import { useGetAttendanceStaffQuery, useGetSummaryAttendanceStaffQuery } from '@/gql/graphql';
+import { useUser } from '@/service/UserProvider';
 import { useSetting } from '@/service/useSettingProvider';
 import { Card, Box, ProgressBar, Text } from '@shopify/polaris';
 import moment from 'moment';
 import React from 'react';
 
 export function AttendanceStatisc() {
+  const user = useUser();
   const today = new Date();
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -17,6 +19,11 @@ export function AttendanceStatisc() {
       offset: 0,
       from: moment(firstDay).format('YYYY-MM-DD'),
       to: moment(lastDay).format('YYYY-MM-DD'),
+    },
+  });
+  const querySummary = useGetSummaryAttendanceStaffQuery({
+    variables: {
+      userId: Number(user?.id),
     },
   });
 
@@ -51,7 +58,9 @@ export function AttendanceStatisc() {
       <Box background="bg-fill" borderRadius="200" padding={'300'} borderColor="border-secondary" borderWidth="025">
         <div className="flex flex-row justify-between items-center">
           <div>Today</div>
-          <div>3.45 / {hw} hrs</div>
+          <div>
+            {querySummary.data?.getSummaryAttendanceStaff.today || 0} / {hw} hrs
+          </div>
         </div>
         <ProgressBar size="small" animated progress={x} tone="success" />
       </Box>
@@ -59,7 +68,9 @@ export function AttendanceStatisc() {
       <Box background="bg-fill" borderRadius="200" padding={'300'} borderColor="border-secondary" borderWidth="025">
         <div className="flex flex-row justify-between items-center">
           <div>This Week</div>
-          <div>28 / {hww.toFixed(2)} hrs</div>
+          <div>
+            {querySummary.data?.getSummaryAttendanceStaff.week || 0} / {hww.toFixed(2)} hrs
+          </div>
         </div>
         <ProgressBar size="small" animated progress={y} tone="highlight" />
       </Box>
@@ -67,7 +78,9 @@ export function AttendanceStatisc() {
       <Box background="bg-fill" borderRadius="200" padding={'300'} borderColor="border-secondary" borderWidth="025">
         <div className="flex flex-row justify-between items-center">
           <div>This Month</div>
-          <div>90 / {hwm.toFixed(2)} hrs</div>
+          <div>
+            {querySummary.data?.getSummaryAttendanceStaff.month || 0} / {hwm.toFixed(2)} hrs
+          </div>
         </div>
         <ProgressBar size="small" animated progress={z} tone="primary" />
       </Box>
