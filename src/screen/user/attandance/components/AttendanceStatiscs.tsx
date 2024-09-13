@@ -22,6 +22,7 @@ export function AttendanceStatisc() {
     },
   });
   const querySummary = useGetSummaryAttendanceStaffQuery({
+    skip: !user,
     variables: {
       userId: Number(user?.id),
     },
@@ -88,7 +89,9 @@ export function AttendanceStatisc() {
       <Box background="bg-fill" borderRadius="200" padding={'300'} borderColor="border-secondary" borderWidth="025">
         <div className="flex flex-row justify-between items-center">
           <div>Overtime</div>
-          <div>4 / {10}</div>
+          <div>
+            {querySummary.data?.getSummaryAttendanceStaff.ot || 0} / {10}
+          </div>
         </div>
         <ProgressBar size="small" animated progress={(4 / 10) * 100} tone="critical" />
       </Box>
