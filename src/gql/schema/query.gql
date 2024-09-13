@@ -316,6 +316,8 @@ query user($userId: Int!) {
     bankName
     bankAcc
     isActive
+    fromTime
+    toTime
   }
 }
 
@@ -343,6 +345,8 @@ query userList($offset: Int, $limit: Int, $roles: [Int]) {
     bankName
     bankAcc
     isActive
+    fromTime
+    toTime
   }
 }
 
@@ -527,6 +531,8 @@ query attendanceListAdmin($month: Int!, $year: Int!) {
       id
       display
       profile
+      fromTime
+      toTime
     }
     leave {
       id
@@ -538,4 +544,74 @@ query attendanceListAdmin($month: Int!, $year: Int!) {
 
 query getSummaryAttendanceStaff($userId: Int!) {
   getSummaryAttendanceStaff(userId: $userId)
+}
+
+query overTimeList($limit: Int, $offset: Int, $status: [OverTimeStatus], $from: String, $to: String) {
+  overTimeList(limit: $limit, offset: $offset, status: $status, from: $from, to: $to) {
+    id
+    startat
+    endAt
+    otDate
+    note
+    status
+    approvedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+  }
+}
+
+query overTime($overTimeId: Int!) {
+  overTime(id: $overTimeId) {
+    id
+    startat
+    endAt
+    otDate
+    note
+    status
+    approvedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+  }
 }

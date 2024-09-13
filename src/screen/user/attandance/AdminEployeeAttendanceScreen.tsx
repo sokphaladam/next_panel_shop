@@ -51,13 +51,13 @@ export function AdminEployeeAttendanceScreen() {
 
   const group = groupBy(data?.attendanceListAdmin || [], ({ user }: any) => user.id);
 
-  const start = setting.find((f) => f.option === 'DEFAULT_STARTWORK')?.value;
-  const end = setting.find((f) => f.option === 'DEFAULT_ENDWORK')?.value;
+  // const start = setting.find((f) => f.option === 'DEFAULT_STARTWORK')?.value;
+  // const end = setting.find((f) => f.option === 'DEFAULT_ENDWORK')?.value;
 
-  const diff = getDiffHour(
-    new Date().setHours(Number(start?.replace(':', '.'))),
-    new Date().setHours(Number(end?.replace(':', '.'))),
-  );
+  // const diff = getDiffHour(
+  //   new Date().setHours(Number(start?.replace(':', '.'))),
+  //   new Date().setHours(Number(end?.replace(':', '.'))),
+  // );
 
   return (
     <PolarisLayout
@@ -105,21 +105,21 @@ export function AdminEployeeAttendanceScreen() {
                 {queryUser.data &&
                   queryUser.data.userList
                     ?.filter((x) => x?.type === 'STAFF')
-                    .map((x) => {
-                      const checklist = group[x?.id || 0] ? group[x?.id || 0] || [] : [];
+                    .map((user) => {
+                      const checklist = group[user?.id || 0] ? group[user?.id || 0] || [] : [];
                       // console.log(x?.id, checklist);
                       return (
-                        <IndexTable.Row key={x?.id} position={x?.id || 0} id={x?.id + ''}>
+                        <IndexTable.Row key={user?.id} position={user?.id || 0} id={user?.id + ''}>
                           <IndexTable.Cell>
                             <div className="flex flex-row gap-2 items-center">
                               <Avatar
-                                source={x?.profile || ''}
-                                initials={x?.display
+                                source={user?.profile || ''}
+                                initials={user?.display
                                   ?.split(' ')
                                   .map((s) => s.charAt(0).toUpperCase())
                                   .join('')}
                               />
-                              <div>{x?.display}</div>
+                              <div>{user?.display}</div>
                             </div>
                           </IndexTable.Cell>
                           {getDayOfMonth(Number(selectYear), Number(selectMonth)).map((d) => {
@@ -127,6 +127,16 @@ export function AdminEployeeAttendanceScreen() {
                               const c = moment(f.checkDate).date();
                               return c === d + 1;
                             });
+
+                            const start = user?.fromTime;
+                            const end = user?.toTime;
+
+                            const diff = moment(
+                              new Date().setHours(Number(end?.split(':')[0]), Number(end?.split(':')[1])),
+                            ).diff(
+                              moment(new Date().setHours(Number(start?.split(':')[0]), Number(start?.split(':')[1]))),
+                              'hour',
+                            );
 
                             const checkDiff = find.reduce((a: any, b: any) => {
                               const defaultEnd = moment(new Date(b.checkDate).setHours(Number(end?.replace(':', '.'))));
@@ -167,18 +177,20 @@ export function AdminEployeeAttendanceScreen() {
                                               <div className="flex flex-row items-center gap-2">
                                                 <small>{log.checkIn}</small>
                                                 <small>-</small>
-                                                <small>{log.checkOut}</small>
+                                                <small>{log.checkOut === 'Invalid date' ? '--' : log.checkOut}</small>
                                                 <small>=</small>
                                                 <small
                                                   className={
-                                                    checkDiff >= 8
+                                                    log.checkOut === 'Invalid date'
+                                                      ? 'text-orange-600'
+                                                      : checkDiff >= diff
                                                       ? 'text-green-700'
                                                       : checkDiff === 0
                                                       ? 'text-slate-500'
                                                       : 'text-red-700'
                                                   }
                                                 >
-                                                  {log.hour}
+                                                  {isNaN(log.hour) ? '--' : log.hour}
                                                 </small>
                                               </div>
                                               <div className="border-collapse border-t-[0.5px] border-solid">
@@ -190,18 +202,24 @@ export function AdminEployeeAttendanceScreen() {
                                       </div>
                                     }
                                   >
-                                    {checkDiff >= 8 ? (
-                                      <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-green-700 text-white">
-                                        <Icon source={CheckSmallIcon} tone="inherit" />
-                                      </div>
-                                    ) : checkDiff === 0 ? (
-                                      <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-slate-500 text-white">
-                                        {/* <Icon source={MinusCircleIcon} tone="inherit" /> */}
-                                      </div>
+                                    {logs.find((f: any) => f.checkOut === 'Invalid date') ? (
+                                      <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-orange-500 text-white"></div>
                                     ) : (
-                                      <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-red-700 text-white">
-                                        <Icon source={XSmallIcon} tone="inherit" />
-                                      </div>
+                                      <>
+                                        {checkDiff >= diff ? (
+                                          <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-green-700 text-white">
+                                            <Icon source={CheckSmallIcon} tone="inherit" />
+                                          </div>
+                                        ) : checkDiff === 0 ? (
+                                          <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-slate-500 text-white">
+                                            {/* <Icon source={MinusCircleIcon} tone="inherit" /> */}
+                                          </div>
+                                        ) : (
+                                          <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-red-700 text-white">
+                                            <Icon source={XSmallIcon} tone="inherit" />
+                                          </div>
+                                        )}
+                                      </>
                                     )}
                                   </Tooltip>
                                 )}

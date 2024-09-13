@@ -111,6 +111,8 @@ export function CreateUserScreen() {
       password: value.password ? value.password : undefined,
       createdDate: moment(new Date()).format('YYYY-MM-DD'),
       type: 'STAFF',
+      fromTime: value?.fromTime,
+      toTime: value?.toTime,
     };
 
     create({
