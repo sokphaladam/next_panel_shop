@@ -1,4 +1,4 @@
-import { ActionList, Icon, IndexTable, Popover, TextField, Tooltip } from '@shopify/polaris';
+import { ActionList, Icon, IndexTable, Popover, Spinner, TextField, Tooltip } from '@shopify/polaris';
 import React, { useCallback, useState } from 'react';
 import { MenuVerticalIcon } from '@shopify/polaris-icons';
 import { ProductInput, Sku } from '@/gql/graphql';
@@ -35,7 +35,7 @@ function UploadProductSkuItem(props: {
     [props],
   );
 
-  if (!props.value.sku || !!loading) {
+  if (!props.value.sku) {
     return <></>;
   }
 
@@ -49,6 +49,7 @@ function UploadProductSkuItem(props: {
           size="slim"
           value={props.value.sku[props.index]?.name || ''}
           onChange={(v) => handleChangeText(v, 'name')}
+          disabled={loading}
         />
       </IndexTable.Cell>
       <IndexTable.Cell>
@@ -61,6 +62,7 @@ function UploadProductSkuItem(props: {
           prefix="$"
           value={props.value.sku[props.index]?.price + ''}
           onChange={(v) => handleChangeText(v, 'price')}
+          disabled={loading}
         />
       </IndexTable.Cell>
       <IndexTable.Cell>
@@ -73,15 +75,20 @@ function UploadProductSkuItem(props: {
           suffix="%"
           value={props.value.sku[props.index]?.discount + ''}
           onChange={(v) => handleChangeText(v, 'discount')}
+          disabled={loading}
         />
       </IndexTable.Cell>
       <IndexTable.Cell>
-        <PolarisUpload
-          url={props.value.sku[props.index]?.image || ''}
-          setUrl={(v) => handleChangeText(v, 'image')}
-          onLoading={setLoading}
-          isSmall
-        />
+        {loading ? (
+          <Spinner size="small" />
+        ) : (
+          <PolarisUpload
+            url={props.value.sku[props.index]?.image || ''}
+            setUrl={(v) => handleChangeText(v, 'image')}
+            onLoading={setLoading}
+            isSmall
+          />
+        )}
       </IndexTable.Cell>
       <IndexTable.Cell>
         <Popover
@@ -132,7 +139,13 @@ function UploadProductSkuItem(props: {
 export function UploadProductSku(props: Props) {
   return (
     <IndexTable
-      headings={[{ title: 'Name' }, { title: 'Price' }, { title: 'Discount' }, { title: 'control' }]}
+      headings={[
+        { title: 'Name' },
+        { title: 'Price' },
+        { title: 'Discount' },
+        { title: 'Image' },
+        { title: 'control' },
+      ]}
       itemCount={1}
       selectable={false}
     >

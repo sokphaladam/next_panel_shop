@@ -361,14 +361,13 @@ export function OrderDetailScreen() {
                             <Thumbnail alt="" source={item?.product?.images + ''} size="small" />
                             <div className="flex flex-col justify-between">
                               <Text as="p" variant="bodySm" truncate>
-                                {item?.product?.title}{' '}
-                                <small>
-                                  <strong>({item?.status})</strong>
-                                </small>
+                                {item?.product?.title} {/* <small> */}
+                                <strong>({item?.sku?.name})</strong>
+                                {/* </small> */}
                               </Text>
                               <div className="flex flex-row">
                                 <Text as="strong" variant="bodySm" tone="base">
-                                  {item?.sku?.name} x{item?.qty}
+                                  {item?.status} x{item?.qty}
                                 </Text>
                               </div>
                               <div>
