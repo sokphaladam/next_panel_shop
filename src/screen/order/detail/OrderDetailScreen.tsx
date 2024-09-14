@@ -283,7 +283,7 @@ export function OrderDetailScreen() {
                         variant="primary"
                         onClick={() => handleUpdate(StatusOrder.Delivery)}
                       >
-                        Deliver
+                        Confirm
                       </Button>
                     )}
                     {[StatusOrder.Delivery, StatusOrder.Checkout].includes(data?.order?.status as any) &&

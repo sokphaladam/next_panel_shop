@@ -23,6 +23,7 @@ export function CreateProductScreen() {
         discount: 0,
         price: 0,
         unit: '',
+        image: '',
       },
     ],
     type: [Type_Product.Production],

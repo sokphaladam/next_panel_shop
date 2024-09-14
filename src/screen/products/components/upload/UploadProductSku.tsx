@@ -2,88 +2,131 @@ import { ActionList, Icon, IndexTable, Popover, TextField, Tooltip } from '@shop
 import React, { useCallback, useState } from 'react';
 import { MenuVerticalIcon } from '@shopify/polaris-icons';
 import { ProductInput, Sku } from '@/gql/graphql';
+import { PolarisUpload } from '@/components/polaris/PolarisUpload';
 
 interface Props {
   value: ProductInput;
-  setValue: (v: ProductInput) => void
+  setValue: (v: ProductInput) => void;
 }
 
 function UploadProductSkuItem(props: {
-  value: ProductInput
-  setValue: (v: ProductInput) => void
-  current: Sku
-  latest: boolean
-  index: number
+  value: ProductInput;
+  setValue: (v: ProductInput) => void;
+  current: Sku;
+  latest: boolean;
+  index: number;
 }) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleChangeText = useCallback((v: string, text: string) => {
-    let dummy: any = (props.value.sku as any).map((x: any) => {
-      return {
-        ...x
-      }
-    })
-    dummy[props.index][text] = v;
-    props.setValue({
-      ...props.value,
-      sku: dummy
-    })
-  }, [props])
+  const handleChangeText = useCallback(
+    (v: string, text: string) => {
+      let dummy: any = (props.value.sku as any).map((x: any) => {
+        return {
+          ...x,
+        };
+      });
+      dummy[props.index][text] = v;
+      props.setValue({
+        ...props.value,
+        sku: dummy,
+      });
+    },
+    [props],
+  );
 
-  if (!props.value.sku) {
-    return <></>
+  if (!props.value.sku || !!loading) {
+    return <></>;
   }
 
   return (
     <IndexTable.Row id="0" position={0}>
       <IndexTable.Cell>
-        <TextField autoComplete='off' label labelHidden size='slim'
+        <TextField
+          autoComplete="off"
+          label
+          labelHidden
+          size="slim"
           value={props.value.sku[props.index]?.name || ''}
-          onChange={v => handleChangeText(v, 'name')}
+          onChange={(v) => handleChangeText(v, 'name')}
         />
       </IndexTable.Cell>
       <IndexTable.Cell>
-        <TextField autoComplete='off' label labelHidden size='slim' type='number' prefix="$"
+        <TextField
+          autoComplete="off"
+          label
+          labelHidden
+          size="slim"
+          type="number"
+          prefix="$"
           value={props.value.sku[props.index]?.price + ''}
-          onChange={v => handleChangeText(v, 'price')}
+          onChange={(v) => handleChangeText(v, 'price')}
         />
       </IndexTable.Cell>
       <IndexTable.Cell>
-        <TextField autoComplete='off' label labelHidden size='slim' type='number' suffix="%"
+        <TextField
+          autoComplete="off"
+          label
+          labelHidden
+          size="slim"
+          type="number"
+          suffix="%"
           value={props.value.sku[props.index]?.discount + ''}
-          onChange={v => handleChangeText(v, 'discount')}
+          onChange={(v) => handleChangeText(v, 'discount')}
         />
       </IndexTable.Cell>
       <IndexTable.Cell>
-        <Popover preferredPosition='above' activator={<div className='cursor-pointer' onClick={() => setOpen(!open)}><Icon source={MenuVerticalIcon} /></div>} active={open} onClose={() => setOpen(false)}>
+        <PolarisUpload
+          url={props.value.sku[props.index]?.image || ''}
+          setUrl={(v) => handleChangeText(v, 'image')}
+          onLoading={setLoading}
+          isSmall
+        />
+      </IndexTable.Cell>
+      <IndexTable.Cell>
+        <Popover
+          preferredPosition="above"
+          activator={
+            <div className="cursor-pointer" onClick={() => setOpen(!open)}>
+              <Icon source={MenuVerticalIcon} />
+            </div>
+          }
+          active={open}
+          onClose={() => setOpen(false)}
+        >
           <Popover.Pane>
             <ActionList
-              items={
-                [
-                  {
-                    content: 'Insert row below',
-                    onAction: () => {
-                      props.setValue({ ...props.value, sku: [...(props.value.sku || []), { name: '', discount: 0, price: 0, unit: '' }] });
-                      setOpen(false)
-                    },
-                    disabled: !props.latest
+              items={[
+                {
+                  content: 'Insert row below',
+                  onAction: () => {
+                    props.setValue({
+                      ...props.value,
+                      sku: [...(props.value.sku || []), { name: '', discount: 0, price: 0, unit: '' }],
+                    });
+                    setOpen(false);
                   },
-                  {
-                    content: 'Remove',
-                    destructive: true,
-                    onAction: () => {
-                      props.setValue({ ...props.value, sku: [...(props.value.sku || []).filter((x, i) => i !== props.index)] });
-                      setOpen(false)
-                    },
-                    disabled: (props.value.sku || []).length <= 1
-                  }
-                ]}
+                  disabled: !props.latest,
+                },
+                {
+                  content: 'Remove',
+                  destructive: true,
+                  onAction: () => {
+                    props.setValue({
+                      ...props.value,
+                      sku: [...(props.value.sku || []).filter((x, i) => i !== props.index)],
+                    });
+                    setOpen(false);
+                  },
+                  disabled: (props.value.sku || []).length <= 1,
+                },
+              ]}
             />
           </Popover.Pane>
         </Popover>
       </IndexTable.Cell>
     </IndexTable.Row>
-  )
+  );
 }
 
 export function UploadProductSku(props: Props) {
@@ -93,11 +136,17 @@ export function UploadProductSku(props: Props) {
       itemCount={1}
       selectable={false}
     >
-      {
-        (props.value.sku || []).map((x, i) => {
-          return (<UploadProductSkuItem current={x || {}} {...props} key={i} latest={(props.value.sku || []).length === i + 1} index={i} />)
-        })
-      }
+      {(props.value.sku || []).map((x, i) => {
+        return (
+          <UploadProductSkuItem
+            current={x || {}}
+            {...props}
+            key={i}
+            latest={(props.value.sku || []).length === i + 1}
+            index={i}
+          />
+        );
+      })}
     </IndexTable>
-  )
+  );
 }

@@ -208,6 +208,7 @@ export type Mutation = {
   createDelivery?: Maybe<Scalars['Boolean']['output']>;
   createLeave?: Maybe<Scalars['Boolean']['output']>;
   createOrder?: Maybe<Scalars['Boolean']['output']>;
+  createOverTime?: Maybe<Scalars['Boolean']['output']>;
   createPosition?: Maybe<Scalars['Boolean']['output']>;
   createProduct?: Maybe<Scalars['Boolean']['output']>;
   createProductStock?: Maybe<Scalars['Boolean']['output']>;
@@ -228,6 +229,8 @@ export type Mutation = {
   updateDelivery?: Maybe<Scalars['Boolean']['output']>;
   updateLeave?: Maybe<Scalars['Boolean']['output']>;
   updateLeaveStatus?: Maybe<Scalars['Boolean']['output']>;
+  updateOverTime?: Maybe<Scalars['Boolean']['output']>;
+  updateOverTimeStatus?: Maybe<Scalars['Boolean']['output']>;
   updatePosition?: Maybe<Scalars['Boolean']['output']>;
   updateProduct?: Maybe<Scalars['Boolean']['output']>;
   updateProductStock?: Maybe<Scalars['Boolean']['output']>;
@@ -290,6 +293,12 @@ export type MutationCreateLeaveArgs = {
 
 export type MutationCreateOrderArgs = {
   data?: InputMaybe<OrderInput>;
+};
+
+
+export type MutationCreateOverTimeArgs = {
+  data?: InputMaybe<OverTimeInput>;
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -408,6 +417,18 @@ export type MutationUpdateLeaveStatusArgs = {
 };
 
 
+export type MutationUpdateOverTimeArgs = {
+  data?: InputMaybe<OverTimeInput>;
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateOverTimeStatusArgs = {
+  id: Scalars['Int']['input'];
+  status?: InputMaybe<OverTimeStatus>;
+};
+
+
 export type MutationUpdatePositionArgs = {
   id: Scalars['Int']['input'];
   name: Scalars['String']['input'];
@@ -508,6 +529,39 @@ export enum OrderViewBy {
   User = 'USER'
 }
 
+export type OverTime = {
+  __typename?: 'OverTime';
+  approvedBy?: Maybe<User>;
+  approvedDate?: Maybe<Scalars['String']['output']>;
+  cancelledBy?: Maybe<User>;
+  cancelledDate?: Maybe<Scalars['String']['output']>;
+  endAt?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  note?: Maybe<Scalars['String']['output']>;
+  otDate?: Maybe<Scalars['String']['output']>;
+  rejectedBy?: Maybe<User>;
+  rejectedDate?: Maybe<Scalars['String']['output']>;
+  requestedBy?: Maybe<User>;
+  requestedDate?: Maybe<Scalars['String']['output']>;
+  startat?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<OverTimeStatus>;
+};
+
+export type OverTimeInput = {
+  endAt?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
+  otDate?: InputMaybe<Scalars['String']['input']>;
+  startat?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<OverTimeStatus>;
+};
+
+export enum OverTimeStatus {
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Rejected = 'REJECTED',
+  Request = 'REQUEST'
+}
+
 export type Position = {
   __typename?: 'Position';
   createdDate?: Maybe<Scalars['String']['output']>;
@@ -573,12 +627,15 @@ export type Query = {
   getAttendanceStaffToday?: Maybe<Attendance>;
   getLeaveAdmin?: Maybe<Scalars['JSON']['output']>;
   getPositionList?: Maybe<Array<Maybe<Position>>>;
+  getSummaryAttendanceStaff?: Maybe<Scalars['JSON']['output']>;
   getbankList?: Maybe<Array<Maybe<BankInfo>>>;
   leave?: Maybe<Leave>;
   leaveList?: Maybe<Array<Maybe<Leave>>>;
   me?: Maybe<User>;
   order?: Maybe<Order>;
   orderList?: Maybe<Array<Maybe<Order>>>;
+  overTime?: Maybe<OverTime>;
+  overTimeList?: Maybe<Array<Maybe<OverTime>>>;
   position?: Maybe<Position>;
   product?: Maybe<Product>;
   productList?: Maybe<Array<Maybe<Product>>>;
@@ -654,6 +711,11 @@ export type QueryGetPositionListArgs = {
 };
 
 
+export type QueryGetSummaryAttendanceStaffArgs = {
+  userId: Scalars['Int']['input'];
+};
+
+
 export type QueryGetbankListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -689,6 +751,20 @@ export type QueryOrderListArgs = {
   status?: InputMaybe<Array<InputMaybe<StatusOrder>>>;
   toDate?: InputMaybe<Scalars['String']['input']>;
   viewBy?: InputMaybe<OrderViewBy>;
+};
+
+
+export type QueryOverTimeArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryOverTimeListArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Array<InputMaybe<OverTimeStatus>>>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -771,6 +847,7 @@ export type Sku = {
   __typename?: 'SKU';
   discount?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
   unit?: Maybe<Scalars['String']['output']>;
@@ -779,6 +856,7 @@ export type Sku = {
 export type SkuInput = {
   discount?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   unit?: InputMaybe<Scalars['String']['input']>;
@@ -876,6 +954,7 @@ export type User = {
   createdDate?: Maybe<Scalars['String']['output']>;
   display?: Maybe<Scalars['String']['output']>;
   dob?: Maybe<Scalars['String']['output']>;
+  fromTime?: Maybe<Scalars['String']['output']>;
   gender?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   isActive?: Maybe<Scalars['Boolean']['output']>;
@@ -885,6 +964,7 @@ export type User = {
   profile?: Maybe<Scalars['String']['output']>;
   role?: Maybe<Role>;
   startingAt?: Maybe<Scalars['String']['output']>;
+  toTime?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
@@ -898,6 +978,7 @@ export type UserInput = {
   createdDate?: InputMaybe<Scalars['String']['input']>;
   display?: InputMaybe<Scalars['String']['input']>;
   dob?: InputMaybe<Scalars['String']['input']>;
+  fromTime?: InputMaybe<Scalars['String']['input']>;
   gender?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   ownerId?: InputMaybe<Scalars['String']['input']>;
@@ -906,6 +987,7 @@ export type UserInput = {
   profile?: InputMaybe<Scalars['String']['input']>;
   roleId?: InputMaybe<Scalars['Int']['input']>;
   startingAt?: InputMaybe<Scalars['String']['input']>;
+  toTime?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1164,14 +1246,14 @@ export type ProductListQueryVariables = Exact<{
 }>;
 
 
-export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
+export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
 
 export type ProductQueryVariables = Exact<{
   productId: Scalars['Int']['input'];
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
+export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
 
 export type CategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2427,6 +2509,7 @@ export const ProductListDocument = gql`
       price
       discount
       unit
+      image
     }
     code
     images
@@ -2494,6 +2577,7 @@ export const ProductDocument = gql`
       price
       discount
       unit
+      image
     }
     code
     images
