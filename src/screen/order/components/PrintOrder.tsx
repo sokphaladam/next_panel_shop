@@ -242,7 +242,7 @@ export function PrintOrder(props: Props) {
               </table>
               <div></div>
             </div>
-            {!props.kitchen && <div className="text-center">Thank you, please come again!</div>}
+            {!props.kitchen && <div className="text-center">Thank you, see you again!</div>}
           </div>
         </div>
       </Modal.Section>

@@ -16,9 +16,10 @@ interface Props {
   setValue: (e: ProductInput) => void;
   onSubmit: (v: ProductInput) => void;
   loading: boolean;
+  isEdit?: boolean;
 }
 
-export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
+export function UploadProduct({ value, setValue, onSubmit, loading, isEdit }: Props) {
   const [unit, setUnit] = useState((value.sku as any)[0]?.unit || '');
   const [error, setError] = useState<
     {
@@ -95,8 +96,6 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
     ];
   }
 
-  console.log(error);
-
   return (
     <PolarisLayout
       title="Upload Product"
@@ -127,7 +126,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading }: Props) {
                   setValue({
                     ...value,
                     title: v,
-                    code: v === '' ? '' : prefix(v),
+                    code: isEdit ? value.code : v === '' ? '' : prefix(v),
                   });
                 }}
                 requiredIndicator

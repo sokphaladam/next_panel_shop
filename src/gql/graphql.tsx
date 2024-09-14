@@ -847,6 +847,7 @@ export type Sku = {
   __typename?: 'SKU';
   discount?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
   unit?: Maybe<Scalars['String']['output']>;
@@ -855,6 +856,7 @@ export type Sku = {
 export type SkuInput = {
   discount?: InputMaybe<Scalars['Float']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   unit?: InputMaybe<Scalars['String']['input']>;
@@ -1268,14 +1270,14 @@ export type ProductListQueryVariables = Exact<{
 }>;
 
 
-export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
+export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
 
 export type ProductQueryVariables = Exact<{
   productId: Scalars['Int']['input'];
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
+export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
 
 export type CategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2652,6 +2654,7 @@ export const ProductListDocument = gql`
       price
       discount
       unit
+      image
     }
     code
     images
@@ -2719,6 +2722,7 @@ export const ProductDocument = gql`
       price
       discount
       unit
+      image
     }
     code
     images

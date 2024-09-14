@@ -3,7 +3,12 @@ import { Banner, DropZone, LegacyStack, List, Spinner, Text, Thumbnail } from '@
 import React, { useCallback, useState } from 'react';
 import { getDownloadURL } from 'firebase/storage';
 
-export function PolarisUpload(props: { url: string; setUrl: (url: string) => void; onLoading: (v: boolean) => void }) {
+export function PolarisUpload(props: {
+  url: string;
+  setUrl: (url: string) => void;
+  onLoading: (v: boolean) => void;
+  isSmall?: boolean;
+}) {
   const { file } = useFirebase();
   const [files, setFiles] = useState<any[]>(props.url ? [props.url] : []);
   const [loading, setLoading] = useState(false);
@@ -53,6 +58,16 @@ export function PolarisUpload(props: { url: string; setUrl: (url: string) => voi
     </div>
   );
 
+  const uploadedSmallFiles = files.length > 0 && (
+    <div className="flex flex-col justify-center items-center w-[40px]">
+      {files.map((file, index) => (
+        <LegacyStack alignment="center" key={index}>
+          <Thumbnail size="small" alt={file.name} source={file} />
+        </LegacyStack>
+      ))}
+    </div>
+  );
+
   const errorMessage = hasError && (
     <Banner title="The following images couldn’t be uploaded:" tone="critical">
       <List type="bullet">
@@ -62,6 +77,24 @@ export function PolarisUpload(props: { url: string; setUrl: (url: string) => voi
       </List>
     </Banner>
   );
+
+  if (props.isSmall) {
+    return (
+      <div style={{ width: 40, height: 40 }}>
+        <DropZone accept="image/*" type="image" onDrop={handleDrop} allowMultiple={false}>
+          {loading && (
+            <div className="flex flex-col justify-center items-center">
+              <LegacyStack alignment="center">
+                <Spinner size="small" />
+              </LegacyStack>
+            </div>
+          )}
+          {!loading && files.length === 0 && uploadedFiles}
+          {uploadedSmallFiles}
+        </DropZone>
+      </div>
+    );
+  }
 
   return (
     <LegacyStack vertical>
