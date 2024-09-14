@@ -146,7 +146,6 @@ export function MenuItems(user: User | null) {
         MenuItem = [...defaultValue];
         break;
       case 3:
-        MenuItem = [...defaultValue];
         MenuItem = [
           {
             title: 'Orders',
