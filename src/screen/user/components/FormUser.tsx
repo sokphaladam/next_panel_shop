@@ -299,6 +299,33 @@ export function FormUser(props: Props) {
                 }}
               />
               <br />
+              <InlineGrid columns={['oneHalf', 'oneHalf']} gap={'300'}>
+                <TextField
+                  label="Work from"
+                  autoComplete="off"
+                  type="time"
+                  value={props.user.fromTime || ''}
+                  onChange={(v: any) => {
+                    props.setUser({
+                      ...props.user,
+                      fromTime: v,
+                    });
+                  }}
+                />
+                <TextField
+                  label="Work to"
+                  autoComplete="off"
+                  type="time"
+                  value={props.user.toTime || ''}
+                  onChange={(v: any) => {
+                    props.setUser({
+                      ...props.user,
+                      toTime: v,
+                    });
+                  }}
+                />
+              </InlineGrid>
+              <br />
               <Select
                 label="Active"
                 options={[

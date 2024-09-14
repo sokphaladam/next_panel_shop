@@ -1233,6 +1233,30 @@ export type UpdateLeaveStatusMutationVariables = Exact<{
 
 export type UpdateLeaveStatusMutation = { __typename?: 'Mutation', updateLeaveStatus?: boolean | null };
 
+export type CreateOverTimeMutationVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  data?: InputMaybe<OverTimeInput>;
+}>;
+
+
+export type CreateOverTimeMutation = { __typename?: 'Mutation', createOverTime?: boolean | null };
+
+export type UpdateOverTimeMutationVariables = Exact<{
+  updateOverTimeId: Scalars['Int']['input'];
+  data?: InputMaybe<OverTimeInput>;
+}>;
+
+
+export type UpdateOverTimeMutation = { __typename?: 'Mutation', updateOverTime?: boolean | null };
+
+export type UpdateOverTimeStatusMutationVariables = Exact<{
+  updateOverTimeStatusId: Scalars['Int']['input'];
+  status?: InputMaybe<OverTimeStatus>;
+}>;
+
+
+export type UpdateOverTimeStatusMutation = { __typename?: 'Mutation', updateOverTimeStatus?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1349,7 +1373,7 @@ export type UserQueryVariables = Exact<{
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, display?: string | null, gender?: string | null, dob?: string | null, contact?: string | null, ownerId?: string | null, position?: string | null, startingAt?: string | null, type?: string | null, username?: string | null, password?: string | null, profile?: string | null, baseSalary?: string | null, createdDate?: string | null, bankType?: string | null, bankName?: string | null, bankAcc?: string | null, isActive?: boolean | null, role?: { __typename?: 'Role', id?: number | null, name?: string | null } | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, display?: string | null, gender?: string | null, dob?: string | null, contact?: string | null, ownerId?: string | null, position?: string | null, startingAt?: string | null, type?: string | null, username?: string | null, password?: string | null, profile?: string | null, baseSalary?: string | null, createdDate?: string | null, bankType?: string | null, bankName?: string | null, bankAcc?: string | null, isActive?: boolean | null, fromTime?: string | null, toTime?: string | null, role?: { __typename?: 'Role', id?: number | null, name?: string | null } | null } | null };
 
 export type UserListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1358,7 +1382,7 @@ export type UserListQueryVariables = Exact<{
 }>;
 
 
-export type UserListQuery = { __typename?: 'Query', userList?: Array<{ __typename?: 'User', id: number, display?: string | null, gender?: string | null, dob?: string | null, contact?: string | null, ownerId?: string | null, position?: string | null, startingAt?: string | null, type?: string | null, username?: string | null, password?: string | null, profile?: string | null, baseSalary?: string | null, createdDate?: string | null, bankType?: string | null, bankName?: string | null, bankAcc?: string | null, isActive?: boolean | null, role?: { __typename?: 'Role', id?: number | null, name?: string | null } | null } | null> | null };
+export type UserListQuery = { __typename?: 'Query', userList?: Array<{ __typename?: 'User', id: number, display?: string | null, gender?: string | null, dob?: string | null, contact?: string | null, ownerId?: string | null, position?: string | null, startingAt?: string | null, type?: string | null, username?: string | null, password?: string | null, profile?: string | null, baseSalary?: string | null, createdDate?: string | null, bankType?: string | null, bankName?: string | null, bankAcc?: string | null, isActive?: boolean | null, fromTime?: string | null, toTime?: string | null, role?: { __typename?: 'Role', id?: number | null, name?: string | null } | null } | null> | null };
 
 export type RoleListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1426,7 +1450,32 @@ export type AttendanceListAdminQueryVariables = Exact<{
 }>;
 
 
-export type AttendanceListAdminQuery = { __typename?: 'Query', attendanceListAdmin?: Array<{ __typename?: 'Attendance', checkIn?: string | null, checkOut?: string | null, checkDate?: string | null, id?: number | null, user?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, leaveReason?: string | null, leaveType?: string | null } | null } | null> | null };
+export type AttendanceListAdminQuery = { __typename?: 'Query', attendanceListAdmin?: Array<{ __typename?: 'Attendance', checkIn?: string | null, checkOut?: string | null, checkDate?: string | null, id?: number | null, user?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null, fromTime?: string | null, toTime?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, leaveReason?: string | null, leaveType?: string | null } | null } | null> | null };
+
+export type GetSummaryAttendanceStaffQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+
+export type GetSummaryAttendanceStaffQuery = { __typename?: 'Query', getSummaryAttendanceStaff?: any | null };
+
+export type OverTimeListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Array<InputMaybe<OverTimeStatus>> | InputMaybe<OverTimeStatus>>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type OverTimeListQuery = { __typename?: 'Query', overTimeList?: Array<{ __typename?: 'OverTime', id?: number | null, startat?: string | null, endAt?: string | null, otDate?: string | null, note?: string | null, status?: OverTimeStatus | null, approvedDate?: string | null, requestedDate?: string | null, rejectedDate?: string | null, cancelledDate?: string | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null> | null };
+
+export type OverTimeQueryVariables = Exact<{
+  overTimeId: Scalars['Int']['input'];
+}>;
+
+
+export type OverTimeQuery = { __typename?: 'Query', overTime?: { __typename?: 'OverTime', id?: number | null, startat?: string | null, endAt?: string | null, otDate?: string | null, note?: string | null, status?: OverTimeStatus | null, approvedDate?: string | null, requestedDate?: string | null, rejectedDate?: string | null, cancelledDate?: string | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -2433,6 +2482,102 @@ export function useUpdateLeaveStatusMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdateLeaveStatusMutationHookResult = ReturnType<typeof useUpdateLeaveStatusMutation>;
 export type UpdateLeaveStatusMutationResult = Apollo.MutationResult<UpdateLeaveStatusMutation>;
 export type UpdateLeaveStatusMutationOptions = Apollo.BaseMutationOptions<UpdateLeaveStatusMutation, UpdateLeaveStatusMutationVariables>;
+export const CreateOverTimeDocument = gql`
+    mutation createOverTime($userId: Int!, $data: OverTimeInput) {
+  createOverTime(userId: $userId, data: $data)
+}
+    `;
+export type CreateOverTimeMutationFn = Apollo.MutationFunction<CreateOverTimeMutation, CreateOverTimeMutationVariables>;
+
+/**
+ * __useCreateOverTimeMutation__
+ *
+ * To run a mutation, you first call `useCreateOverTimeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOverTimeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOverTimeMutation, { data, loading, error }] = useCreateOverTimeMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateOverTimeMutation(baseOptions?: Apollo.MutationHookOptions<CreateOverTimeMutation, CreateOverTimeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOverTimeMutation, CreateOverTimeMutationVariables>(CreateOverTimeDocument, options);
+      }
+export type CreateOverTimeMutationHookResult = ReturnType<typeof useCreateOverTimeMutation>;
+export type CreateOverTimeMutationResult = Apollo.MutationResult<CreateOverTimeMutation>;
+export type CreateOverTimeMutationOptions = Apollo.BaseMutationOptions<CreateOverTimeMutation, CreateOverTimeMutationVariables>;
+export const UpdateOverTimeDocument = gql`
+    mutation updateOverTime($updateOverTimeId: Int!, $data: OverTimeInput) {
+  updateOverTime(id: $updateOverTimeId, data: $data)
+}
+    `;
+export type UpdateOverTimeMutationFn = Apollo.MutationFunction<UpdateOverTimeMutation, UpdateOverTimeMutationVariables>;
+
+/**
+ * __useUpdateOverTimeMutation__
+ *
+ * To run a mutation, you first call `useUpdateOverTimeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOverTimeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOverTimeMutation, { data, loading, error }] = useUpdateOverTimeMutation({
+ *   variables: {
+ *      updateOverTimeId: // value for 'updateOverTimeId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateOverTimeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOverTimeMutation, UpdateOverTimeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOverTimeMutation, UpdateOverTimeMutationVariables>(UpdateOverTimeDocument, options);
+      }
+export type UpdateOverTimeMutationHookResult = ReturnType<typeof useUpdateOverTimeMutation>;
+export type UpdateOverTimeMutationResult = Apollo.MutationResult<UpdateOverTimeMutation>;
+export type UpdateOverTimeMutationOptions = Apollo.BaseMutationOptions<UpdateOverTimeMutation, UpdateOverTimeMutationVariables>;
+export const UpdateOverTimeStatusDocument = gql`
+    mutation updateOverTimeStatus($updateOverTimeStatusId: Int!, $status: OverTimeStatus) {
+  updateOverTimeStatus(id: $updateOverTimeStatusId, status: $status)
+}
+    `;
+export type UpdateOverTimeStatusMutationFn = Apollo.MutationFunction<UpdateOverTimeStatusMutation, UpdateOverTimeStatusMutationVariables>;
+
+/**
+ * __useUpdateOverTimeStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateOverTimeStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOverTimeStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOverTimeStatusMutation, { data, loading, error }] = useUpdateOverTimeStatusMutation({
+ *   variables: {
+ *      updateOverTimeStatusId: // value for 'updateOverTimeStatusId'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateOverTimeStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOverTimeStatusMutation, UpdateOverTimeStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOverTimeStatusMutation, UpdateOverTimeStatusMutationVariables>(UpdateOverTimeStatusDocument, options);
+      }
+export type UpdateOverTimeStatusMutationHookResult = ReturnType<typeof useUpdateOverTimeStatusMutation>;
+export type UpdateOverTimeStatusMutationResult = Apollo.MutationResult<UpdateOverTimeStatusMutation>;
+export type UpdateOverTimeStatusMutationOptions = Apollo.BaseMutationOptions<UpdateOverTimeStatusMutation, UpdateOverTimeStatusMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3279,6 +3424,8 @@ export const UserDocument = gql`
     bankName
     bankAcc
     isActive
+    fromTime
+    toTime
   }
 }
     `;
@@ -3340,6 +3487,8 @@ export const UserListDocument = gql`
     bankName
     bankAcc
     isActive
+    fromTime
+    toTime
   }
 }
     `;
@@ -3816,6 +3965,8 @@ export const AttendanceListAdminDocument = gql`
       id
       display
       profile
+      fromTime
+      toTime
     }
     leave {
       id
@@ -3859,6 +4010,192 @@ export type AttendanceListAdminQueryHookResult = ReturnType<typeof useAttendance
 export type AttendanceListAdminLazyQueryHookResult = ReturnType<typeof useAttendanceListAdminLazyQuery>;
 export type AttendanceListAdminSuspenseQueryHookResult = ReturnType<typeof useAttendanceListAdminSuspenseQuery>;
 export type AttendanceListAdminQueryResult = Apollo.QueryResult<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>;
+export const GetSummaryAttendanceStaffDocument = gql`
+    query getSummaryAttendanceStaff($userId: Int!) {
+  getSummaryAttendanceStaff(userId: $userId)
+}
+    `;
+
+/**
+ * __useGetSummaryAttendanceStaffQuery__
+ *
+ * To run a query within a React component, call `useGetSummaryAttendanceStaffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSummaryAttendanceStaffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSummaryAttendanceStaffQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetSummaryAttendanceStaffQuery(baseOptions: Apollo.QueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables> & ({ variables: GetSummaryAttendanceStaffQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
+      }
+export function useGetSummaryAttendanceStaffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
+        }
+export function useGetSummaryAttendanceStaffSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
+        }
+export type GetSummaryAttendanceStaffQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffQuery>;
+export type GetSummaryAttendanceStaffLazyQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffLazyQuery>;
+export type GetSummaryAttendanceStaffSuspenseQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffSuspenseQuery>;
+export type GetSummaryAttendanceStaffQueryResult = Apollo.QueryResult<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>;
+export const OverTimeListDocument = gql`
+    query overTimeList($limit: Int, $offset: Int, $status: [OverTimeStatus], $from: String, $to: String) {
+  overTimeList(
+    limit: $limit
+    offset: $offset
+    status: $status
+    from: $from
+    to: $to
+  ) {
+    id
+    startat
+    endAt
+    otDate
+    note
+    status
+    approvedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+  }
+}
+    `;
+
+/**
+ * __useOverTimeListQuery__
+ *
+ * To run a query within a React component, call `useOverTimeListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOverTimeListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOverTimeListQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      status: // value for 'status'
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useOverTimeListQuery(baseOptions?: Apollo.QueryHookOptions<OverTimeListQuery, OverTimeListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OverTimeListQuery, OverTimeListQueryVariables>(OverTimeListDocument, options);
+      }
+export function useOverTimeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OverTimeListQuery, OverTimeListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OverTimeListQuery, OverTimeListQueryVariables>(OverTimeListDocument, options);
+        }
+export function useOverTimeListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OverTimeListQuery, OverTimeListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OverTimeListQuery, OverTimeListQueryVariables>(OverTimeListDocument, options);
+        }
+export type OverTimeListQueryHookResult = ReturnType<typeof useOverTimeListQuery>;
+export type OverTimeListLazyQueryHookResult = ReturnType<typeof useOverTimeListLazyQuery>;
+export type OverTimeListSuspenseQueryHookResult = ReturnType<typeof useOverTimeListSuspenseQuery>;
+export type OverTimeListQueryResult = Apollo.QueryResult<OverTimeListQuery, OverTimeListQueryVariables>;
+export const OverTimeDocument = gql`
+    query overTime($overTimeId: Int!) {
+  overTime(id: $overTimeId) {
+    id
+    startat
+    endAt
+    otDate
+    note
+    status
+    approvedDate
+    approvedBy {
+      id
+      display
+      profile
+    }
+    requestedDate
+    rejectedBy {
+      id
+      display
+      profile
+    }
+    rejectedDate
+    requestedBy {
+      id
+      display
+      profile
+    }
+    cancelledDate
+    cancelledBy {
+      id
+      display
+      profile
+    }
+  }
+}
+    `;
+
+/**
+ * __useOverTimeQuery__
+ *
+ * To run a query within a React component, call `useOverTimeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOverTimeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOverTimeQuery({
+ *   variables: {
+ *      overTimeId: // value for 'overTimeId'
+ *   },
+ * });
+ */
+export function useOverTimeQuery(baseOptions: Apollo.QueryHookOptions<OverTimeQuery, OverTimeQueryVariables> & ({ variables: OverTimeQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OverTimeQuery, OverTimeQueryVariables>(OverTimeDocument, options);
+      }
+export function useOverTimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OverTimeQuery, OverTimeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OverTimeQuery, OverTimeQueryVariables>(OverTimeDocument, options);
+        }
+export function useOverTimeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OverTimeQuery, OverTimeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OverTimeQuery, OverTimeQueryVariables>(OverTimeDocument, options);
+        }
+export type OverTimeQueryHookResult = ReturnType<typeof useOverTimeQuery>;
+export type OverTimeLazyQueryHookResult = ReturnType<typeof useOverTimeLazyQuery>;
+export type OverTimeSuspenseQueryHookResult = ReturnType<typeof useOverTimeSuspenseQuery>;
+export type OverTimeQueryResult = Apollo.QueryResult<OverTimeQuery, OverTimeQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

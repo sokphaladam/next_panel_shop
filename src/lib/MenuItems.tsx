@@ -16,11 +16,23 @@ import {
   CreditCardIcon,
   MoneyFilledIcon,
 } from '@shopify/polaris-icons';
+import { FunctionComponent, SVGProps } from 'react';
+
+interface PropsMenu {
+  title: string;
+  items: PropsMenuItem[];
+}
+
+interface PropsMenuItem {
+  label: string;
+  icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+  url: string;
+}
 
 export function MenuItems(user: User | null) {
   const lng = useScriptLanguage();
 
-  const defaultValue: any[] = [
+  const defaultValue: PropsMenu[] = [
     {
       title: lng.menu_dashboard,
       items: [
@@ -28,7 +40,6 @@ export function MenuItems(user: User | null) {
           label: lng.menu_dashboard,
           icon: AppsIcon,
           url: '/',
-          items: [],
         },
       ],
     },
@@ -83,7 +94,7 @@ export function MenuItems(user: User | null) {
         {
           label: 'Overtime',
           icon: PageClockIcon,
-          url: '#',
+          url: '/ot',
         },
         {
           label: 'Shift Handover',
@@ -132,98 +143,7 @@ export function MenuItems(user: User | null) {
         MenuItem = [...defaultValue];
         break;
       case 2:
-        MenuItem = [
-          {
-            title: 'Inventory',
-            items: [
-              {
-                label: 'Products',
-                icon: ArchiveIcon,
-                url: '/products',
-              },
-              {
-                label: 'Categories',
-                icon: MagicIcon,
-                url: '/category',
-              },
-            ],
-          },
-          {
-            title: 'Orders',
-            items: [
-              {
-                label: 'Order',
-                icon: CartFilledIcon,
-                url: '/order/list',
-              },
-            ],
-          },
-          {
-            title: 'Employee',
-            items: [
-              {
-                label: 'Attendance',
-                icon: AttachmentIcon,
-                url: '/employee/attendance',
-              },
-              {
-                label: 'Attendance (Admin)',
-                icon: AttachmentIcon,
-                url: '/attendance',
-              },
-              {
-                label: 'Leave',
-                icon: FileIcon,
-                url: '/leave',
-              },
-              {
-                label: 'Staff',
-                icon: PersonIcon,
-                url: '/staff',
-              },
-              {
-                label: 'Overtime',
-                icon: PageClockIcon,
-                url: '#',
-              },
-              {
-                label: 'Shift Handover',
-                icon: MoneyFilledIcon,
-                url: '/shift',
-              },
-            ],
-          },
-          {
-            title: 'Setting',
-            items: [
-              {
-                label: 'Option',
-                icon: SettingsIcon,
-                url: '/setting',
-              },
-              {
-                label: 'Table',
-                icon: TabletIcon,
-                url: '/set',
-              },
-              {
-                label: 'Delivery',
-                icon: DeliveryIcon,
-                url: '/delivery',
-              },
-              {
-                label: 'Position',
-                icon: StarIcon,
-                url: '/position',
-              },
-              {
-                label: 'Payment Info',
-                icon: CreditCardIcon,
-                url: '/payment',
-              },
-            ],
-          },
-        ];
+        MenuItem = [...defaultValue];
         break;
       case 3:
         MenuItem = [
@@ -249,6 +169,11 @@ export function MenuItems(user: User | null) {
                 label: 'Leave',
                 icon: FileIcon,
                 url: '/leave',
+              },
+              {
+                label: 'Overtime',
+                icon: PageClockIcon,
+                url: '/ot',
               },
             ],
           },
@@ -318,6 +243,11 @@ export function MenuItems(user: User | null) {
                 icon: FileIcon,
                 url: '/leave',
               },
+              {
+                label: 'Overtime',
+                icon: PageClockIcon,
+                url: '/ot',
+              },
             ],
           },
           {
@@ -376,6 +306,11 @@ export function MenuItems(user: User | null) {
                 label: 'Leave',
                 icon: FileIcon,
                 url: '/leave',
+              },
+              {
+                label: 'Overtime',
+                icon: PageClockIcon,
+                url: '/ot',
               },
             ],
           },

@@ -40,6 +40,8 @@ export function EditUserScreen() {
           roleId: u.role ? u.role.id : undefined,
           username: u.username,
           password: '',
+          fromTime: u.fromTime,
+          toTime: u.toTime,
         });
       }
     },
@@ -117,6 +119,8 @@ export function EditUserScreen() {
       password: value?.password ? value.password : undefined,
       createdDate: moment(new Date()).format('YYYY-MM-DD'),
       type: 'STAFF',
+      fromTime: value?.fromTime,
+      toTime: value?.toTime,
     };
 
     update({

@@ -121,3 +121,15 @@ mutation updateLeave($updateLeaveId: Int!, $data: LeaveInput) {
 mutation updateLeaveStatus($updateLeaveStatusId: Int!, $status: LeaveStatus) {
   updateLeaveStatus(id: $updateLeaveStatusId, status: $status)
 }
+
+mutation createOverTime($userId: Int!, $data: OverTimeInput) {
+  createOverTime(userId: $userId, data: $data)
+}
+
+mutation updateOverTime($updateOverTimeId: Int!, $data: OverTimeInput) {
+  updateOverTime(id: $updateOverTimeId, data: $data)
+}
+
+mutation updateOverTimeStatus($updateOverTimeStatusId: Int!, $status: OverTimeStatus) {
+  updateOverTimeStatus(id: $updateOverTimeStatusId, status: $status)
+}

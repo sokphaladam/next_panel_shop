@@ -1,5 +1,6 @@
 'use client';
 
+import { useCustomToast } from '@/components/custom/CustomToast';
 import { useCheckAttendanceMutation, useGetAttendanceStaffTodayQuery } from '@/gql/graphql';
 import { Modal } from '@/hook/modal';
 import { haversineDistance } from '@/lib/loacationDistance';
@@ -12,13 +13,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 export function CheckAttandance() {
   const setting = useSetting();
   const user = useUser();
+  const { toasts, setToasts } = useCustomToast();
   const [allow, setAllow] = useState(false);
   const { data, loading } = useGetAttendanceStaffTodayQuery({
     variables: {
       date: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     },
   });
-  const [attendance] = useCheckAttendanceMutation({
+  const [attendance, propUpdate] = useCheckAttendanceMutation({
     refetchQueries: ['getAttendanceStaffToday', 'getAttendanceStaff'],
   });
 
@@ -55,12 +57,25 @@ export function CheckAttandance() {
                 userId: Number(user?.id),
                 date: moment(d).format('YYYY-MM-DD HH:mm:ss'),
               },
-            });
+            })
+              .then((res) => {
+                if (res.data?.checkAttendance) {
+                  setToasts([
+                    ...toasts,
+                    { content: `Check out at ${moment(d).format('YYYY-MM-DD HH:mm:ss')}`, status: 'success' },
+                  ]);
+                } else {
+                  setToasts([...toasts, { content: `Oop! someting was wrong please try again.`, status: 'error' }]);
+                }
+              })
+              .catch(() => {
+                setToasts([...toasts, { content: `Oop! someting was wrong please try again.`, status: 'error' }]);
+              });
           },
         },
       ],
     });
-  }, [attendance, user]);
+  }, [attendance, setToasts, toasts, user?.id]);
 
   const handleCheckOut = useCallback(() => {
     const d = new Date();
@@ -76,12 +91,25 @@ export function CheckAttandance() {
                 userId: Number(user?.id),
                 date: moment(d).format('YYYY-MM-DD HH:mm:ss'),
               },
-            });
+            })
+              .then((res) => {
+                if (res.data?.checkAttendance) {
+                  setToasts([
+                    ...toasts,
+                    { content: `Check out at ${moment(d).format('YYYY-MM-DD HH:mm:ss')}`, status: 'success' },
+                  ]);
+                } else {
+                  setToasts([...toasts, { content: `Oop! someting was wrong please try again.`, status: 'error' }]);
+                }
+              })
+              .catch(() => {
+                setToasts([...toasts, { content: `Oop! someting was wrong please try again.`, status: 'error' }]);
+              });
           },
         },
       ],
     });
-  }, [attendance, user]);
+  }, [attendance, setToasts, toasts, user?.id]);
 
   if (setting.length <= 0 && !user?.id) {
     return <></>;
@@ -92,7 +120,7 @@ export function CheckAttandance() {
   const end = setting.find((f) => f.option === 'DEFAULT_ENDWORK')?.value || '0';
   const break_time = setting.find((f) => f.option === 'DEFAULT_BREAKWORK')?.value;
 
-  if (loading) {
+  if (loading || !!propUpdate.loading) {
     return <></>;
   }
 

@@ -1,7 +1,6 @@
 'use client';
-
 import { PolarisLayout } from '@/components/polaris/PolarisLayout';
-import { Leave, LeaveStatus, useLeaveListQuery } from '@/gql/graphql';
+import { LeaveStatus, OverTime, OverTimeStatus, useOverTimeListQuery } from '@/gql/graphql';
 import { usePagination } from '@/hook/usePagination';
 import {
   Avatar,
@@ -15,42 +14,42 @@ import {
   useSetIndexFiltersMode,
 } from '@shopify/polaris';
 import moment from 'moment';
-import { ControllLeave } from './components/ControllLeave';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { ControllOt } from './components/ControllOt';
 
 const toneStatus: any = {
-  [LeaveStatus.Request]: 'attention-strong',
-  [LeaveStatus.Approved]: 'success-strong',
-  [LeaveStatus.Rejected]: 'critical-strong',
-  [LeaveStatus.Cancelled]: 'new',
+  [OverTimeStatus.Request]: 'attention-strong',
+  [OverTimeStatus.Approved]: 'success-strong',
+  [OverTimeStatus.Rejected]: 'critical-strong',
+  [OverTimeStatus.Cancelled]: 'new',
 };
 
 const tabs: TabProps[] = [
   {
     content: 'Pending',
-    id: LeaveStatus.Request,
+    id: OverTimeStatus.Request,
   },
   {
     content: 'Approved',
-    id: LeaveStatus.Approved,
+    id: OverTimeStatus.Approved,
   },
   {
     content: 'Rejected',
-    id: LeaveStatus.Rejected,
+    id: OverTimeStatus.Rejected,
   },
   {
     content: 'Cancelled',
-    id: LeaveStatus.Cancelled,
+    id: OverTimeStatus.Cancelled,
   },
 ];
 
-export function LeaveListScreen() {
+export function OtListScreen() {
   const [select, setSelect] = useState(0);
   const { limit, offset, setOffset, handleResetPage } = usePagination();
   const [searchInput, setSearchInput] = useState('');
   const { mode, setMode } = useSetIndexFiltersMode();
 
-  const { data, loading } = useLeaveListQuery({
+  const { data, loading } = useOverTimeListQuery({
     variables: {
       offset: offset * limit,
       limit,
@@ -59,7 +58,7 @@ export function LeaveListScreen() {
   });
 
   return (
-    <PolarisLayout fullWidth title={'Leave List'} primaryAction={{ content: 'Request Leave', url: '/leave/create' }}>
+    <PolarisLayout title="Overtime List" fullWidth primaryAction={{ content: 'Request Overtime', url: '/ot/create' }}>
       <Layout>
         <Layout.Section>
           <Card padding={'0'}>
@@ -94,9 +93,9 @@ export function LeaveListScreen() {
             <Box padding={'0'}>
               <IndexTable
                 headings={[
-                  { title: 'Start Date' },
-                  { title: 'End Date' },
-                  { title: 'Duration' },
+                  { title: 'Date' },
+                  { title: 'From Time' },
+                  { title: 'To Time' },
                   { title: 'Request By' },
                   {
                     title: 'Reason',
@@ -105,19 +104,19 @@ export function LeaveListScreen() {
                   { title: 'Change Status' },
                   { title: 'Control' },
                 ]}
-                itemCount={data?.leaveList?.length || 0}
+                itemCount={data?.overTimeList?.length || 0}
                 selectable={false}
                 loading={loading}
                 pagination={{
                   label: `${offset * limit + 1} - ${limit * (offset + 1)}`,
-                  hasNext: (data?.leaveList?.length || 0) >= limit,
+                  hasNext: (data?.overTimeList?.length || 0) >= limit,
                   hasPrevious: offset > 0,
                   onNext: () => setOffset(offset + 1),
                   onPrevious: () => setOffset(offset - 1),
                 }}
               >
                 {data &&
-                  data.leaveList?.map((item, index) => {
+                  data.overTimeList?.map((item, index) => {
                     return <LeavListItem index={index} item={item || {}} key={index} />;
                   })}
               </IndexTable>
@@ -129,25 +128,25 @@ export function LeaveListScreen() {
   );
 }
 
-function LeavListItem({ item, index }: { item: Leave; index: number }) {
-  const x = ['fullday', 'morning', 'afternoon'].includes(item?.duration + '');
+function LeavListItem({ item, index }: { item: OverTime; index: number }) {
+  // const x = ['fullday', 'morning', 'afternoon'].includes(item?.duration + '');
   let change = null;
 
-  if (item.status === LeaveStatus.Approved) {
+  if (item.status === OverTimeStatus.Approved) {
     change = {
       date: item.approvedDate,
       by: item.approvedBy,
     };
   }
 
-  if (item.status === LeaveStatus.Rejected) {
+  if (item.status === OverTimeStatus.Rejected) {
     change = {
       date: item.rejectedDate,
       by: item.rejectedBy,
     };
   }
 
-  if (item.status === LeaveStatus.Cancelled) {
+  if (item.status === OverTimeStatus.Cancelled) {
     change = {
       date: item.cancelledDate,
       by: item.cancelledBy,
@@ -156,9 +155,9 @@ function LeavListItem({ item, index }: { item: Leave; index: number }) {
 
   return (
     <IndexTable.Row key={index} id={item?.id + ''} position={index}>
-      <IndexTable.Cell>{!x ? item?.startDate : moment(item?.startDate).format('YYYY-MM-DD')}</IndexTable.Cell>
-      <IndexTable.Cell>{!x ? item?.endDate : moment(item?.endDate).format('YYYY-MM-DD')}</IndexTable.Cell>
-      <IndexTable.Cell>{item?.duration}</IndexTable.Cell>
+      <IndexTable.Cell>{item?.otDate}</IndexTable.Cell>
+      <IndexTable.Cell>{item.startat ? item?.startat : moment(item?.startat).format('YYYY-MM-DD')}</IndexTable.Cell>
+      <IndexTable.Cell>{item.endAt ? item?.endAt : moment(item?.endAt).format('YYYY-MM-DD')}</IndexTable.Cell>
       <IndexTable.Cell>
         <div className="flex flex-row gap-2 items-center">
           <Avatar
@@ -175,7 +174,7 @@ function LeavListItem({ item, index }: { item: Leave; index: number }) {
           </div>
         </div>
       </IndexTable.Cell>
-      <IndexTable.Cell>{item.leaveReason}</IndexTable.Cell>
+      <IndexTable.Cell>{item.note}</IndexTable.Cell>
       <IndexTable.Cell>
         <Badge tone={toneStatus[item?.status || '']} size="small">
           {item?.status || ''}
@@ -199,7 +198,7 @@ function LeavListItem({ item, index }: { item: Leave; index: number }) {
           </div>
         )}
       </IndexTable.Cell>
-      <IndexTable.Cell>{item.status === LeaveStatus.Request && <ControllLeave item={item} />}</IndexTable.Cell>
+      <IndexTable.Cell>{item.status === OverTimeStatus.Request && <ControllOt item={item} />}</IndexTable.Cell>
     </IndexTable.Row>
   );
 }

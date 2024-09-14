@@ -1,6 +1,6 @@
 import { ActionList, Icon, IndexTable, Popover, Spinner, TextField, Tooltip } from '@shopify/polaris';
 import React, { useCallback, useState } from 'react';
-import { MenuVerticalIcon } from '@shopify/polaris-icons';
+import { MenuVerticalIcon, PlusIcon } from '@shopify/polaris-icons';
 import { ProductInput, Sku } from '@/gql/graphql';
 import { PolarisUpload } from '@/components/polaris/PolarisUpload';
 
@@ -138,28 +138,41 @@ function UploadProductSkuItem(props: {
 
 export function UploadProductSku(props: Props) {
   return (
-    <IndexTable
-      headings={[
-        { title: 'Name' },
-        { title: 'Price' },
-        { title: 'Discount' },
-        { title: 'Image' },
-        { title: 'control' },
-      ]}
-      itemCount={1}
-      selectable={false}
-    >
-      {(props.value.sku || []).map((x, i) => {
-        return (
-          <UploadProductSkuItem
-            current={x || {}}
-            {...props}
-            key={i}
-            latest={(props.value.sku || []).length === i + 1}
-            index={i}
-          />
-        );
-      })}
-    </IndexTable>
+    <div>
+      <IndexTable
+        headings={[
+          { title: 'Name' },
+          { title: 'Price' },
+          { title: 'Discount' },
+          { title: 'Image' },
+          { title: 'control' },
+        ]}
+        itemCount={1}
+        selectable={false}
+      >
+        {(props.value.sku || []).map((x, i) => {
+          return (
+            <UploadProductSkuItem
+              current={x || {}}
+              {...props}
+              key={i}
+              latest={(props.value.sku || []).length === i + 1}
+              index={i}
+            />
+          );
+        })}
+      </IndexTable>
+      <div
+        className="border-collapse border-dotted border-[0.5px] rounded-md p-2 hover:bg-gray-300 cursor-pointer"
+        onClick={() => {
+          props.setValue({
+            ...props.value,
+            sku: [...(props.value.sku || []), { name: '', discount: 0, price: 0, unit: '' }],
+          });
+        }}
+      >
+        <Icon source={PlusIcon} />
+      </div>
+    </div>
   );
 }
