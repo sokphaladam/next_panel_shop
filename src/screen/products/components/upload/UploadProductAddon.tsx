@@ -1,6 +1,6 @@
 import { ProductInput } from '@/gql/graphql';
-import { Checkbox, Icon, TextField } from '@shopify/polaris';
-import { PlusIcon } from '@shopify/polaris-icons';
+import { Button, Checkbox, Icon, IndexTable, TextField } from '@shopify/polaris';
+import { DeleteIcon, PlusIcon } from '@shopify/polaris-icons';
 import react, { useCallback } from 'react';
 
 interface Props {
@@ -27,7 +27,60 @@ export function UploadProductAddon(props: Props) {
 
   return (
     <div className="flex flex-col gap-1">
-      {props.value.addons?.map((x, i) => {
+      <IndexTable
+        headings={[{ title: 'Name' }, { title: 'Price' }, { title: 'control', alignment: 'end' }]}
+        itemCount={1}
+        selectable={false}
+      >
+        {props.value.addons?.map((x, i) => {
+          return (
+            <IndexTable.Row key={i} position={i} id={i + ''}>
+              <IndexTable.Cell>
+                <TextField
+                  autoComplete="off"
+                  value={x?.name || ''}
+                  label
+                  labelHidden
+                  placeholder="Enter name addon"
+                  onChange={(v) => {
+                    handleChangeText(v, 'name', i);
+                  }}
+                />
+              </IndexTable.Cell>
+              <IndexTable.Cell>
+                <TextField
+                  autoComplete="off"
+                  value={x?.value || ''}
+                  label
+                  labelHidden
+                  placeholder="Enter price addons"
+                  // helpText={'Ex: 10%,25%,50%,...'}
+                  onChange={(v) => handleChangeText(v, 'value', i)}
+                  type="number"
+                  prefix="$"
+                />
+              </IndexTable.Cell>
+              <IndexTable.Cell>
+                <div className="flex flex-row justify-center">
+                  <Button
+                    onClick={() => {
+                      props.setValue({
+                        ...props.value,
+                        addons: [...(props.value.sku || []).filter((x, ii) => ii !== i)],
+                      });
+                    }}
+                    size="slim"
+                    icon={DeleteIcon}
+                    variant="tertiary"
+                    tone="critical"
+                  ></Button>
+                </div>
+              </IndexTable.Cell>
+            </IndexTable.Row>
+          );
+        })}
+      </IndexTable>
+      {/* {props.value.addons?.map((x, i) => {
         return (
           <div key={i} className="p-2 flex flex-row gap-2 justify-between">
             <div>
@@ -56,12 +109,10 @@ export function UploadProductAddon(props: Props) {
               />
             </div>
             <div>
-              {/* <Checkbox checked={x?.isRequired || false} label="Required" onChange={v => handleChangeText(v, 'isRequired', i)} /> */}
-              {/* <TextField autoComplete='off' value={x.}/> */}
             </div>
           </div>
         );
-      })}
+      })} */}
       <div
         className="border-collapse border-dotted border-[0.5px] rounded-md p-2 hover:bg-gray-300 cursor-pointer"
         onClick={() => {

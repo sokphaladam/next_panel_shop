@@ -16,7 +16,7 @@ export function RoleController(props: Props) {
 
   const options = [{ label: 'Select role', value: '' }];
 
-  for (const d of data.roleList || []) {
+  for (const d of data.roleList?.filter((x) => ![1, 2].includes(x?.id || 0)) || []) {
     options.push({ label: d?.name || '', value: d?.id + '' });
   }
 
