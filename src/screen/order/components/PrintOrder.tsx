@@ -56,6 +56,7 @@ export function PrintOrder(props: Props) {
   const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value;
   const vat = setting.find((f) => f.option === 'TAX')?.value;
   const discount = (Number(props.order?.total || 0) * Number(props.order?.discount)) / 100;
+  const signature = props.order ? props.order?.log?.find((f) => f?.text === 'Signature')?.by?.display : '';
 
   return (
     <Modal
@@ -199,6 +200,7 @@ export function PrintOrder(props: Props) {
                           )}
                           <div className="h-8">TOTAL</div>
                           <div className="h-8">VAT (Include.)</div>
+                          {signature && <div className="h-8">Signature</div>}
                         </div>
                       </td>
                       <td colSpan={2} suppressHydrationWarning className="text-right border-none">
@@ -221,6 +223,7 @@ export function PrintOrder(props: Props) {
                             )}
                           </div>
                           <div className="h-8"></div>
+                          {signature && <div className="h-8"></div>}
                         </div>
                       </td>
                       <td className="text-right border-none">
@@ -234,6 +237,7 @@ export function PrintOrder(props: Props) {
                           )}
                           <div className="h-8">${(Number(props.total) - Number(discount)).toFixed(2)}</div>
                           <div className="h-8">$({vat}%)</div>
+                          {signature && <div className="h-8">{signature || ''}</div>}
                         </div>
                       </td>
                     </tr>

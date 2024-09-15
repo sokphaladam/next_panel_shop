@@ -44,6 +44,7 @@ export function ProductScreen() {
                   { title: 'Category' },
                   { title: 'SKU' },
                   { title: 'Type' },
+                  { title: 'Status' },
                   { title: 'Control' },
                 ]}
                 loading={loading}

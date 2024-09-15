@@ -236,6 +236,7 @@ export type Mutation = {
   updateProductStock?: Maybe<Scalars['Boolean']['output']>;
   updateSetting?: Maybe<Scalars['Boolean']['output']>;
   updateShift?: Maybe<Scalars['Boolean']['output']>;
+  updateStatusProduct?: Maybe<Scalars['Boolean']['output']>;
   updateUser?: Maybe<Scalars['Boolean']['output']>;
   verifyOtpOrder?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -460,6 +461,12 @@ export type MutationUpdateShiftArgs = {
 };
 
 
+export type MutationUpdateStatusProductArgs = {
+  id: Scalars['Int']['input'];
+  status: Status_Product;
+};
+
+
 export type MutationUpdateUserArgs = {
   data?: InputMaybe<UserInput>;
   id: Scalars['Int']['input'];
@@ -580,6 +587,7 @@ export type Product = {
   images?: Maybe<Scalars['String']['output']>;
   integrates?: Maybe<Array<Maybe<Integrate>>>;
   sku?: Maybe<Array<Maybe<Sku>>>;
+  status?: Maybe<Status_Product>;
   stockAlter?: Maybe<Scalars['Float']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Array<Maybe<Type_Product>>>;
@@ -633,6 +641,7 @@ export type Query = {
   leaveList?: Maybe<Array<Maybe<Leave>>>;
   me?: Maybe<User>;
   order?: Maybe<Order>;
+  orderBalanceSummary?: Maybe<Scalars['JSON']['output']>;
   orderList?: Maybe<Array<Maybe<Order>>>;
   overTime?: Maybe<OverTime>;
   overTimeList?: Maybe<Array<Maybe<OverTime>>>;
@@ -850,6 +859,7 @@ export type Sku = {
   image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  status?: Maybe<Status_Product>;
   unit?: Maybe<Scalars['String']['output']>;
 };
 
@@ -859,8 +869,14 @@ export type SkuInput = {
   image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
+  status?: InputMaybe<Status_Product>;
   unit?: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum Status_Product {
+  Available = 'AVAILABLE',
+  OutOfStock = 'OUT_OF_STOCK'
+}
 
 export type Setting = {
   __typename?: 'Setting';
@@ -1257,6 +1273,14 @@ export type UpdateOverTimeStatusMutationVariables = Exact<{
 
 export type UpdateOverTimeStatusMutation = { __typename?: 'Mutation', updateOverTimeStatus?: boolean | null };
 
+export type UpdateStatusProductMutationVariables = Exact<{
+  updateStatusProductId: Scalars['Int']['input'];
+  status: Status_Product;
+}>;
+
+
+export type UpdateStatusProductMutation = { __typename?: 'Mutation', updateStatusProduct?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1270,14 +1294,14 @@ export type ProductListQueryVariables = Exact<{
 }>;
 
 
-export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
+export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, status?: Status_Product | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null, status?: Status_Product | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
 
 export type ProductQueryVariables = Exact<{
   productId: Scalars['Int']['input'];
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
+export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, status?: Status_Product | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null, status?: Status_Product | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
 
 export type CategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1476,6 +1500,11 @@ export type OverTimeQueryVariables = Exact<{
 
 
 export type OverTimeQuery = { __typename?: 'Query', overTime?: { __typename?: 'OverTime', id?: number | null, startat?: string | null, endAt?: string | null, otDate?: string | null, note?: string | null, status?: OverTimeStatus | null, approvedDate?: string | null, requestedDate?: string | null, rejectedDate?: string | null, cancelledDate?: string | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null };
+
+export type OrderBalanceSummaryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OrderBalanceSummaryQuery = { __typename?: 'Query', orderBalanceSummary?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -2578,6 +2607,38 @@ export function useUpdateOverTimeStatusMutation(baseOptions?: Apollo.MutationHoo
 export type UpdateOverTimeStatusMutationHookResult = ReturnType<typeof useUpdateOverTimeStatusMutation>;
 export type UpdateOverTimeStatusMutationResult = Apollo.MutationResult<UpdateOverTimeStatusMutation>;
 export type UpdateOverTimeStatusMutationOptions = Apollo.BaseMutationOptions<UpdateOverTimeStatusMutation, UpdateOverTimeStatusMutationVariables>;
+export const UpdateStatusProductDocument = gql`
+    mutation updateStatusProduct($updateStatusProductId: Int!, $status: STATUS_PRODUCT!) {
+  updateStatusProduct(id: $updateStatusProductId, status: $status)
+}
+    `;
+export type UpdateStatusProductMutationFn = Apollo.MutationFunction<UpdateStatusProductMutation, UpdateStatusProductMutationVariables>;
+
+/**
+ * __useUpdateStatusProductMutation__
+ *
+ * To run a mutation, you first call `useUpdateStatusProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateStatusProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateStatusProductMutation, { data, loading, error }] = useUpdateStatusProductMutation({
+ *   variables: {
+ *      updateStatusProductId: // value for 'updateStatusProductId'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateStatusProductMutation(baseOptions?: Apollo.MutationHookOptions<UpdateStatusProductMutation, UpdateStatusProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateStatusProductMutation, UpdateStatusProductMutationVariables>(UpdateStatusProductDocument, options);
+      }
+export type UpdateStatusProductMutationHookResult = ReturnType<typeof useUpdateStatusProductMutation>;
+export type UpdateStatusProductMutationResult = Apollo.MutationResult<UpdateStatusProductMutation>;
+export type UpdateStatusProductMutationOptions = Apollo.BaseMutationOptions<UpdateStatusProductMutation, UpdateStatusProductMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -2655,9 +2716,11 @@ export const ProductListDocument = gql`
       discount
       unit
       image
+      status
     }
     code
     images
+    status
     addons {
       value
       name
@@ -2710,6 +2773,7 @@ export const ProductDocument = gql`
     title
     description
     type
+    status
     stockAlter
     category {
       id
@@ -2723,6 +2787,7 @@ export const ProductDocument = gql`
       discount
       unit
       image
+      status
     }
     code
     images
@@ -4196,6 +4261,43 @@ export type OverTimeQueryHookResult = ReturnType<typeof useOverTimeQuery>;
 export type OverTimeLazyQueryHookResult = ReturnType<typeof useOverTimeLazyQuery>;
 export type OverTimeSuspenseQueryHookResult = ReturnType<typeof useOverTimeSuspenseQuery>;
 export type OverTimeQueryResult = Apollo.QueryResult<OverTimeQuery, OverTimeQueryVariables>;
+export const OrderBalanceSummaryDocument = gql`
+    query orderBalanceSummary {
+  orderBalanceSummary
+}
+    `;
+
+/**
+ * __useOrderBalanceSummaryQuery__
+ *
+ * To run a query within a React component, call `useOrderBalanceSummaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderBalanceSummaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderBalanceSummaryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOrderBalanceSummaryQuery(baseOptions?: Apollo.QueryHookOptions<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>(OrderBalanceSummaryDocument, options);
+      }
+export function useOrderBalanceSummaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>(OrderBalanceSummaryDocument, options);
+        }
+export function useOrderBalanceSummarySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>(OrderBalanceSummaryDocument, options);
+        }
+export type OrderBalanceSummaryQueryHookResult = ReturnType<typeof useOrderBalanceSummaryQuery>;
+export type OrderBalanceSummaryLazyQueryHookResult = ReturnType<typeof useOrderBalanceSummaryLazyQuery>;
+export type OrderBalanceSummarySuspenseQueryHookResult = ReturnType<typeof useOrderBalanceSummarySuspenseQuery>;
+export type OrderBalanceSummaryQueryResult = Apollo.QueryResult<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

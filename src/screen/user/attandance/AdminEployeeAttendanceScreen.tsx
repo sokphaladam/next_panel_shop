@@ -104,10 +104,9 @@ export function AdminEployeeAttendanceScreen() {
               >
                 {queryUser.data &&
                   queryUser.data.userList
-                    ?.filter((x) => x?.type === 'STAFF')
+                    ?.filter((x) => x?.type === 'STAFF' && !!x.isActive)
                     .map((user) => {
                       const checklist = group[user?.id || 0] ? group[user?.id || 0] || [] : [];
-                      // console.log(x?.id, checklist);
                       return (
                         <IndexTable.Row key={user?.id} position={user?.id || 0} id={user?.id + ''}>
                           <IndexTable.Cell>

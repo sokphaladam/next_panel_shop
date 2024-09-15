@@ -227,7 +227,9 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             Return to customer:{' '}
             <span className="pl-2">
               {currency === 'USD'
-                ? '$' + (Number(amountInput || xTotal) - Number(xTotal)).toFixed(2)
+                ? `${'$' + (Number(amountInput || xTotal) - Number(xTotal)).toFixed(2)} = ${
+                    '៛' + ((Number(amountInput) - Number(xTotal)) * Number(exchangeRate)).toFixed(2)
+                  }`
                 : '៛' + (Number(amountInput) - Number(xTotal)).toFixed(2)}
             </span>
           </div>

@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from 'react';
 import { UploadProduct } from './UploadProduct';
 import { useParams, useRouter } from 'next/navigation';
-import { ProductInput, useProductQuery, useUpdateProductMutation } from '@/gql/graphql';
+import { ProductInput, Status_Product, useProductQuery, useUpdateProductMutation } from '@/gql/graphql';
 import { Loading, Page } from '@shopify/polaris';
 import { useCustomToast } from '@/components/custom/CustomToast';
 
@@ -50,6 +50,7 @@ export function UpdateProductScreen() {
                   discount: s?.discount,
                   price: s?.price,
                   image: s?.image,
+                  status: s?.status,
                 };
               })
             : [
@@ -59,6 +60,7 @@ export function UpdateProductScreen() {
                   price: 0,
                   unit: '',
                   image: '',
+                  status: Status_Product.Available,
                 },
               ],
         type: x?.type,
@@ -106,6 +108,7 @@ export function UpdateProductScreen() {
                   discount: Number(s?.discount),
                   price: Number(s?.price),
                   image: s.image,
+                  status: s.status,
                 };
               }
               return {
@@ -114,6 +117,7 @@ export function UpdateProductScreen() {
                 discount: Number(s?.discount),
                 price: Number(s?.price),
                 image: s?.image,
+                status: s?.status,
               };
             }),
           },

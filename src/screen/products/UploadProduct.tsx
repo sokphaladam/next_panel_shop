@@ -163,7 +163,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading, isEdit }: Pr
                 onChange={(v) => setUnit(v)}
               />
               <br />
-              {!uploading && <UploadProductSku value={value} setValue={setValue} />}
+              {!uploading && <UploadProductSku isEdit={isEdit} value={value} setValue={setValue} />}
             </Box>
           </Card>
           <br />

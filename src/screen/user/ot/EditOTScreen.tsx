@@ -16,6 +16,7 @@ export function EditOtScreen() {
   const { toasts, setToasts } = useCustomToast();
   const now = moment(new Date());
   const [value, setValue] = useState<OverTimeInput>({});
+  const [selectUser, setSelectUser] = useState(user?.id || 0);
   const { loading } = useOverTimeQuery({
     variables: {
       overTimeId: Number(id),
@@ -27,6 +28,7 @@ export function EditOtScreen() {
         endAt: res.overTime?.endAt || '18:00',
         note: res.overTime?.note || '',
       });
+      setSelectUser(res.overTime?.requestedBy?.id || 0);
     },
   });
   const [update] = useUpdateOverTimeMutation({
@@ -70,7 +72,9 @@ export function EditOtScreen() {
           fullWidth
           primaryAction={{ content: 'Save', onAction: handleSave }}
         >
-          <FormOT value={value} setValue={setValue} />
+          {value.otDate && (
+            <FormOT isEdit selectUser={selectUser} setSelectUser={setSelectUser} value={value} setValue={setValue} />
+          )}
         </PolarisLayout>
       </Layout.Section>
       <Layout.Section variant="oneThird"></Layout.Section>

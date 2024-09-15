@@ -1,7 +1,7 @@
 'use client';
 import React, { useCallback, useState } from 'react';
 import { UploadProduct } from './UploadProduct';
-import { ProductInput, Type_Product, useCreateProductMutation } from '@/gql/graphql';
+import { ProductInput, Status_Product, Type_Product, useCreateProductMutation } from '@/gql/graphql';
 import { useCustomToast } from '@/components/custom/CustomToast';
 import { useRouter } from 'next/navigation';
 
@@ -24,6 +24,7 @@ export function CreateProductScreen() {
         price: 0,
         unit: '',
         image: '',
+        status: Status_Product.Available,
       },
     ],
     type: [Type_Product.Production],
