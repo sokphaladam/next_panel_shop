@@ -66,7 +66,7 @@ export function UploadProductAddon(props: Props) {
                     onClick={() => {
                       props.setValue({
                         ...props.value,
-                        addons: [...(props.value.sku || []).filter((x, ii) => ii !== i)],
+                        addons: [...(props.value.addons || []).filter((x, ii) => ii !== i)],
                       });
                     }}
                     size="slim"
