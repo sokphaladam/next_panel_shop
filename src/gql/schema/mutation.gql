@@ -133,3 +133,7 @@ mutation updateOverTime($updateOverTimeId: Int!, $data: OverTimeInput) {
 mutation updateOverTimeStatus($updateOverTimeStatusId: Int!, $status: OverTimeStatus) {
   updateOverTimeStatus(id: $updateOverTimeStatusId, status: $status)
 }
+
+mutation updateStatusProduct($updateStatusProductId: Int!, $status: STATUS_PRODUCT!) {
+  updateStatusProduct(id: $updateStatusProductId, status: $status)
+}

@@ -1,12 +1,13 @@
-import { ActionList, Icon, IndexTable, Popover, Spinner, TextField, Tooltip } from '@shopify/polaris';
+import { ActionList, Icon, IndexTable, Popover, Select, Spinner, TextField, Tooltip } from '@shopify/polaris';
 import React, { useCallback, useState } from 'react';
 import { MenuVerticalIcon, PlusIcon } from '@shopify/polaris-icons';
-import { ProductInput, Sku } from '@/gql/graphql';
+import { ProductInput, Sku, Status_Product } from '@/gql/graphql';
 import { PolarisUpload } from '@/components/polaris/PolarisUpload';
 
 interface Props {
   value: ProductInput;
   setValue: (v: ProductInput) => void;
+  isEdit?: boolean;
 }
 
 function UploadProductSkuItem(props: {
@@ -15,6 +16,7 @@ function UploadProductSkuItem(props: {
   current: Sku;
   latest: boolean;
   index: number;
+  isEdit?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,6 +43,22 @@ function UploadProductSkuItem(props: {
 
   return (
     <IndexTable.Row id="0" position={0}>
+      {props.isEdit && (
+        <IndexTable.Cell>
+          <Select
+            label
+            labelHidden
+            value={props.value.sku[props.index]?.status || ''}
+            options={[
+              { label: 'Available', value: Status_Product.Available },
+              { label: 'Out of stock', value: Status_Product.OutOfStock },
+            ]}
+            onChange={(v) => {
+              handleChangeText(v, 'status');
+            }}
+          />
+        </IndexTable.Cell>
+      )}
       <IndexTable.Cell>
         <TextField
           autoComplete="off"
@@ -109,7 +127,10 @@ function UploadProductSkuItem(props: {
                   onAction: () => {
                     props.setValue({
                       ...props.value,
-                      sku: [...(props.value.sku || []), { name: '', discount: 0, price: 0, unit: '' }],
+                      sku: [
+                        ...(props.value.sku || []),
+                        { name: '', discount: 0, price: 0, unit: '', status: Status_Product.Available, image: '' },
+                      ],
                     });
                     setOpen(false);
                   },
@@ -140,13 +161,18 @@ export function UploadProductSku(props: Props) {
   return (
     <div>
       <IndexTable
-        headings={[
-          { title: 'Name' },
-          { title: 'Price' },
-          { title: 'Discount' },
-          { title: 'Image' },
-          { title: 'control' },
-        ]}
+        headings={
+          props.isEdit
+            ? [
+                { title: '' },
+                { title: 'Name' },
+                { title: 'Price' },
+                { title: 'Discount' },
+                { title: 'Image' },
+                { title: 'control' },
+              ]
+            : [{ title: 'Name' }, { title: 'Price' }, { title: 'Discount' }, { title: 'Image' }, { title: 'control' }]
+        }
         itemCount={1}
         selectable={false}
       >
@@ -158,6 +184,7 @@ export function UploadProductSku(props: Props) {
               key={i}
               latest={(props.value.sku || []).length === i + 1}
               index={i}
+              isEdit={props.isEdit}
             />
           );
         })}
@@ -167,7 +194,10 @@ export function UploadProductSku(props: Props) {
         onClick={() => {
           props.setValue({
             ...props.value,
-            sku: [...(props.value.sku || []), { name: '', discount: 0, price: 0, unit: '' }],
+            sku: [
+              ...(props.value.sku || []),
+              { name: '', discount: 0, price: 0, unit: '', status: Status_Product.Available, image: '' },
+            ],
           });
         }}
       >

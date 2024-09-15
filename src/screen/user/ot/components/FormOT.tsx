@@ -1,5 +1,7 @@
 'use client';
+import { PolarisUser } from '@/components/polaris/PolarisUser';
 import { OverTimeInput } from '@/gql/graphql';
+import { useUser } from '@/service/UserProvider';
 import { Box, Card, InlineGrid, Layout, TextField } from '@shopify/polaris';
 import moment from 'moment';
 import React from 'react';
@@ -7,16 +9,28 @@ import React from 'react';
 interface Props {
   value: OverTimeInput;
   setValue: (v: OverTimeInput) => void;
+  selectUser: number;
+  setSelectUser: any;
+  isEdit?: boolean;
 }
 
 export function FormOT(props: Props) {
-  const start = new Date().setHours(Number(props.value.startat?.replace(':', '.')));
-  const end = new Date().setHours(Number(props.value.endAt?.replace(':', '.')));
+  const user = useUser();
+  const start = new Date().setHours(
+    Number(props.value.startat?.split(':')[0]),
+    Number(props.value.startat?.split(':')[1]),
+  );
+  const end = new Date().setHours(Number(props.value.endAt?.split(':')[0]), Number(props.value.endAt?.split(':')[1]));
+
   return (
     <Layout>
       <Layout.Section>
         <Card>
           <Box>
+            {!props.isEdit && [1, 2, 5].includes(user?.role?.id || 0) && (
+              <PolarisUser id={props.selectUser} title="Staff Request" onChange={props.setSelectUser} />
+            )}
+            <br />
             <TextField
               value={props.value.otDate || ''}
               autoComplete="off"
