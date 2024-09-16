@@ -163,10 +163,13 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
           togglePaid();
           const inv = {
             date: moment(new Date()),
-            count: Number(invoice.count) >= 50 ? 1 : Number(invoice.count) + 1,
+            count: Number(invoice.count) + 1,
           };
           localStorage.setItem('invoice', JSON.stringify(inv));
           setInvoice(inv);
+          setTimeout(() => {
+            process.browser && window.location.reload();
+          }, 500);
         } else {
           setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
         }
