@@ -4,6 +4,7 @@ import { usePagination } from '@/hook/usePagination';
 import { Box, Card, IndexFilters, IndexTable, Layout, Page, TabProps, useSetIndexFiltersMode } from '@shopify/polaris';
 import React, { useState } from 'react';
 import { OrderListItem } from './components/OrderListItem';
+import { PrintAllOrder } from './components/PrintAllOrder';
 
 const tabs: TabProps[] = [
   {
@@ -53,6 +54,8 @@ export function OrderListScreen() {
     <Page title="Order List" fullWidth>
       <Layout>
         <Layout.Section>
+          <PrintAllOrder />
+          <br />
           <Card padding={'0'}>
             <Box padding={'0'}>
               <IndexFilters
