@@ -37,12 +37,12 @@ export function ShiftListItem(props: Props) {
       <IndexTable.Cell>
         <small>USD: ${props.data.openCurrency?.usd}</small>
         <br />
-        <small>KHR: {props.data.openCurrency?.khr}</small>
+        <small>KHR: {Number(props.data.openCurrency?.khr).toFixed(2)}</small>
       </IndexTable.Cell>
       <IndexTable.Cell>
         <small>USD: ${props.data.closeCurrency?.usd}</small>
         <br />
-        <small>KHR: {props.data.closeCurrency?.khr}</small>
+        <small>KHR: {Number(props.data.closeCurrency?.khr).toFixed(2)}</small>
       </IndexTable.Cell>
       <IndexTable.Cell>
         {props.data.bank && (

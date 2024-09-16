@@ -100,7 +100,7 @@ export function PrintAllOrder() {
                       <p className="flex flex-row items-center justify-end">
                         <div className="w-[45px] text-left">Invoice</div>
                         <div className="mx-1">:</div>
-                        <div className="text-end">#{String(order?.id).padStart(5, '0')}</div>
+                        <div className="text-end">#{String(order?.invoice).padStart(5, '0')}</div>
                       </p>
                       <p className="flex flex-row items-center justify-end">
                         <div className="w-[45px] text-left">Table</div>
