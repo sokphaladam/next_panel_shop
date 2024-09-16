@@ -121,7 +121,7 @@ export function PrintShift(props: Props) {
   return (
     <div>
       <div style={{ display: 'none' }}>
-        <div ref={contentToPrint} style={{ width: '70mm' }}>
+        <div ref={contentToPrint} style={{ width: '70mm', color: '#000' }}>
           <div className="w-full flex flex-row justify-center">
             <img
               src={config_app.public.assets.logo}
@@ -130,8 +130,10 @@ export function PrintShift(props: Props) {
             />
           </div>
           <br />
-          <div style={{ fontWeight: 'bold', textAlign: 'center' }}>{'Minutes of shift handover'.toUpperCase()}</div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div style={{ fontWeight: 'bold', textAlign: 'center', color: '#000' }}>
+            {'Minutes of shift handover'.toUpperCase()}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', color: '#000' }}>
             <small>Shift on {moment(new Date(props.data.open + '')).format('DD/MMM/YYYY')}</small>
           </div>
           <br />
@@ -171,11 +173,11 @@ export function PrintShift(props: Props) {
               <strong>Cash (KHR)</strong>
             </div>
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="Opening Shift" value={props.data.openCurrency?.khr + ''} />
+            <RenderItemList text="Opening Shift" value={Number(props.data.openCurrency?.khr).toFixed(2) + ''} />
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="Closing Shift" value={props.data.closeCurrency?.khr + ''} />
+            <RenderItemList text="Closing Shift" value={Number(props.data.closeCurrency?.khr).toFixed(2) + ''} />
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="Handover amount" value={props.data.closeCurrency?.khr + ''} bold />
+            <RenderItemList text="Handover amount" value={Number(props.data.closeCurrency?.khr).toFixed(2) + ''} bold />
             <hr style={{ borderColor: 'black' }} />
             <RenderItemList text="✔️ Credit/Debit card" value={Number(bankTotal).toFixed(2) + '$'} bold />
             <hr style={{ borderColor: 'black' }} />

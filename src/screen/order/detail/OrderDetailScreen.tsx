@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Badge,
   Box,
@@ -65,16 +65,7 @@ const toneIcon: any = {
 
 export function OrderDetailScreen() {
   const params = useParams<{ id: string }>();
-  const local = process.browser
-    ? localStorage.getItem('invoice')
-      ? JSON.parse(localStorage.getItem('invoice') || '')
-      : { date: moment(new Date()).format('YYYY-MM-DD'), count: 1 }
-    : { date: moment(new Date()).format('YYYY-MM-DD'), count: 1 };
-  const [invoice, setInvoice] = useState(
-    new Date(local.date).getTime() === new Date(moment(new Date()).format('YYYY-MM-DD')).getTime()
-      ? local
-      : { date: moment(new Date()).format('YYYY-MM-DD'), count: 1 },
-  );
+  const [invoice, setInvoice] = useState<any>();
   const { setToasts, toasts } = useCustomToast();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
@@ -101,6 +92,20 @@ export function OrderDetailScreen() {
       }
     },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const local = localStorage.getItem('invoice');
+      if (local) {
+        const inv = JSON.parse(local);
+        if (moment(new Date(inv.date)).date() === moment(new Date()).date()) {
+          setInvoice(inv);
+        } else {
+          setInvoice({ date: moment(new Date()).format('YYYY-MM-DD'), count: 1 });
+        }
+      }
+    }
+  }, []);
 
   const handleUpdate = useCallback(
     (status: StatusOrder) => {
@@ -153,7 +158,7 @@ export function OrderDetailScreen() {
     [change, data?.order?.id, setToasts, toasts, toggelOpen, toggleActive, togglePaid],
   );
 
-  if (loading) {
+  if (loading || typeof window === 'undefined') {
     <Page title="Order Detail">
       <Frame>
         <Loading />
@@ -235,14 +240,16 @@ export function OrderDetailScreen() {
         </Modals.Section>
       </Modals>
       {/* Checkout */}
-      <FormCheckout
-        data={data?.order || {}}
-        open={paid}
-        setOpen={setPaid}
-        invoice={invoice}
-        setInvoice={setInvoice}
-        total={total}
-      />
+      {invoice && (
+        <FormCheckout
+          data={data?.order || {}}
+          open={paid}
+          setOpen={setPaid}
+          invoice={invoice}
+          setInvoice={setInvoice}
+          total={total}
+        />
+      )}
       <Layout>
         <Layout.Section variant="oneHalf">
           <Card padding={'0'}>
@@ -276,7 +283,7 @@ export function OrderDetailScreen() {
                         Verify
                       </Button>
                     )}
-                    {data?.order?.status === StatusOrder.Verify && (
+                    {/* {data?.order?.status === StatusOrder.Verify && (
                       <Button
                         size="micro"
                         tone="success"
@@ -285,8 +292,10 @@ export function OrderDetailScreen() {
                       >
                         Confirm
                       </Button>
-                    )}
-                    {[StatusOrder.Delivery, StatusOrder.Checkout].includes(data?.order?.status as any) &&
+                    )} */}
+                    {[StatusOrder.Delivery, StatusOrder.Checkout, StatusOrder.Verify].includes(
+                      data?.order?.status as any,
+                    ) &&
                       Number(data?.order?.paid || 0) <= 0 && (
                         <Button
                           size="micro"
