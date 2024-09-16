@@ -25,13 +25,14 @@ export function ControllChangeQty(props: Props) {
     refetchQueries: ['order'],
   });
 
-  const loading = loadingPlus || loadingMark || loadingSub || props.item.isPrint;
+  // const loading = loadingPlus || loadingMark || loadingSub || props.item.isPrint;
+  const loading = false;
 
   return (
     <ButtonGroup variant="segmented">
       <Button
         size="micro"
-        disabled={loading || props.item.status === StatusOrderItem.Completed || !!props.item.isPrint}
+        disabled={loading}
         onClick={() => {
           if (props.item.qty === 1) {
             Modal.dialog({
@@ -68,7 +69,7 @@ export function ControllChangeQty(props: Props) {
       </Button>
       <Button
         size="micro"
-        disabled={loading || props.item.status === StatusOrderItem.Completed || !!props.item.isPrint}
+        disabled={loading}
         onClick={() => {
           plus({
             variables: {
