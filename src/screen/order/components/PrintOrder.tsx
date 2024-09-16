@@ -172,11 +172,22 @@ export function PrintOrder(props: Props) {
                         </tr>
                       );
                     }
-                    console.log(x);
                     return (
                       <tr key={i}>
                         <td className="text-start">
                           {i + 1}. {x?.product?.title} ({x?.sku?.name})
+                          {x?.addons && (
+                            <>
+                              <br />
+                              <span className="ml-3">Addon: {x.addons}</span>
+                            </>
+                          )}
+                          {x?.remark && (
+                            <>
+                              <br />
+                              <span className="ml-3">Remark: {x.remark}</span>
+                            </>
+                          )}
                         </td>
                         <td className="!text-center">{x?.qty}</td>
                         <td className="text-left">${x?.price?.toFixed(2)}</td>
