@@ -5,6 +5,8 @@ import {
   CartItemInput,
   Order,
   Product,
+  Sku,
+  Status_Product,
   Type_Product,
   useAddOrderItemMutation,
   useProductListQuery,
@@ -14,19 +16,22 @@ import {
   ButtonGroup,
   ChoiceList,
   Divider,
+  Icon,
   Modal,
   RadioButton,
   Select,
   TextField,
   Thumbnail,
 } from '@shopify/polaris';
-import { ArrowLeftIcon } from '@shopify/polaris-icons';
+import { ArrowLeftIcon, CartAbandonedFilledIcon } from '@shopify/polaris-icons';
 import { useCallback, useState } from 'react';
 import { useCustomToast } from '../custom/CustomToast';
+import Image from 'next/image';
+import { config_app } from '@/lib/config_app';
 
 interface Props {}
 
-function ProductItem({ x, onSelected }: { x: Product; onSelected: any }) {
+function ProductItem({ x, onSelected, defaultSku }: { x: Product; onSelected: any; defaultSku?: Sku }) {
   // const [selectSku, setSelectSku] = useState((x.sku || [])[0]?.id + '');
 
   // const sku = x?.sku ? x?.sku?.map((x) => ({ label: `${x?.name} ($${x?.price})`, value: x?.id + '' })) : [];
@@ -34,22 +39,47 @@ function ProductItem({ x, onSelected }: { x: Product; onSelected: any }) {
   return (
     <div
       key={x?.id}
-      className="pb-2 cursor-pointer px-2 border-collapse border-gray-300 border-b-[0.5px] flex flex-row justify-between items-center"
+      className={`pb-2 cursor-pointer px-2 border-collapse border-gray-300 border-b-[0.5px] flex flex-row justify-between items-center ${
+        x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock ? 'bg-gray-400' : ''
+      }`}
       onClick={() => {
-        onSelected(x);
+        if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
+          onSelected(x, defaultSku);
+        }
       }}
     >
       <div className="flex items-center gap-2">
-        <Thumbnail alt="" source={x?.images + ''} size="small" />
+        <Image
+          alt=""
+          src={defaultSku?.image || x.images || ''}
+          width={40}
+          height={40}
+          loading="lazy"
+          style={{ borderRadius: 5 }}
+        />
+        {/* <Thumbnail alt="" source={x?.images + ''} size="small" /> */}
         <div>
-          <h5>{x?.title}</h5>
+          <h5>
+            {x?.title} ({defaultSku?.name})
+          </h5>
+          {(x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock) && (
+            <div className="flex flex-row items-center gap-1 mt-2">
+              <div>
+                <Icon source={CartAbandonedFilledIcon} tone="critical" />
+              </div>
+              <small className="text-red-500">(Out Of Stock)</small>
+            </div>
+          )}
+        </div>
+        <div>
+          <h5 className="text-green-800 font-bold">${defaultSku?.price}</h5>
         </div>
       </div>
     </div>
   );
 }
 
-function ProductItemSelect(props: { product: Product; setProduct: any }) {
+function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku; setSku: any }) {
   const [addons, setAddons] = useState<any[]>(
     props.product.addons?.map((ad) => {
       return {
@@ -58,23 +88,30 @@ function ProductItemSelect(props: { product: Product; setProduct: any }) {
       };
     }) || [],
   );
-  const [sku, setSku] = useState<number>(
-    (props.product.sku?.length || 0) > 0 ? (props.product.sku || [])[0]?.id || 0 : 0,
-  );
+  // const [sku, setSku] = useState<number>((props.product as any).selectSku);
 
   const [remark, setRemark] = useState('');
   const addon = addons
     .filter((x) => x.qty > 0)
     .reduce((a, b) => (a = a + Number(b.qty || '0') * (isNaN(Number(b.value || '0')) ? 0 : Number(b.value || '0'))), 0);
+  // const selectedSku = props.sku ? props.product.sku?.find((f) => f?.id === props.sku) || {} : {};
 
   return (
     <div>
-      <img src={props.product.images || ''} alt="" className="w-full max-h-[275px] object-contain" />
+      {/* <Image alt="" src={props.product.images || ''} width={275} height={275} /> */}
+      <Image
+        src={props.sku.image || props.product.images || ''}
+        alt=""
+        className="w-full max-h-[275px] object-contain"
+        width={300}
+        height={275}
+        loading="lazy"
+      />
       <div className="p-4">
         <div className="text-lg font-bold">{props.product.title}</div>
         <div>{props.product.description}</div>
         <br />
-        <div className="text-red-500 font-bold">${Number((props.product.sku || [])[0]?.price) + addon}</div>
+        <div className="text-red-500 font-bold">${Number(props.sku.price) + addon}</div>
         <br />
         <Divider />
         <br />
@@ -82,9 +119,9 @@ function ProductItemSelect(props: { product: Product; setProduct: any }) {
           {props.product.sku?.map((x, i) => {
             return (
               <RadioButton
-                checked={sku === x?.id}
+                checked={props.sku.id === x?.id}
                 onChange={(v) => {
-                  setSku(v === true ? x?.id || 0 : 0);
+                  props.setSku(v === true ? x : {});
                   props.setProduct({
                     ...props.product,
                     skuSelect: v === true ? x?.id || 0 : 0,
@@ -93,6 +130,7 @@ function ProductItemSelect(props: { product: Product; setProduct: any }) {
                 label={x?.name}
                 key={i}
                 helpText={(<div>${x?.price}</div>) as any}
+                disabled={x?.status === Status_Product.OutOfStock}
               />
             );
           })}
@@ -170,6 +208,7 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
   const [open, setOpen] = useState(false);
   const { setToasts, toasts } = useCustomToast();
   const [selectProduct, setSelectProduct] = useState<any>(null);
+  const [selectSku, setSelectSku] = useState<any>(null);
   const { data, loading } = useProductListQuery({
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -191,7 +230,7 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
   );
 
   const handleAddtoCart = useCallback(() => {
-    if (selectProduct.skuSelect === 0) {
+    if (!selectSku) {
       return;
     }
 
@@ -206,13 +245,13 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
         f.addon_value.join(',').trim() === addonValue.trim() &&
         f.remark.trim() === selectProduct.remark.trim(),
     );
-    const skuIndex = selectProduct.sku?.findIndex((f: any) => Number(f?.id) === selectProduct.skuSelect);
+    const skuIndex = selectProduct.sku?.findIndex((f: any) => Number(f?.id) === selectSku.id);
 
     if (index >= 0) {
       data[index].qty = data[index].qty + 1;
     }
 
-    const skuQuery = data.items?.find((f: any) => f.sku_id === selectProduct.skuSelect && !f.isPrint);
+    const skuQuery = data.items?.find((f: any) => f.sku_id === selectSku.id && !f.isPrint);
     const addonPrice = selectProduct.addonSelect
       .filter((x: any) => x.qty > 0)
       .reduce(
@@ -222,7 +261,7 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
       );
 
     const input: CartItemInput = {
-      skuId: selectProduct.skuSelect,
+      skuId: selectSku.id,
       productId: selectProduct.id,
       addons: addonValue,
       discount: skuIndex !== undefined ? Number((selectProduct.sku || [])[skuIndex]?.discount) : 0,
@@ -251,14 +290,18 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
 
     setOpen(!open);
     setSelectProduct(null);
-  }, [addCart, open, order, refetch, selectProduct, setToasts, toasts]);
+  }, [addCart, open, order.id, order.items, refetch, selectProduct, selectSku, setToasts, toasts]);
 
   return (
     <Modal
       loading={loading}
       title="Product Picker"
       open={open}
-      onClose={toggleOpen}
+      onClose={() => {
+        toggleOpen();
+        setSelectProduct(null);
+        setSelectSku(null);
+      }}
       activator={activator}
       footer={
         <div>
@@ -276,26 +319,30 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
         <Modal.Section flush>
           <div className="flex flex-col gap-2">
             {data?.productList?.map((x) => {
-              return (
-                <ProductItem
-                  x={x || {}}
-                  key={x?.id}
-                  onSelected={(v: any) => {
-                    setSelectProduct({
-                      ...v,
-                      addonSelect:
-                        v.addons?.map((ad: any) => {
-                          return {
-                            ...ad,
-                            qty: 0,
-                          };
-                        }) || [],
-                      skuSelect: (v.sku?.length || 0) > 0 ? (v.sku || [])[0]?.id || 0 : 0,
-                      remark: '',
-                    });
-                  }}
-                />
-              );
+              return x?.sku?.map((sku, indexSku) => {
+                return (
+                  <ProductItem
+                    x={x || {}}
+                    key={x?.id}
+                    defaultSku={sku || {}}
+                    onSelected={(v: any, sku: any) => {
+                      setSelectSku(sku);
+                      setSelectProduct({
+                        ...v,
+                        addonSelect:
+                          v.addons?.map((ad: any) => {
+                            return {
+                              ...ad,
+                              qty: 0,
+                            };
+                          }) || [],
+                        skuSelect: sku.id,
+                        remark: '',
+                      });
+                    }}
+                  />
+                );
+              });
             })}
           </div>
         </Modal.Section>
@@ -303,7 +350,12 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
       {selectProduct && (
         <>
           <Modal.Section flush>
-            <ProductItemSelect product={selectProduct} setProduct={setSelectProduct} />
+            <ProductItemSelect
+              product={selectProduct}
+              setProduct={setSelectProduct}
+              sku={selectSku}
+              setSku={setSelectSku}
+            />
           </Modal.Section>
         </>
       )}

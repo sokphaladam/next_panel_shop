@@ -46,6 +46,7 @@ import { PolarisProductPickerAddCart } from '@/components/polaris/PolarisProduct
 import { ControllChangeQty } from './ControllChangeQty';
 import { ControllPerson } from './ControllPerson';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 const toneStatus: any = {
   [StatusOrder.Pending]: 'attention-strong',
@@ -357,7 +358,16 @@ export function OrderDetailScreen() {
                         <IndexTable.Cell>{index + 1}</IndexTable.Cell>
                         <IndexTable.Cell>
                           <div className="flex flex-row gap-2">
-                            <Thumbnail alt="" source={item?.product?.images + ''} size="small" />
+                            <Image
+                              alt=""
+                              src={item?.sku?.image || item?.product?.images || ''}
+                              width={40}
+                              height={40}
+                              objectFit="contain"
+                              style={{ width: 'auto', borderRadius: 5 }}
+                              loading="lazy"
+                            />
+                            {/* <Thumbnail alt="" source={item?.product?.images + ''} size="small" /> */}
                             <div className="flex flex-col justify-between">
                               <Text as="p" variant="bodySm" truncate>
                                 {item?.product?.title} {/* <small> */}
