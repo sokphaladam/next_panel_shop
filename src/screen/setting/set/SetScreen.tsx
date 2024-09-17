@@ -60,7 +60,7 @@ function TableItem({ x }: { x: TableSet }) {
 
   const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
   return (
-    <div className="cursor-pointer" {...logPressEvent}>
+    <div className="cursor-pointer" {...logPressEvent} suppressHydrationWarning>
       <div id={`table_${x?.set}`} onClick={() => handleGenerate(x.set + '', x)}></div>
       <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
         <Box>
@@ -76,8 +76,7 @@ function TableItem({ x }: { x: TableSet }) {
   );
 }
 
-export function SetScreen() {
-  const { push } = useRouter();
+function SetScreen() {
   const { data, loading, refetch } = useTableSetListQuery({
     variables: {
       offset: 0,
@@ -176,3 +175,5 @@ export function SetScreen() {
     </Page>
   );
 }
+
+export default SetScreen;

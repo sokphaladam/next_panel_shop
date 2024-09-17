@@ -64,6 +64,9 @@ export function CheckAttandance() {
                     ...toasts,
                     { content: `Check out at ${moment(d).format('YYYY-MM-DD HH:mm:ss')}`, status: 'success' },
                   ]);
+                  setTimeout(() => {
+                    typeof window !== 'undefined' && window.location.reload();
+                  }, 500);
                 } else {
                   setToasts([...toasts, { content: `Oop! someting was wrong please try again.`, status: 'error' }]);
                 }
@@ -98,6 +101,9 @@ export function CheckAttandance() {
                     ...toasts,
                     { content: `Check out at ${moment(d).format('YYYY-MM-DD HH:mm:ss')}`, status: 'success' },
                   ]);
+                  setTimeout(() => {
+                    typeof window !== 'undefined' && window.location.reload();
+                  }, 500);
                 } else {
                   setToasts([...toasts, { content: `Oop! someting was wrong please try again.`, status: 'error' }]);
                 }

@@ -283,16 +283,6 @@ export function OrderDetailScreen() {
                         Verify
                       </Button>
                     )}
-                    {/* {data?.order?.status === StatusOrder.Verify && (
-                      <Button
-                        size="micro"
-                        tone="success"
-                        variant="primary"
-                        onClick={() => handleUpdate(StatusOrder.Delivery)}
-                      >
-                        Confirm
-                      </Button>
-                    )} */}
                     {[StatusOrder.Delivery, StatusOrder.Checkout, StatusOrder.Verify].includes(
                       data?.order?.status as any,
                     ) &&
@@ -592,7 +582,7 @@ export function OrderDetailScreen() {
               >
                 {data?.order?.log?.map((x, i) => {
                   return (
-                    <IndexTable.Row key={x?.text} position={i} id={x?.text + ''}>
+                    <IndexTable.Row key={i} position={i} id={x?.text + ''}>
                       <IndexTable.Cell>
                         <small>{x?.text}</small>
                       </IndexTable.Cell>
