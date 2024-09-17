@@ -19,7 +19,7 @@ export function ProductScreen() {
   return (
     <PolarisLayout
       title="Products"
-      permission={[role_permission.SUPER_ADMIN, role_permission.ADMIN]}
+      permission={[role_permission.SUPER_ADMIN, role_permission.ADMIN, role_permission.CASHIER]}
       primaryAction={{
         content: 'Upload Product',
         url: '/products/create',
