@@ -280,6 +280,16 @@ export function MenuItems(user: User | null) {
       case 6:
         MenuItem = [
           {
+            title: 'Inventory',
+            items: [
+              {
+                label: lng.menu_product,
+                icon: ArchiveIcon,
+                url: '/products',
+              },
+            ],
+          },
+          {
             title: 'Orders',
             items: [
               {

@@ -86,8 +86,14 @@ export type CartItemInput = {
 export type Category = {
   __typename?: 'Category';
   id?: Maybe<Scalars['Int']['output']>;
+  index?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   root?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CategoryIndexInput = {
+  id: Scalars['Int']['input'];
+  index: Scalars['Int']['input'];
 };
 
 export type CategoryInput = {
@@ -226,6 +232,7 @@ export type Mutation = {
   updateBank?: Maybe<Scalars['Boolean']['output']>;
   updateBrand?: Maybe<Scalars['Boolean']['output']>;
   updateCategory?: Maybe<Scalars['Boolean']['output']>;
+  updateCategoryIndex?: Maybe<Scalars['Boolean']['output']>;
   updateDelivery?: Maybe<Scalars['Boolean']['output']>;
   updateLeave?: Maybe<Scalars['Boolean']['output']>;
   updateLeaveStatus?: Maybe<Scalars['Boolean']['output']>;
@@ -397,6 +404,11 @@ export type MutationUpdateCategoryArgs = {
   data?: InputMaybe<CategoryInput>;
   id: Scalars['Int']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationUpdateCategoryIndexArgs = {
+  data?: InputMaybe<Array<InputMaybe<CategoryIndexInput>>>;
 };
 
 
@@ -623,6 +635,7 @@ export type ProductStockInput = {
 export type Query = {
   __typename?: 'Query';
   attendanceListAdmin?: Maybe<Array<Maybe<Attendance>>>;
+  attendanceStaff?: Maybe<Array<Maybe<Attendance>>>;
   bankInfo?: Maybe<BankInfo>;
   books?: Maybe<Array<Maybe<Book>>>;
   brand?: Maybe<Brand>;
@@ -666,6 +679,13 @@ export type QueryAttendanceListAdminArgs = {
   month: Scalars['Int']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   year: Scalars['Int']['input'];
+};
+
+
+export type QueryAttendanceStaffArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -1324,7 +1344,7 @@ export type OrderListQueryVariables = Exact<{
 }>;
 
 
-export type OrderListQuery = { __typename?: 'Query', orderList?: Array<{ __typename?: 'Order', id?: number | null, code?: string | null, deliveryCode?: string | null, discount?: number | null, status?: StatusOrder | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, vat?: string | null, bankType?: string | null, invoice?: number | null, person?: number | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, price?: number | null, qty?: number | null, discount?: number | null, addons?: string | null, remark?: string | null, status?: StatusOrderItem | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null, code?: string | null } | null, sku?: { __typename?: 'SKU', name?: string | null } | null } | null> | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null } | null> | null };
+export type OrderListQuery = { __typename?: 'Query', orderList?: Array<{ __typename?: 'Order', id?: number | null, code?: string | null, deliveryCode?: string | null, discount?: number | null, status?: StatusOrder | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, vat?: string | null, bankType?: string | null, invoice?: number | null, person?: number | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, price?: number | null, qty?: number | null, discount?: number | null, addons?: string | null, remark?: string | null, status?: StatusOrderItem | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null, code?: string | null } | null, sku?: { __typename?: 'SKU', name?: string | null, image?: string | null } | null } | null> | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null } | null> | null };
 
 export type OrderQueryVariables = Exact<{
   token?: InputMaybe<Scalars['String']['input']>;
@@ -1332,7 +1352,7 @@ export type OrderQueryVariables = Exact<{
 }>;
 
 
-export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id?: number | null, address?: string | null, status?: StatusOrder | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, code?: string | null, discount?: number | null, vat?: string | null, person?: number | null, invoice?: number | null, bankType?: string | null, deliveryCode?: string | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, qty?: number | null, price?: number | null, discount?: number | null, status?: StatusOrderItem | null, addons?: string | null, remark?: string | null, isPrint?: boolean | null, sku?: { __typename?: 'SKU', price?: number | null, discount?: number | null, id?: number | null, unit?: string | null, name?: string | null } | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, code?: string | null, description?: string | null, id?: number | null } | null } | null> | null } | null };
+export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id?: number | null, address?: string | null, status?: StatusOrder | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, code?: string | null, discount?: number | null, vat?: string | null, person?: number | null, invoice?: number | null, bankType?: string | null, deliveryCode?: string | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, qty?: number | null, price?: number | null, discount?: number | null, status?: StatusOrderItem | null, addons?: string | null, remark?: string | null, isPrint?: boolean | null, sku?: { __typename?: 'SKU', price?: number | null, discount?: number | null, id?: number | null, unit?: string | null, name?: string | null, image?: string | null } | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, code?: string | null, description?: string | null, id?: number | null } | null } | null> | null } | null };
 
 export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2959,6 +2979,7 @@ export const OrderListDocument = gql`
       remark
       sku {
         name
+        image
       }
       status
     }
@@ -3062,6 +3083,7 @@ export const OrderDocument = gql`
         id
         unit
         name
+        image
       }
       product {
         title

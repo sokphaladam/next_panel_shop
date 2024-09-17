@@ -140,6 +140,7 @@ query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [Statu
       remark
       sku {
         name
+        image
       }
       status
     }
@@ -205,6 +206,7 @@ query order($token: String, $orderId: Int) {
         id
         unit
         name
+        image
       }
       product {
         title
