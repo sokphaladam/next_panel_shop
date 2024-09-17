@@ -99,7 +99,7 @@ export function UploadProduct({ value, setValue, onSubmit, loading, isEdit }: Pr
   return (
     <PolarisLayout
       title="Upload Product"
-      permission={[role_permission.SUPER_ADMIN, role_permission.ADMIN]}
+      permission={[role_permission.SUPER_ADMIN, role_permission.ADMIN, role_permission.CASHIER]}
       primaryAction={{
         content: 'Save',
         onAction: handleSave,
