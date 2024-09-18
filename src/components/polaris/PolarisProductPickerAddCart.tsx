@@ -24,18 +24,140 @@ import {
   Thumbnail,
 } from '@shopify/polaris';
 import { ArrowLeftIcon, CartAbandonedFilledIcon } from '@shopify/polaris-icons';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useCustomToast } from '../custom/CustomToast';
 import Image from 'next/image';
 import { config_app } from '@/lib/config_app';
+import ListArrangement from '@/lib/ListArrangement';
+import { CustomerOrderCategory } from './CustomOrderCategory';
 
 interface Props {}
 
-function ProductItem({ x, onSelected, defaultSku }: { x: Product; onSelected: any; defaultSku?: Sku }) {
-  // const [selectSku, setSelectSku] = useState((x.sku || [])[0]?.id + '');
+function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSelectProduct: any }) {
+  const [category, setCategory] = useState(null);
+  const groups = props.data?.reduce((a: any, b: any) => {
+    const key = b?.category?.name;
 
-  // const sku = x?.sku ? x?.sku?.map((x) => ({ label: `${x?.name} ($${x?.price})`, value: x?.id + '' })) : [];
+    if (!a[key]) {
+      a[key] = [];
+    }
 
+    a[key].push(b);
+    return a;
+  }, {});
+
+  return (
+    <div className="h-[500px] overflow-x-auto">
+      <div className="sticky top-0 z-[999]">
+        <CustomerOrderCategory productGroup={groups} selected={category} onSelected={setCategory} />
+      </div>
+      <div className="grid grid-cols-2 gap-4 p-3">
+        {groups &&
+          (category === null
+            ? Object.keys(groups)
+            : Object.keys(groups).filter((f) => f === (category as any).name)
+          ).map((g) => {
+            return groups[g].map((x: Product) => {
+              return x.sku?.map((sku) => {
+                return (
+                  <div key={sku?.id}>
+                    <ProductItem
+                      display="CARD"
+                      x={x || {}}
+                      key={x?.id}
+                      defaultSku={sku || {}}
+                      onSelected={(v: any, sku: any) => {
+                        props.setSelectSku(sku);
+                        props.setSelectProduct({
+                          ...v,
+                          addonSelect:
+                            v.addons?.map((ad: any) => {
+                              return {
+                                ...ad,
+                                qty: 0,
+                              };
+                            }) || [],
+                          skuSelect: sku.id,
+                          remark: '',
+                        });
+                      }}
+                    />
+                  </div>
+                );
+              });
+            });
+          })}
+      </div>
+    </div>
+  );
+}
+
+function ProductItem({
+  x,
+  onSelected,
+  defaultSku,
+  display,
+}: {
+  x: Product;
+  onSelected: any;
+  defaultSku?: Sku;
+  display?: 'CARD' | 'LIST';
+}) {
+  if (display === 'CARD') {
+    return (
+      <div
+        key={x?.id}
+        className={`pb-2 overflow-hidden cursor-pointer border-collapse rounded-md border-gray-300 border-[0.5px] ${
+          x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock
+            ? 'bg-gray-400'
+            : ''
+        }`}
+        onClick={() => {
+          if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
+            onSelected(x, defaultSku);
+          }
+        }}
+      >
+        <div className="w-full h-[125px]">
+          <Image
+            alt=""
+            src={defaultSku?.image || x.images || ''}
+            width={100}
+            height={40}
+            loading="lazy"
+            className="w-full h-[125px] object-cover"
+            // style={{ borderRadius: 5 }}
+          />
+        </div>
+        <div className="p-2">
+          <div>
+            <h5>
+              {x?.title} ({defaultSku?.name})
+            </h5>
+            {/* {(x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock) && (
+              <div className="flex flex-row items-center gap-1 mt-2">
+                <div>
+                  <Icon source={CartAbandonedFilledIcon} tone="critical" />
+                </div>
+                <small className="text-red-500">(Out Of Stock)</small>
+              </div>
+            )} */}
+          </div>
+          <div>
+            <h5 className="text-green-800 font-bold">${Number(defaultSku?.price).toFixed(2)}</h5>
+          </div>
+          {(x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock) && (
+            <div className="flex flex-row items-center gap-1">
+              <div>
+                <Icon source={CartAbandonedFilledIcon} tone="critical" />
+              </div>
+              <small className="text-red-500">(Out Of Stock)</small>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
   return (
     <div
       key={x?.id}
@@ -204,7 +326,15 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
   );
 }
 
-export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; refetch: any }) {
+export function PolarisProductPickerAddCart({
+  order,
+  refetch,
+  type,
+}: {
+  order: Order;
+  refetch: any;
+  type?: 'BUTTON' | 'LAYOUT';
+}) {
   const [open, setOpen] = useState(false);
   const { setToasts, toasts } = useCustomToast();
   const [selectProduct, setSelectProduct] = useState<any>(null);
@@ -291,6 +421,55 @@ export function PolarisProductPickerAddCart({ order, refetch }: { order: Order; 
     setOpen(!open);
     setSelectProduct(null);
   }, [addCart, open, order.id, order.items, refetch, selectProduct, selectSku, setToasts, toasts]);
+
+  if (type === 'LAYOUT') {
+    return (
+      <div>
+        <TwoColumnList
+          setSelectProduct={(v: any) => {
+            setSelectProduct(v);
+            toggleOpen();
+          }}
+          data={data?.productList || []}
+          sku={selectSku}
+          setSelectSku={setSelectSku}
+        />
+        {selectProduct && (
+          <Modal
+            loading={loading}
+            title="Product Picker"
+            open={open}
+            onClose={() => {
+              toggleOpen();
+              setSelectProduct(null);
+              setSelectSku(null);
+            }}
+            // activator={activator}
+            // footer={
+            //   <div>
+            //     <Button icon={ArrowLeftIcon} onClick={() => setSelectProduct(null)}>
+            //       Back
+            //     </Button>
+            //   </div>
+            // }
+            primaryAction={{
+              content: 'Add to cart',
+              onAction: handleAddtoCart,
+            }}
+          >
+            <Modal.Section flush>
+              <ProductItemSelect
+                product={selectProduct}
+                setProduct={setSelectProduct}
+                sku={selectSku}
+                setSku={setSelectSku}
+              />
+            </Modal.Section>
+          </Modal>
+        )}
+      </div>
+    );
+  }
 
   return (
     <Modal

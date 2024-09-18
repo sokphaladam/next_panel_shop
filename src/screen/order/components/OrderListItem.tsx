@@ -22,6 +22,7 @@ import { LogStatus } from './LogStatus';
 import Link from 'next/link';
 import { useSetting } from '@/service/useSettingProvider';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface Props {
   item: Order | null;
@@ -192,7 +193,7 @@ export function OrderListItem({ item }: Props) {
           <div className="flex flex-row items-center justify-start">
             <Link href={`/order/detail/${item?.id}`}>
               <Text as="p" variant="bodySm">
-                #{item?.id}
+                #{item?.invoice}
               </Text>
             </Link>
             {isSignature && (
@@ -214,8 +215,16 @@ export function OrderListItem({ item }: Props) {
               if (i > 2) return <></>;
               return (
                 <div key={x?.id} className="mx-1">
-                  <Tooltip content={x?.product?.title + ' x' + x?.qty}>
-                    <Thumbnail alt="" source={x?.product?.images || ''} size="small" />
+                  <Tooltip content={`${x?.product?.title} (${x?.sku?.name}) x${x?.qty}`}>
+                    <Image
+                      alt=""
+                      src={x?.sku?.image || x?.product?.images || ''}
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      className="object-contain rounded-md"
+                    />
+                    {/* <Thumbnail alt="" source={x?.product?.images || ''} size="small" /> */}
                   </Tooltip>
                 </div>
               );

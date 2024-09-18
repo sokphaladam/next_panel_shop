@@ -143,6 +143,7 @@ query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [Statu
         image
       }
       status
+      createdDate
     }
     status
     name
@@ -171,6 +172,7 @@ query order($token: String, $orderId: Int) {
     id
     address
     status
+    customerPaid
     name
     paid
     set
@@ -198,6 +200,7 @@ query order($token: String, $orderId: Int) {
       contact
     }
     items {
+      createdDate
       id
       qty
       sku {

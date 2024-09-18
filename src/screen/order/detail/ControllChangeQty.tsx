@@ -8,6 +8,7 @@ import {
   useMarkOrderItemStatusMutation,
 } from '@/gql/graphql';
 import { Modal } from '@/hook/modal';
+import { useUser } from '@/service/UserProvider';
 import { Button, ButtonGroup } from '@shopify/polaris';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export function ControllChangeQty(props: Props) {
+  const user = useUser();
   const [plus, { loading: loadingPlus }] = useIncreaseOrderItemMutation({
     refetchQueries: ['order'],
   });
@@ -27,12 +29,13 @@ export function ControllChangeQty(props: Props) {
 
   // const loading = loadingPlus || loadingMark || loadingSub || props.item.isPrint;
   const loading = false;
+  const allow = [1, 2, 6].includes(user?.role?.id || 0) || props.item.status === StatusOrderItem.Pending;
 
   return (
     <ButtonGroup variant="segmented">
       <Button
         size="micro"
-        disabled={loading}
+        disabled={loading || !allow}
         onClick={() => {
           if (props.item.qty === 1) {
             Modal.dialog({
@@ -69,7 +72,7 @@ export function ControllChangeQty(props: Props) {
       </Button>
       <Button
         size="micro"
-        disabled={loading}
+        disabled={loading || !allow}
         onClick={() => {
           plus({
             variables: {

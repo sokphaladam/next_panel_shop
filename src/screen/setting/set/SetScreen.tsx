@@ -32,7 +32,7 @@ function TableItem({ x }: { x: TableSet }) {
       setTimeout(() => {
         const doc = document.getElementById(`table_${x.set}`);
         doc?.click();
-      }, 500);
+      }, 1000);
     });
   };
 
@@ -58,9 +58,9 @@ function TableItem({ x }: { x: TableSet }) {
     [propsUpdate.loading, push],
   );
 
-  const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
+  // const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
   return (
-    <div className="cursor-pointer" {...logPressEvent} suppressHydrationWarning>
+    <div className="cursor-pointer" onDoubleClick={handleLogPress} onClick={handleClick} suppressHydrationWarning>
       <div id={`table_${x?.set}`} onClick={() => handleGenerate(x.set + '', x)}></div>
       <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
         <Box>

@@ -148,6 +148,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       bankId: Number(bank.split(',')[1]),
       currency: currency,
       discount,
+      customerPaid: currency === 'USD' ? String(amountInput) : (Number(amountInput) / Number(exchangeRate)).toFixed(2),
     };
 
     change({
@@ -193,6 +194,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     total,
     typeDiscount,
     xTotal,
+    exchangeRate,
   ]);
 
   return (
@@ -233,7 +235,11 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
                 ? `${'$' + (Number(amountInput || xTotal) - Number(xTotal)).toFixed(2)} = ${
                     '៛' + ((Number(amountInput) - Number(xTotal)) * Number(exchangeRate)).toFixed(2)
                   }`
-                : '៛' + (Number(amountInput) - Number(xTotal)).toFixed(2)}
+                : `
+                  ${'៛' + (Number(amountInput) - Number(xTotal)).toFixed(2)} = ${
+                    '$' + ((Number(amountInput) - Number(xTotal)) / Number(exchangeRate)).toFixed(2)
+                  }
+                `}
             </span>
           </div>
         </div>
