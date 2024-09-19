@@ -319,7 +319,7 @@ export default function OrderDetailScreen() {
                     {[StatusOrder.Delivery, StatusOrder.Checkout, StatusOrder.Verify].includes(
                       data?.order?.status as any,
                     ) &&
-                      Number(data?.order?.paid || 0) > 0 && (
+                      Number(data?.order?.paid || 0) <= 0 && (
                         <Button
                           size="micro"
                           tone="success"
