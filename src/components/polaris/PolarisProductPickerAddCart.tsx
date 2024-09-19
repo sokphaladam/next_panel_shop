@@ -134,14 +134,6 @@ function ProductItem({
             <h5>
               {x?.title} ({defaultSku?.name})
             </h5>
-            {/* {(x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock) && (
-              <div className="flex flex-row items-center gap-1 mt-2">
-                <div>
-                  <Icon source={CartAbandonedFilledIcon} tone="critical" />
-                </div>
-                <small className="text-red-500">(Out Of Stock)</small>
-              </div>
-            )} */}
           </div>
           <div>
             <h5 className="text-green-800 font-bold">${Number(defaultSku?.price).toFixed(2)}</h5>

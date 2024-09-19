@@ -1,5 +1,7 @@
 'use client';
 
+import { useCustomToast } from '@/components/custom/CustomToast';
+import { Order, useAddDiscountOrderMutation } from '@/gql/graphql';
 import { useSetting } from '@/service/useSettingProvider';
 import { Button, Modal, Select, TextField } from '@shopify/polaris';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,10 +23,12 @@ function TotalStrategy(amount: number, currency: string, discount: number, disco
 
 interface Props {
   total: number;
+  data: Order;
 }
 
 export function DiscountOrder(props: Props) {
   const setting = useSetting();
+  const { setToasts, toasts } = useCustomToast();
   const [open, setOpen] = useState(false);
   const [currency, setCurrency] = useState('USD');
   const [discountInput, setDiscountInput] = useState<string>('0');
@@ -32,13 +36,22 @@ export function DiscountOrder(props: Props) {
   const [amount, setAmount] = useState<any>(props.total);
   const [loading, setLoading] = useState(true);
 
+  const [update] = useAddDiscountOrderMutation({
+    refetchQueries: ['order', 'orderList'],
+  });
+
   const toggleOpen = useCallback(() => setOpen(!open), [open]);
 
   const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value || '4000';
 
   useEffect(() => {
-    if (props.total && !!loading) {
-      setAmount(props.total + '');
+    if (props.total && !!loading && props.data) {
+      const defaultDis = Number(props.data.discount || 0);
+      setAmount(props.total - (props.total * defaultDis) / 100);
+      if (defaultDis > 0) {
+        setDiscountInput(defaultDis + '');
+        setTypeDiscount('PERCENTAGE');
+      }
       setLoading(false);
     }
   }, [props, loading]);
@@ -77,6 +90,39 @@ export function DiscountOrder(props: Props) {
     [exchangeRate, props, typeDiscount],
   );
 
+  const handleDiscount = useCallback(() => {
+    let discount = (Number(discountInput) / props.total) * 100;
+
+    if (currency === 'KHR') {
+      const totalKhr = (props.total || 0) * Number(exchangeRate);
+      discount = (Number(discountInput) / totalKhr) * 100;
+    }
+
+    if (typeDiscount === 'PERCENTAGE') {
+      discount = Number(discountInput);
+    }
+
+    update({
+      variables: {
+        addDiscountOrderId: Number(props.data.id),
+        discount: discount,
+      },
+    })
+      .then((res) => {
+        if (res.data?.addDiscountOrder) {
+          setToasts([...toasts, { content: 'Update discount was success.', status: 'success' }]);
+          setTimeout(() => {
+            process.browser && window.location.reload();
+          }, 500);
+        } else {
+          setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
+        }
+      })
+      .catch(() => {
+        setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
+      });
+  }, [currency, discountInput, exchangeRate, props.data.id, props.total, setToasts, toasts, typeDiscount, update]);
+
   const activator = (
     <Button size="micro" onClick={toggleOpen}>
       Set Discount
@@ -84,19 +130,42 @@ export function DiscountOrder(props: Props) {
   );
 
   return (
-    <Modal open={open} onClose={toggleOpen} title="Discount Order" activator={activator}>
+    <Modal
+      open={open}
+      onClose={toggleOpen}
+      title="Discount Order"
+      activator={activator}
+      footer={
+        <div className="flex flex-row gap-4 items-center">
+          <div className="font-bold">
+            Exchange Rate: <span className="pl-2">$1 = ៛{exchangeRate}</span>
+            <br />
+            Total Order:{' '}
+            <span className="pl-2">
+              {currency === 'USD' ? '$' + Number(amount || 0).toFixed(2) : '៛' + Number(amount || 0).toFixed(2)}
+            </span>
+          </div>
+        </div>
+      }
+      primaryAction={{
+        content: 'Discount',
+        onAction: handleDiscount,
+      }}
+    >
       <Modal.Section>
         <div>
-          {amount}
-          <Select
-            label="Currency"
-            options={[
-              { label: 'USD', value: 'USD' },
-              { label: 'KHR', value: 'KHR' },
-            ]}
-            value={currency}
-            onChange={handleChangeCurrency}
-          />
+          <div className="flex flex-row items-center gap-2">
+            <Select
+              label="Currency"
+              options={[
+                { label: 'USD', value: 'USD' },
+                { label: 'KHR', value: 'KHR' },
+              ]}
+              value={currency}
+              onChange={handleChangeCurrency}
+            />
+          </div>
+          <br />
           <div>
             <TextField
               autoComplete="off"
@@ -105,6 +174,7 @@ export function DiscountOrder(props: Props) {
               type="number"
               onChange={handleChangeDiscount}
               label="Discount"
+              selectTextOnFocus
               connectedRight={
                 <Select
                   label
