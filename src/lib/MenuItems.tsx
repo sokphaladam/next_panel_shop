@@ -62,6 +62,11 @@ export function MenuItems(user: User | null) {
       title: 'Orders',
       items: [
         {
+          label: 'Table',
+          icon: TabletIcon,
+          url: '/set',
+        },
+        {
           label: 'Customer Order',
           icon: CartFilledIcon,
           url: '/order/list',
@@ -112,11 +117,6 @@ export function MenuItems(user: User | null) {
           url: '/setting',
         },
         {
-          label: 'Table',
-          icon: TabletIcon,
-          url: '/set',
-        },
-        {
           label: 'Delivery',
           icon: DeliveryIcon,
           url: '/delivery',
@@ -151,6 +151,11 @@ export function MenuItems(user: User | null) {
             title: 'Orders',
             items: [
               {
+                label: 'Table',
+                icon: TabletIcon,
+                url: '/set',
+              },
+              {
                 label: 'Order',
                 icon: CartFilledIcon,
                 url: '/order/list',
@@ -181,11 +186,6 @@ export function MenuItems(user: User | null) {
             title: 'Setting',
             items: [
               {
-                label: 'Table',
-                icon: TabletIcon,
-                url: '/set',
-              },
-              {
                 label: 'Delivery',
                 icon: DeliveryIcon,
                 url: '/delivery',
@@ -213,6 +213,11 @@ export function MenuItems(user: User | null) {
           {
             title: 'Orders',
             items: [
+              {
+                label: 'Table',
+                icon: TabletIcon,
+                url: '/set',
+              },
               {
                 label: 'Order',
                 icon: CartFilledIcon,
@@ -293,6 +298,11 @@ export function MenuItems(user: User | null) {
             title: 'Orders',
             items: [
               {
+                label: 'Table',
+                icon: TabletIcon,
+                url: '/set',
+              },
+              {
                 label: 'Order',
                 icon: CartFilledIcon,
                 url: '/order/list',
@@ -327,11 +337,6 @@ export function MenuItems(user: User | null) {
           {
             title: 'Setting',
             items: [
-              {
-                label: 'Table',
-                icon: TabletIcon,
-                url: '/set',
-              },
               {
                 label: 'Delivery',
                 icon: DeliveryIcon,

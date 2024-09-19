@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Order } from '@/gql/graphql';
+import { Order, OrderItem } from '@/gql/graphql';
 import { Button, Modal, Text } from '@shopify/polaris';
 import moment from 'moment';
 import React, { useCallback, useRef, useState } from 'react';
@@ -58,6 +58,28 @@ export function PrintOrder(props: Props) {
   const discount = (Number(props.order?.total || 0) * Number(props.order?.discount)) / 100;
   const signature = props.order ? props.order?.log?.find((f) => f?.text === 'Signature')?.by?.display : '';
 
+  let groups: OrderItem[] = [];
+
+  for (const x of props.order?.items || []) {
+    const find = groups.findIndex(
+      (f) =>
+        f.sku?.id === x?.sku?.id && f.addons?.trim() === x?.addons?.trim() && f.remark?.trim() === x?.remark?.trim(),
+    );
+    if (find >= 0) {
+      groups[find].qty = Number(groups[find].qty || 0) + 1;
+      if (groups[find].addons) {
+        const currentAdd: any = groups[find].addons?.split('x');
+        const newAdd: any = x?.addons?.split('x');
+        const v = Number((currentAdd[1] || '').split(')')[0]) + Number(newAdd[1].split(')')[0]);
+        groups[find].addons = `${currentAdd[0]} x${v})`;
+      }
+    } else {
+      groups.push({
+        ...x,
+      });
+    }
+  }
+
   return (
     <Modal
       open={open}
@@ -91,11 +113,9 @@ export function PrintOrder(props: Props) {
                   <div className="text-end">#{String(props.order?.invoice).padStart(5, '0')}</div>
                 </p>
                 <p className="flex flex-row items-center justify-end">
-                  <div className="w-[45px] text-left">Table</div>
+                  <div className="w-[45px] text-left">Order</div>
                   <div className="mx-1">:</div>
-                  <div className="text-end">
-                    {props.order?.set} ({props.order?.person || 0} P)
-                  </div>
+                  <div className="text-end">{verify_date}</div>
                 </p>
                 <p className="flex flex-row items-center justify-between">
                   <div className="w-[45px] text-left">Cashier</div>
@@ -110,6 +130,13 @@ export function PrintOrder(props: Props) {
                 </p>
               </div>
               <div>
+                <p className="flex flex-row items-center justify-between">
+                  <div className="w-[25px] text-left">Table</div>
+                  <div className="mx-2">:</div>
+                  <div className="w-[90px] text-right">
+                    {props.order?.set} ({props.order?.person || 0} P)
+                  </div>
+                </p>
                 <p className="flex flex-row items-center justify-between">
                   <div className="w-[25px] text-left">In</div>
                   <div className="mx-2">:</div>
@@ -157,7 +184,7 @@ export function PrintOrder(props: Props) {
                   )}
                 </thead>
                 <tbody>
-                  {props.order?.items?.map((x, i) => {
+                  {groups.map((x, i) => {
                     const disPrice = Number(x?.price) * (Number(x?.discount) / 100);
                     const amount = Number(x?.qty) * (Number(x?.price) - Number(disPrice));
                     if (props.kitchen) {
@@ -211,7 +238,9 @@ export function PrintOrder(props: Props) {
                             </>
                           )}
                           <div className="h-8">TOTAL</div>
-                          <div className="h-8">VAT (Include.)</div>
+                          <div className="h-8">VAT (Included)</div>
+                          <div className="h-8">Recevied</div>
+                          <div className="h-8">Return to Customer</div>
                           {signature && <div className="h-8">Signature</div>}
                         </div>
                       </td>
@@ -235,6 +264,19 @@ export function PrintOrder(props: Props) {
                             )}
                           </div>
                           <div className="h-8"></div>
+                          <div className="h-8">
+                            {formatKHR(Math.round(Number(exchangeRate) * Number(props.order?.customerPaid)))}
+                          </div>
+                          <div className="h-8">
+                            {Number(props.order?.customerPaid) > 0
+                              ? formatKHR(
+                                  Math.round(
+                                    Number(exchangeRate) * Number(props.order?.customerPaid) -
+                                      Number(exchangeRate) * Number(props.total),
+                                  ),
+                                )
+                              : 0}
+                          </div>
                           {signature && <div className="h-8"></div>}
                         </div>
                       </td>
@@ -249,6 +291,13 @@ export function PrintOrder(props: Props) {
                           )}
                           <div className="h-8">${(Number(props.total) - Number(discount)).toFixed(2)}</div>
                           <div className="h-8">$({vat}%)</div>
+                          <div className="h-8">${Number(props.order?.customerPaid).toFixed(2)}</div>
+                          <div className="h-8">
+                            $
+                            {Number(props.order?.customerPaid) > 0
+                              ? (Number(props.order?.customerPaid) - Number(props.total)).toFixed(2)
+                              : 0}
+                          </div>
                           {signature && <div className="h-8">{signature || ''}</div>}
                         </div>
                       </td>
