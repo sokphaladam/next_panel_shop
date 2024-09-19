@@ -53,6 +53,7 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { useUser } from '@/service/UserProvider';
 import { PrintForKitchen } from '../components/PrintForKitchen';
+import { DiscountOrder } from '../components/DiscountOrder';
 
 const tabs: TabProps[] = [
   {
@@ -359,6 +360,13 @@ export default function OrderDetailScreen() {
                     }
                   </Badge>
                 </div>
+              </div>
+            </Box>
+            <Divider />
+            <Box padding={'300'}>
+              <div className="flex flex-row justify-between items-start">
+                <div></div>
+                <DiscountOrder total={total} />
               </div>
             </Box>
             <Divider />
