@@ -27,7 +27,7 @@ export function DashboardScreen() {
               </Text>
               <br />
               <Text as="h3" variant="heading2xl" tone="success">
-                ${data?.orderBalanceSummary.order}
+                ${Number(data?.orderBalanceSummary.order || 0).toFixed(2)}
               </Text>
             </Box>
           </Card>

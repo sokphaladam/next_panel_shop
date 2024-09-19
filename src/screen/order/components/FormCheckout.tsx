@@ -48,14 +48,14 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     refetchQueries: ['order', 'orderList'],
   });
 
+  const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value || '4000';
+
   useEffect(() => {
-    if (total && !!loading) {
+    if (total && !!loading && data) {
       setAmountInput(total + '');
       setLoading(false);
     }
-  }, [total, loading]);
-
-  const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value || '4000';
+  }, [total, loading, data]);
 
   const totalKhr = (total || 0) * Number(exchangeRate);
 
@@ -128,10 +128,10 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       return;
     }
 
-    let discount = (Number(discountInput) / xTotal) * 100;
+    let discount = (Number(discountInput) / total) * 100;
 
     if (currency === 'KHR') {
-      discount = (Number(discountInput) / xTotal) * 100;
+      discount = (Number(discountInput) / totalKhr) * 100;
     }
 
     if (typeDiscount === 'PERCENTAGE') {
@@ -147,7 +147,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       bankType: String(bank.split(',')[0]),
       bankId: Number(bank.split(',')[1]),
       currency: currency,
-      discount,
+      discount: Number(data.discount),
       customerPaid: currency === 'USD' ? String(amountInput) : (Number(amountInput) / Number(exchangeRate)).toFixed(2),
     };
 
@@ -180,21 +180,22 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       });
   }, [
     amountInput,
-    bank,
-    change,
+    total,
     currency,
-    data?.id,
+    bank,
     discountInput,
-    invoice.count,
+    typeDiscount,
+    data,
     reasonInput,
-    setInvoice,
+    invoice,
+    exchangeRate,
+    change,
+    xTotal,
     setToasts,
     toasts,
+    totalKhr,
     togglePaid,
-    total,
-    typeDiscount,
-    xTotal,
-    exchangeRate,
+    setInvoice,
   ]);
 
   return (
@@ -259,7 +260,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
           />
         </div>
         <br />
-        <InlineGrid columns={['oneHalf', 'oneHalf']} gap={'400'}>
+        <InlineGrid columns={['oneHalf']} gap={'400'}>
           <TextField
             type="number"
             autoComplete="off"
@@ -280,7 +281,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             }
             selectTextOnFocus
           />
-          <div>
+          {/* <div>
             <TextField
               autoComplete="off"
               placeholder="Discount"
@@ -301,7 +302,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
                 />
               }
             />
-          </div>
+          </div> */}
         </InlineGrid>
         <br />
         <TextField

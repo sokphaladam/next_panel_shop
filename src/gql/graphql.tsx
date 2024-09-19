@@ -1304,6 +1304,14 @@ export type UpdateStatusProductMutationVariables = Exact<{
 
 export type UpdateStatusProductMutation = { __typename?: 'Mutation', updateStatusProduct?: boolean | null };
 
+export type AddDiscountOrderMutationVariables = Exact<{
+  addDiscountOrderId: Scalars['Int']['input'];
+  discount: Scalars['Float']['input'];
+}>;
+
+
+export type AddDiscountOrderMutation = { __typename?: 'Mutation', addDiscountOrder?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2662,6 +2670,38 @@ export function useUpdateStatusProductMutation(baseOptions?: Apollo.MutationHook
 export type UpdateStatusProductMutationHookResult = ReturnType<typeof useUpdateStatusProductMutation>;
 export type UpdateStatusProductMutationResult = Apollo.MutationResult<UpdateStatusProductMutation>;
 export type UpdateStatusProductMutationOptions = Apollo.BaseMutationOptions<UpdateStatusProductMutation, UpdateStatusProductMutationVariables>;
+export const AddDiscountOrderDocument = gql`
+    mutation addDiscountOrder($addDiscountOrderId: Int!, $discount: Float!) {
+  addDiscountOrder(id: $addDiscountOrderId, discount: $discount)
+}
+    `;
+export type AddDiscountOrderMutationFn = Apollo.MutationFunction<AddDiscountOrderMutation, AddDiscountOrderMutationVariables>;
+
+/**
+ * __useAddDiscountOrderMutation__
+ *
+ * To run a mutation, you first call `useAddDiscountOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddDiscountOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addDiscountOrderMutation, { data, loading, error }] = useAddDiscountOrderMutation({
+ *   variables: {
+ *      addDiscountOrderId: // value for 'addDiscountOrderId'
+ *      discount: // value for 'discount'
+ *   },
+ * });
+ */
+export function useAddDiscountOrderMutation(baseOptions?: Apollo.MutationHookOptions<AddDiscountOrderMutation, AddDiscountOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddDiscountOrderMutation, AddDiscountOrderMutationVariables>(AddDiscountOrderDocument, options);
+      }
+export type AddDiscountOrderMutationHookResult = ReturnType<typeof useAddDiscountOrderMutation>;
+export type AddDiscountOrderMutationResult = Apollo.MutationResult<AddDiscountOrderMutation>;
+export type AddDiscountOrderMutationOptions = Apollo.BaseMutationOptions<AddDiscountOrderMutation, AddDiscountOrderMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
