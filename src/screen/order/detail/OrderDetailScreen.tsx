@@ -81,7 +81,7 @@ const toneIcon: any = {
   [StatusOrder.Cancelled]: XCircleIcon,
 };
 
-export function OrderDetailScreen() {
+export default function OrderDetailScreen() {
   const user = useUser();
   const [select, setSelect] = useState(0);
   const params = useParams<{ id: string }>();
@@ -123,6 +123,8 @@ export function OrderDetailScreen() {
         } else {
           setInvoice({ date: moment(new Date()).format('YYYY-MM-DD'), count: 1 });
         }
+      } else {
+        setInvoice({ date: moment(new Date()).format('YYYY-MM-DD'), count: 1 });
       }
     }
   }, []);

@@ -64,7 +64,6 @@ export function CustomerOrderCategory(props: Props) {
           {category
             .filter((f: any) => props.productGroup[f.name] && props.productGroup[f.name].length > 0)
             .map((c: any) => {
-              console.log(category);
               const count = props.productGroup
                 ? (props.productGroup[c.name] || []).reduce((a: any, b: any) => (a = a + b.sku.length), 0)
                 : 0;
