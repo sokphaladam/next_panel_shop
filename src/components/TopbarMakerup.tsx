@@ -1,12 +1,14 @@
 'use client';
 import React, { useCallback, useState } from 'react';
 import { Icon, IconableAction, Text, TopBar } from '@shopify/polaris';
-import { CheckSmallIcon, ExitIcon, ButtonPressIcon, ContractFilledIcon } from '@shopify/polaris-icons';
+import { CheckSmallIcon, ExitIcon, ButtonPressIcon, ContractFilledIcon, MenuIcon } from '@shopify/polaris-icons';
 import { deleteCookie } from 'cookies-next';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/service/UserProvider';
 import { useLanguage } from '@/service/LanguageProvider';
 import { FormShift } from './polaris/form/FormShift';
+import { useToggle } from '@/service/ToggleProvider';
+import { useWindowSize } from '@/hook/useWindowSize';
 
 interface Props {
   mobileNavigationActive: any;
@@ -15,7 +17,9 @@ interface Props {
 
 export function TopbarMarkup(props: Props) {
   const user = useUser();
+  const { setOpen, open } = useToggle();
   const [shift, setShift] = useState(false);
+  const { width } = useWindowSize();
   const [isShift, setIsShift] = useState(false);
   const { push, refresh } = useRouter();
   const pathname = usePathname();
@@ -116,6 +120,18 @@ export function TopbarMarkup(props: Props) {
         userMenu={userMenuMarkup}
         onNavigationToggle={toggleMobileNavigationActive}
         secondaryMenu={secondaryMenuMarkup}
+        logoSuffix={
+          (width || 0) < 1000 && (width || 0) > 770 ? (
+            <div
+              className="text-white cursor-pointer"
+              onClick={() => {
+                setOpen(!open);
+              }}
+            >
+              <Icon source={MenuIcon} tone="inherit" />
+            </div>
+          ) : undefined
+        }
       />
     </React.Fragment>
   );

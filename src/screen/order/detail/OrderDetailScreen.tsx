@@ -54,6 +54,8 @@ import Image from 'next/image';
 import { useUser } from '@/service/UserProvider';
 import { PrintForKitchen } from '../components/PrintForKitchen';
 import { DiscountOrder } from '../components/DiscountOrder';
+import { useToggle } from '@/service/ToggleProvider';
+import { useWindowSize } from '@/hook/useWindowSize';
 
 const tabs: TabProps[] = [
   {
@@ -84,7 +86,9 @@ const toneIcon: any = {
 
 export default function OrderDetailScreen() {
   const user = useUser();
+  const { setOpen: setToggle } = useToggle();
   const [select, setSelect] = useState(0);
+  const { width, height } = useWindowSize();
   const params = useParams<{ id: string }>();
   const [invoice, setInvoice] = useState<any>();
   const { setToasts, toasts } = useCustomToast();
@@ -113,6 +117,15 @@ export default function OrderDetailScreen() {
       }
     },
   });
+
+  useEffect(() => {
+    if ((width || 0) < 1000 && (width || 0) > 770) {
+      setToggle(false);
+    }
+    return () => {
+      setToggle(true);
+    };
+  }, [setToggle, width]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -215,6 +228,7 @@ export default function OrderDetailScreen() {
             ) as any)
           : ''
       }
+      fullWidth
     >
       {/* Cancel */}
       <Modals
@@ -283,7 +297,7 @@ export default function OrderDetailScreen() {
             </Box>
           </Card>
         </Layout.Section>
-        <Layout.Section variant="oneHalf">
+        <Layout.Section variant={(width || 0) > 600 && (width || 0) < 770 ? 'oneThird' : 'oneHalf'}>
           <Card padding={'0'}>
             <Box padding={'300'}>
               <div className="flex flex-row justify-between items-baseline">
@@ -371,7 +385,10 @@ export default function OrderDetailScreen() {
             </Box>
             <Divider />
             <Box>
-              <div className="max-h-[340px] overflow-x-auto">
+              <div
+                className="overflow-x-auto scroll-smooth snap-y snap-mandatory"
+                style={{ height: (height || 0) / 1.9 }}
+              >
                 <IndexTable
                   headings={[
                     { title: '#' },
@@ -421,7 +438,7 @@ export default function OrderDetailScreen() {
                                   width={40}
                                   height={40}
                                   objectFit="contain"
-                                  style={{ width: 'auto', borderRadius: 5 }}
+                                  style={{ width: 40, borderRadius: 5, maxHeight: 40, objectFit: 'cover' }}
                                   loading="lazy"
                                 />
                                 {/* <Thumbnail alt="" source={item?.product?.images + ''} size="small" /> */}

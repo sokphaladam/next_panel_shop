@@ -30,11 +30,13 @@ import Image from 'next/image';
 import { config_app } from '@/lib/config_app';
 import ListArrangement from '@/lib/ListArrangement';
 import { CustomerOrderCategory } from './CustomOrderCategory';
+import { useWindowSize } from '@/hook/useWindowSize';
 
 interface Props {}
 
 function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSelectProduct: any }) {
   const [category, setCategory] = useState(null);
+  const { height } = useWindowSize();
   const groups = props.data?.reduce((a: any, b: any) => {
     const key = b?.category?.name;
 
@@ -47,7 +49,7 @@ function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSel
   }, {});
 
   return (
-    <div className="h-[500px] overflow-x-auto">
+    <div className="overflow-x-auto scroll-smooth snap-y snap-mandatory" style={{ height: (height || 0) / 1.3 }}>
       <div className="sticky top-0 z-[999]">
         <CustomerOrderCategory productGroup={groups} selected={category} onSelected={setCategory} />
       </div>

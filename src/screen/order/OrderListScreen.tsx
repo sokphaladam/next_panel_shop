@@ -8,23 +8,23 @@ import { PrintAllOrder } from './components/PrintAllOrder';
 
 const tabs: TabProps[] = [
   {
-    content: 'PENDING',
+    content: 'Pending',
     id: 'PENDING',
   },
   {
-    content: 'VERIFY',
+    content: 'In Order',
     id: 'VERIFY',
   },
+  // {
+  //   content: 'DELIVER',
+  //   id: 'DELIVERY',
+  // },
   {
-    content: 'DELIVER',
-    id: 'DELIVERY',
-  },
-  {
-    content: 'CHECKOUT',
+    content: 'Checkout',
     id: 'CHECKOUT',
   },
   {
-    content: 'CANCELLED',
+    content: 'Cancelled',
     id: 'CANCELLED',
   },
 ];

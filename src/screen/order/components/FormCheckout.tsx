@@ -143,7 +143,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       status: StatusOrder.Checkout,
       reason: reasonInput || '',
       amount: total.toFixed(2),
-      invoice: Number(invoice.count),
+      invoice: data.invoice ? Number(data.invoice) : Number(invoice.count),
       bankType: String(bank.split(',')[0]),
       bankId: Number(bank.split(',')[1]),
       currency: currency,
@@ -162,12 +162,14 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
           setReasonInput('');
           setAmountInput('');
           togglePaid();
-          const inv = {
-            date: moment(new Date()),
-            count: Number(invoice.count) + 1,
-          };
-          localStorage.setItem('invoice', JSON.stringify(inv));
-          setInvoice(inv);
+          if (!data.invoice) {
+            const inv = {
+              date: moment(new Date()),
+              count: Number(invoice.count) + 1,
+            };
+            localStorage.setItem('invoice', JSON.stringify(inv));
+            setInvoice(inv);
+          }
           setTimeout(() => {
             process.browser && window.location.reload();
           }, 500);
