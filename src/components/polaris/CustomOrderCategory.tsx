@@ -63,13 +63,13 @@ export function CustomerOrderCategory(props: Props) {
           </li>
           {category
             .filter((f: any) => props.productGroup[f.name] && props.productGroup[f.name].length > 0)
-            .map((c: any) => {
+            .map((c: any, i) => {
               const count = props.productGroup
                 ? (props.productGroup[c.name] || []).reduce((a: any, b: any) => (a = a + b.sku.length), 0)
                 : 0;
               return (
                 <li
-                  key={c.id}
+                  key={i}
                   className={`p-3 hover:bg-emerald-700 font-bold rounded-md  cursor-pointer ${
                     props.selected && props.selected.name === c.name ? 'bg-emerald-700 text-white' : ''
                   }`}

@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { ModalComponent } from '@/components/ModalServer';
 import { Modal } from '@/hook/modal';
 import { useSetting } from './useSettingProvider';
+import { useToggle } from './ToggleProvider';
 
 const logo = {
   width: 35,
@@ -23,6 +24,7 @@ const logo = {
 
 export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
   const setting = useSetting();
+  const { open } = useToggle();
   const [verify, setVerify] = useState(false);
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
 
@@ -50,7 +52,7 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
     >
       <TokenVerification onCompleted={setVerify} />
       <Frame
-        logo={logo}
+        logo={verify ? logo : undefined}
         topBar={
           verify ? (
             <TopbarMarkup
@@ -61,7 +63,7 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
         }
         showMobileNavigation={mobileNavigationActive && verify}
         onNavigationDismiss={toggleMobileNavigationActive}
-        navigation={verify ? <NavigationMarkup onClick={toggleMobileNavigationActive} /> : null}
+        navigation={verify && open ? <NavigationMarkup onClick={toggleMobileNavigationActive} /> : null}
       >
         <div className="flex flex-col justify-between">
           {config_app.public.assets.dev === 'development' && (
