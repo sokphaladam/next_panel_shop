@@ -228,6 +228,7 @@ export type Mutation = {
   login?: Maybe<Scalars['String']['output']>;
   markOrderItemStatus?: Maybe<Scalars['Boolean']['output']>;
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
+  setTypePaymentOrder?: Maybe<Scalars['Boolean']['output']>;
   signatureOrder?: Maybe<Scalars['Boolean']['output']>;
   testSubscription?: Maybe<Scalars['Boolean']['output']>;
   updateBank?: Maybe<Scalars['Boolean']['output']>;
@@ -374,6 +375,14 @@ export type MutationPeopleInOrderArgs = {
 };
 
 
+export type MutationSetTypePaymentOrderArgs = {
+  bankId?: InputMaybe<Scalars['Int']['input']>;
+  bankType?: InputMaybe<Scalars['String']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationSignatureOrderArgs = {
   id: Scalars['Int']['input'];
   password: Scalars['String']['input'];
@@ -494,8 +503,10 @@ export type MutationVerifyOtpOrderArgs = {
 export type Order = {
   __typename?: 'Order';
   address?: Maybe<Scalars['String']['output']>;
+  bankId?: Maybe<Scalars['Int']['output']>;
   bankType?: Maybe<Scalars['String']['output']>;
   code?: Maybe<Scalars['String']['output']>;
+  currency?: Maybe<Scalars['String']['output']>;
   customerPaid?: Maybe<Scalars['String']['output']>;
   delivery?: Maybe<Delivery>;
   deliveryCode?: Maybe<Scalars['String']['output']>;
@@ -1312,6 +1323,16 @@ export type AddDiscountOrderMutationVariables = Exact<{
 
 export type AddDiscountOrderMutation = { __typename?: 'Mutation', addDiscountOrder?: boolean | null };
 
+export type SetTypePaymentOrderMutationVariables = Exact<{
+  setTypePaymentOrderId: Scalars['Int']['input'];
+  bankType?: InputMaybe<Scalars['String']['input']>;
+  currency?: InputMaybe<Scalars['String']['input']>;
+  bankId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type SetTypePaymentOrderMutation = { __typename?: 'Mutation', setTypePaymentOrder?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1355,7 +1376,7 @@ export type OrderListQueryVariables = Exact<{
 }>;
 
 
-export type OrderListQuery = { __typename?: 'Query', orderList?: Array<{ __typename?: 'Order', id?: number | null, code?: string | null, deliveryCode?: string | null, discount?: number | null, status?: StatusOrder | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, vat?: string | null, bankType?: string | null, invoice?: number | null, person?: number | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, price?: number | null, qty?: number | null, discount?: number | null, addons?: string | null, remark?: string | null, status?: StatusOrderItem | null, createdDate?: string | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null, code?: string | null } | null, sku?: { __typename?: 'SKU', name?: string | null, image?: string | null } | null } | null> | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null } | null> | null };
+export type OrderListQuery = { __typename?: 'Query', orderList?: Array<{ __typename?: 'Order', id?: number | null, code?: string | null, deliveryCode?: string | null, discount?: number | null, status?: StatusOrder | null, name?: string | null, paid?: string | null, set?: string | null, bankId?: number | null, currency?: string | null, total?: string | null, uuid?: string | null, note?: string | null, vat?: string | null, bankType?: string | null, invoice?: number | null, person?: number | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, price?: number | null, qty?: number | null, discount?: number | null, addons?: string | null, remark?: string | null, status?: StatusOrderItem | null, createdDate?: string | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null, code?: string | null } | null, sku?: { __typename?: 'SKU', name?: string | null, image?: string | null } | null } | null> | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null } | null> | null };
 
 export type OrderQueryVariables = Exact<{
   token?: InputMaybe<Scalars['String']['input']>;
@@ -1363,7 +1384,7 @@ export type OrderQueryVariables = Exact<{
 }>;
 
 
-export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id?: number | null, address?: string | null, status?: StatusOrder | null, customerPaid?: string | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, code?: string | null, discount?: number | null, vat?: string | null, person?: number | null, invoice?: number | null, bankType?: string | null, deliveryCode?: string | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', createdDate?: string | null, id?: number | null, qty?: number | null, price?: number | null, discount?: number | null, status?: StatusOrderItem | null, addons?: string | null, remark?: string | null, isPrint?: boolean | null, sku?: { __typename?: 'SKU', price?: number | null, discount?: number | null, id?: number | null, unit?: string | null, name?: string | null, image?: string | null } | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, code?: string | null, description?: string | null, id?: number | null } | null } | null> | null } | null };
+export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id?: number | null, address?: string | null, status?: StatusOrder | null, bankId?: number | null, customerPaid?: string | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, code?: string | null, discount?: number | null, vat?: string | null, person?: number | null, currency?: string | null, invoice?: number | null, bankType?: string | null, deliveryCode?: string | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', createdDate?: string | null, id?: number | null, qty?: number | null, price?: number | null, discount?: number | null, status?: StatusOrderItem | null, addons?: string | null, remark?: string | null, isPrint?: boolean | null, sku?: { __typename?: 'SKU', price?: number | null, discount?: number | null, id?: number | null, unit?: string | null, name?: string | null, image?: string | null } | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, code?: string | null, description?: string | null, id?: number | null } | null } | null> | null } | null };
 
 export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2702,6 +2723,45 @@ export function useAddDiscountOrderMutation(baseOptions?: Apollo.MutationHookOpt
 export type AddDiscountOrderMutationHookResult = ReturnType<typeof useAddDiscountOrderMutation>;
 export type AddDiscountOrderMutationResult = Apollo.MutationResult<AddDiscountOrderMutation>;
 export type AddDiscountOrderMutationOptions = Apollo.BaseMutationOptions<AddDiscountOrderMutation, AddDiscountOrderMutationVariables>;
+export const SetTypePaymentOrderDocument = gql`
+    mutation setTypePaymentOrder($setTypePaymentOrderId: Int!, $bankType: String, $currency: String, $bankId: Int) {
+  setTypePaymentOrder(
+    id: $setTypePaymentOrderId
+    bankType: $bankType
+    currency: $currency
+    bankId: $bankId
+  )
+}
+    `;
+export type SetTypePaymentOrderMutationFn = Apollo.MutationFunction<SetTypePaymentOrderMutation, SetTypePaymentOrderMutationVariables>;
+
+/**
+ * __useSetTypePaymentOrderMutation__
+ *
+ * To run a mutation, you first call `useSetTypePaymentOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetTypePaymentOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setTypePaymentOrderMutation, { data, loading, error }] = useSetTypePaymentOrderMutation({
+ *   variables: {
+ *      setTypePaymentOrderId: // value for 'setTypePaymentOrderId'
+ *      bankType: // value for 'bankType'
+ *      currency: // value for 'currency'
+ *      bankId: // value for 'bankId'
+ *   },
+ * });
+ */
+export function useSetTypePaymentOrderMutation(baseOptions?: Apollo.MutationHookOptions<SetTypePaymentOrderMutation, SetTypePaymentOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetTypePaymentOrderMutation, SetTypePaymentOrderMutationVariables>(SetTypePaymentOrderDocument, options);
+      }
+export type SetTypePaymentOrderMutationHookResult = ReturnType<typeof useSetTypePaymentOrderMutation>;
+export type SetTypePaymentOrderMutationResult = Apollo.MutationResult<SetTypePaymentOrderMutation>;
+export type SetTypePaymentOrderMutationOptions = Apollo.BaseMutationOptions<SetTypePaymentOrderMutation, SetTypePaymentOrderMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3031,6 +3091,8 @@ export const OrderListDocument = gql`
     name
     paid
     set
+    bankId
+    currency
     total
     uuid
     note
@@ -3092,6 +3154,7 @@ export const OrderDocument = gql`
     id
     address
     status
+    bankId
     customerPaid
     name
     paid
@@ -3103,6 +3166,7 @@ export const OrderDocument = gql`
     discount
     vat
     person
+    currency
     invoice
     bankType
     log {

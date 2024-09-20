@@ -149,6 +149,8 @@ query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [Statu
     name
     paid
     set
+    bankId
+    currency
     total
     uuid
     note
@@ -172,6 +174,7 @@ query order($token: String, $orderId: Int) {
     id
     address
     status
+    bankId
     customerPaid
     name
     paid
@@ -183,6 +186,7 @@ query order($token: String, $orderId: Int) {
     discount
     vat
     person
+    currency
     invoice
     bankType
     log {
