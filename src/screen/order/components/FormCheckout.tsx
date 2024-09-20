@@ -49,15 +49,17 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
   });
 
   const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value || '4000';
+  const totalKhr = (total || 0) * Number(exchangeRate);
 
   useEffect(() => {
     if (total && !!loading && data) {
-      setAmountInput(total + '');
+      const bank = data.bankType + ',' + data.bankId;
+      setBank(bank);
+      setCurrency(data.currency || 'USD');
+      setAmountInput(data.currency === 'KHR' ? totalKhr + '' : total + '');
       setLoading(false);
     }
-  }, [total, loading, data]);
-
-  const totalKhr = (total || 0) * Number(exchangeRate);
+  }, [total, loading, data, totalKhr]);
 
   const handleChangeBank = useCallback(
     (v: any) => {

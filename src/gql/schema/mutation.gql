@@ -141,3 +141,7 @@ mutation updateStatusProduct($updateStatusProductId: Int!, $status: STATUS_PRODU
 mutation addDiscountOrder($addDiscountOrderId: Int!, $discount: Float!) {
   addDiscountOrder(id: $addDiscountOrderId, discount: $discount)
 }
+
+mutation setTypePaymentOrder($setTypePaymentOrderId: Int!, $bankType: String, $currency: String, $bankId: Int) {
+  setTypePaymentOrder(id: $setTypePaymentOrderId, bankType: $bankType, currency: $currency, bankId: $bankId)
+}

@@ -163,11 +163,11 @@ export function PrintShift(props: Props) {
               <strong>Cash (USD)</strong>
             </div>
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="Opening Shift" value={props.data.openCurrency?.usd + '$'} />
+            <RenderItemList text="Opening Shift" value={props.data.openCurrency?.usd?.toFixed(2) + '$'} />
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="Closing Shift" value={props.data.closeCurrency?.usd + '$'} />
+            <RenderItemList text="Closing Shift" value={props.data.closeCurrency?.usd?.toFixed(2) + '$'} />
             <hr style={{ borderColor: 'black' }} />
-            <RenderItemList text="Handover amount" value={props.data.closeCurrency?.usd + '$'} bold />
+            <RenderItemList text="Handover amount" value={props.data.closeCurrency?.usd?.toFixed(2) + '$'} bold />
             <hr style={{ borderColor: 'black' }} />
             <div style={{ padding: 2 }}>
               <strong>Cash (KHR)</strong>

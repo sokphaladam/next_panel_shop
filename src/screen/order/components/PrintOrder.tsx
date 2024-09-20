@@ -55,8 +55,9 @@ export function PrintOrder(props: Props) {
   const verify_date = props.order ? props.order?.log?.find((f) => f?.text === 'Verifed')?.by?.display : '';
   const exchangeRate = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value;
   const vat = setting.find((f) => f.option === 'TAX')?.value;
-  const discount = (Number(props.order?.total || 0) * Number(props.order?.discount)) / 100;
+  const discount = (Number(props.total || 0) * Number(props.order?.discount)) / 100;
   const signature = props.order ? props.order?.log?.find((f) => f?.text === 'Signature')?.by?.display : '';
+  const totalAfterDiscount = Number((Number(props.total) - Number(discount)).toFixed(2));
 
   let groups: OrderItem[] = [];
 
@@ -79,6 +80,9 @@ export function PrintOrder(props: Props) {
       });
     }
   }
+
+  console.log('customer paid ======>', props.order?.customerPaid);
+  console.log('total after discount ======>', totalAfterDiscount);
 
   return (
     <Modal
@@ -234,7 +238,7 @@ export function PrintOrder(props: Props) {
                           {discount > 0 && (
                             <>
                               <div className="h-8">Sub Total</div>
-                              <div className="h-8">Discount</div>
+                              <div className="h-8">Discount ({props.order?.discount?.toFixed(2)}%)</div>
                             </>
                           )}
                           <div className="h-8">TOTAL</div>
@@ -257,11 +261,7 @@ export function PrintOrder(props: Props) {
                             </>
                           )}
                           <div className="font-bold h-8" style={{ marginLeft: '20%' }}>
-                            {formatKHR(
-                              Math.round(
-                                Number(exchangeRate) * Number(props.total) - Number(exchangeRate) * Number(discount),
-                              ),
-                            )}
+                            {formatKHR(Math.round(Number(exchangeRate) * totalAfterDiscount))}
                           </div>
                           <div className="h-8"></div>
                           <div className="h-8">
@@ -271,8 +271,7 @@ export function PrintOrder(props: Props) {
                             {Number(props.order?.customerPaid) > 0
                               ? formatKHR(
                                   Math.round(
-                                    Number(exchangeRate) * Number(props.order?.customerPaid) -
-                                      Number(exchangeRate) * Number(props.total),
+                                    Number(exchangeRate) * (Number(props.order?.customerPaid) - totalAfterDiscount),
                                   ),
                                 )
                               : 0}
@@ -289,13 +288,13 @@ export function PrintOrder(props: Props) {
                               <div className="h-8">${Number(discount).toFixed(2)}</div>
                             </>
                           )}
-                          <div className="h-8">${(Number(props.total) - Number(discount)).toFixed(2)}</div>
+                          <div className="h-8">${totalAfterDiscount.toFixed(2)}</div>
                           <div className="h-8">$({vat}%)</div>
                           <div className="h-8">${Number(props.order?.customerPaid).toFixed(2)}</div>
                           <div className="h-8">
                             $
                             {Number(props.order?.customerPaid) > 0
-                              ? (Number(props.order?.customerPaid) - Number(props.total)).toFixed(2)
+                              ? (Number(props.order?.customerPaid) - totalAfterDiscount).toFixed(2)
                               : 0}
                           </div>
                           {signature && <div className="h-8">{signature || ''}</div>}

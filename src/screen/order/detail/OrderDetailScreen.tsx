@@ -56,6 +56,7 @@ import { PrintForKitchen } from '../components/PrintForKitchen';
 import { DiscountOrder } from '../components/DiscountOrder';
 import { useToggle } from '@/service/ToggleProvider';
 import { useWindowSize } from '@/hook/useWindowSize';
+import { FormSetPaymentType } from '../components/FormSetPaymentType';
 
 const tabs: TabProps[] = [
   {
@@ -202,11 +203,14 @@ export default function OrderDetailScreen() {
     </Page>;
   }
 
-  const total = data?.order?.items?.reduce((a: any, b: any) => {
-    const dis_price = Number(b.price) * (Number(b.discount) / 100);
-    const amount = Number(b.qty) * (Number(b.price) - dis_price);
-    return (a = a + amount);
-  }, 0);
+  const total =
+    Number(data?.order?.total || 0) > 0
+      ? Number(data?.order?.total)
+      : data?.order?.items?.reduce((a: any, b: any) => {
+          const dis_price = Number(b.price) * (Number(b.discount) / 100);
+          const amount = Number(b.qty) * (Number(b.price) - dis_price);
+          return (a = a + amount);
+        }, 0);
 
   const vatPer = setting.find((f) => f.option === 'TAX')?.value;
   const lastUpdate = data?.order?.log?.find((f) => f?.text === 'Last Updated')?.date;
@@ -632,7 +636,8 @@ export default function OrderDetailScreen() {
                     {data && (
                       <div className="mr-1">
                         <Text as="strong" variant="bodySm" alignment="end">
-                          ${((Number(data.order?.total || 0) * Number(data.order?.discount)) / 100).toFixed(2)}
+                          ${((Number(total || 0) * Number(data.order?.discount)) / 100).toFixed(2)} (
+                          {data.order?.discount?.toFixed(2)}%)
                         </Text>
                       </div>
                     )}
@@ -649,11 +654,7 @@ export default function OrderDetailScreen() {
                   <IndexTable.Cell>
                     <div className="mr-1">
                       <Text as="strong" variant="bodySm" alignment="end" tone="critical" fontWeight="bold">
-                        $
-                        {(
-                          (total || 0) -
-                          (Number(data?.order?.total || 0) * Number(data?.order?.discount)) / 100
-                        ).toFixed(2)}
+                        ${((total || 0) - (Number(total || 0) * Number(data?.order?.discount || 0)) / 100).toFixed(2)}
                       </Text>
                     </div>
                   </IndexTable.Cell>
@@ -661,6 +662,17 @@ export default function OrderDetailScreen() {
               </IndexTable>
             </Box>
           </Card>
+          <br />
+          {data?.order && (
+            <Card padding={'0'}>
+              <Box padding={'400'}>
+                <div className="flex flex-row justify-between items-center">
+                  <div>Payment: {data?.order?.bankType}</div>
+                  <FormSetPaymentType order={data?.order || {}} />
+                </div>
+              </Box>
+            </Card>
+          )}
           <br />
           <Card padding={'0'}>
             <Box padding={'400'}>
