@@ -385,7 +385,10 @@ export default function OrderDetailScreen() {
             </Box>
             <Divider />
             <Box>
-              <div className="overflow-x-auto scroll-smooth snap-mandatory" style={{ height: (height || 0) / 1.9 }}>
+              <div
+                className="overflow-x-auto scroll-smooth snap-y snap-mandatory"
+                style={{ height: (height || 0) / 1.9 }}
+              >
                 <IndexTable
                   headings={[
                     { title: '#' },
