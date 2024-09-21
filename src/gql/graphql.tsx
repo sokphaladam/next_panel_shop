@@ -632,6 +632,14 @@ export type ProductInput = {
   type?: InputMaybe<Array<InputMaybe<Type_Product>>>;
 };
 
+export type ProductSell = {
+  __typename?: 'ProductSell';
+  product?: Maybe<Product>;
+  qty?: Maybe<Scalars['Int']['output']>;
+  sku?: Maybe<Sku>;
+  total?: Maybe<Scalars['Float']['output']>;
+};
+
 export type ProductStock = {
   __typename?: 'ProductStock';
   id?: Maybe<Scalars['Int']['output']>;
@@ -683,6 +691,7 @@ export type Query = {
   shiftList?: Maybe<Array<Maybe<Shift>>>;
   tableSet?: Maybe<TableSet>;
   tableSetList?: Maybe<Array<Maybe<TableSet>>>;
+  topProductSell?: Maybe<Array<Maybe<ProductSell>>>;
   user?: Maybe<User>;
   userList?: Maybe<Array<Maybe<User>>>;
 };
@@ -786,6 +795,12 @@ export type QueryOrderArgs = {
 };
 
 
+export type QueryOrderBalanceSummaryArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryOrderListArgs = {
   fromDate?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -864,6 +879,13 @@ export type QueryTableSetArgs = {
 export type QueryTableSetListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryTopProductSellArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1553,10 +1575,22 @@ export type OverTimeQueryVariables = Exact<{
 
 export type OverTimeQuery = { __typename?: 'Query', overTime?: { __typename?: 'OverTime', id?: number | null, startat?: string | null, endAt?: string | null, otDate?: string | null, note?: string | null, status?: OverTimeStatus | null, approvedDate?: string | null, requestedDate?: string | null, rejectedDate?: string | null, cancelledDate?: string | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, rejectedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, requestedBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null, cancelledBy?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null } | null } | null };
 
-export type OrderBalanceSummaryQueryVariables = Exact<{ [key: string]: never; }>;
+export type OrderBalanceSummaryQueryVariables = Exact<{
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type OrderBalanceSummaryQuery = { __typename?: 'Query', orderBalanceSummary?: any | null };
+
+export type TopProductSellQueryVariables = Exact<{
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type TopProductSellQuery = { __typename?: 'Query', topProductSell?: Array<{ __typename?: 'ProductSell', qty?: number | null, total?: number | null, product?: { __typename?: 'Product', id?: number | null, code?: string | null, title?: string | null, images?: string | null } | null, sku?: { __typename?: 'SKU', id?: number | null, name?: string | null, image?: string | null, price?: number | null, discount?: number | null, unit?: string | null } | null } | null> | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -4394,8 +4428,8 @@ export type OverTimeLazyQueryHookResult = ReturnType<typeof useOverTimeLazyQuery
 export type OverTimeSuspenseQueryHookResult = ReturnType<typeof useOverTimeSuspenseQuery>;
 export type OverTimeQueryResult = Apollo.QueryResult<OverTimeQuery, OverTimeQueryVariables>;
 export const OrderBalanceSummaryDocument = gql`
-    query orderBalanceSummary {
-  orderBalanceSummary
+    query orderBalanceSummary($from: String, $to: String) {
+  orderBalanceSummary(from: $from, to: $to)
 }
     `;
 
@@ -4411,6 +4445,8 @@ export const OrderBalanceSummaryDocument = gql`
  * @example
  * const { data, loading, error } = useOrderBalanceSummaryQuery({
  *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
  *   },
  * });
  */
@@ -4430,6 +4466,63 @@ export type OrderBalanceSummaryQueryHookResult = ReturnType<typeof useOrderBalan
 export type OrderBalanceSummaryLazyQueryHookResult = ReturnType<typeof useOrderBalanceSummaryLazyQuery>;
 export type OrderBalanceSummarySuspenseQueryHookResult = ReturnType<typeof useOrderBalanceSummarySuspenseQuery>;
 export type OrderBalanceSummaryQueryResult = Apollo.QueryResult<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>;
+export const TopProductSellDocument = gql`
+    query topProductSell($from: String, $to: String, $limit: Int = 10) {
+  topProductSell(from: $from, to: $to, limit: $limit) {
+    product {
+      id
+      code
+      title
+      images
+    }
+    sku {
+      id
+      name
+      image
+      price
+      discount
+      unit
+    }
+    qty
+    total
+  }
+}
+    `;
+
+/**
+ * __useTopProductSellQuery__
+ *
+ * To run a query within a React component, call `useTopProductSellQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopProductSellQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopProductSellQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useTopProductSellQuery(baseOptions?: Apollo.QueryHookOptions<TopProductSellQuery, TopProductSellQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TopProductSellQuery, TopProductSellQueryVariables>(TopProductSellDocument, options);
+      }
+export function useTopProductSellLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopProductSellQuery, TopProductSellQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TopProductSellQuery, TopProductSellQueryVariables>(TopProductSellDocument, options);
+        }
+export function useTopProductSellSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TopProductSellQuery, TopProductSellQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TopProductSellQuery, TopProductSellQueryVariables>(TopProductSellDocument, options);
+        }
+export type TopProductSellQueryHookResult = ReturnType<typeof useTopProductSellQuery>;
+export type TopProductSellLazyQueryHookResult = ReturnType<typeof useTopProductSellLazyQuery>;
+export type TopProductSellSuspenseQueryHookResult = ReturnType<typeof useTopProductSellSuspenseQuery>;
+export type TopProductSellQueryResult = Apollo.QueryResult<TopProductSellQuery, TopProductSellQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

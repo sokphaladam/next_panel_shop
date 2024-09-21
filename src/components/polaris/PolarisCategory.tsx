@@ -1,20 +1,8 @@
-import {
-  Button,
-  Collapsible,
-  Icon,
-  Listbox,
-  Popover,
-  TextField,
-} from "@shopify/polaris";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ProductInput, useCategoryListQuery } from "@/gql/graphql";
-import {
-  SearchIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CheckIcon,
-} from "@shopify/polaris-icons";
-import { FormCategory } from "./form/FormCategory";
+import { Button, Collapsible, Icon, Listbox, Popover, TextField } from '@shopify/polaris';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { ProductInput, useCategoryListQuery } from '@/gql/graphql';
+import { SearchIcon, ChevronLeftIcon, ChevronRightIcon, CheckIcon } from '@shopify/polaris-icons';
+import { FormCategory } from './form/FormCategory';
 
 const CategoryCallbackContext = React.createContext<{
   value?: number;
@@ -48,9 +36,9 @@ interface Props {
 export function PolarisCategory(props: Props) {
   const [activeForm, setActiveForm] = useState(false);
   const [active, setActive] = useState(false);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState<any>({
-    root: { children: [], id: 0, name: "", path: "" },
+    root: { children: [], id: 0, name: '', path: '' },
     hash: {},
   });
   const [treeNode, setTreeNode] = useState<CategoryTreeNode[]>([]);
@@ -58,7 +46,7 @@ export function PolarisCategory(props: Props) {
   const [previousTreeId, setPreviousTreeId] = useState<number[]>([0]);
   const [showAll, setShowAll] = useState(false);
   const { data, loading } = useCategoryListQuery({
-    fetchPolicy: "cache-first",
+    fetchPolicy: 'cache-first',
   });
 
   useEffect(() => {
@@ -72,18 +60,14 @@ export function PolarisCategory(props: Props) {
   const filterSearch = useCallback(
     (value: string) => {
       if (value.length >= 2) {
-        const filterRegex = new RegExp(value, "i");
-        const filter = data
-          ? data?.categoryList?.raw.filter((x: any) =>
-            x?.name.match(filterRegex)
-          )
-          : "";
+        const filterRegex = new RegExp(value, 'i');
+        const filter = data ? data?.categoryList?.raw.filter((x: any) => x?.name.match(filterRegex)) : '';
 
         if ((filter || []).length > 0) {
           const builds = filter;
           const ids = builds.map((b: any) => Number(b.id));
           const tree = Object.keys(data?.categoryList.hash)
-            .filter((x) => x !== "0")
+            .filter((x) => x !== '0')
             .filter((x) => ids.includes(Number(x)))
             .map((x: any) => data?.categoryList.hash[x]);
           setCategory(data?.categoryList);
@@ -91,13 +75,13 @@ export function PolarisCategory(props: Props) {
         }
       }
     },
-    [setCategory, setTreeNode, data]
+    [setCategory, setTreeNode, data],
   );
 
   const handleQuery = useCallback(
     async (value: string) => {
       await setKeyword(value);
-      if (value === "") {
+      if (value === '') {
         if (data && data!.categoryList) {
           const builds = data!.categoryList;
           await setCategory(builds);
@@ -107,7 +91,7 @@ export function PolarisCategory(props: Props) {
       }
       await setTimeout(() => filterSearch(value), 500);
     },
-    [filterSearch, data, setCategory, setTreeNode]
+    [filterSearch, data, setCategory, setTreeNode],
   );
 
   const handleSelectChildTree = useCallback(
@@ -118,14 +102,7 @@ export function PolarisCategory(props: Props) {
       setPreviousTreeId([...previousTreeId, tree.id]);
       setShowAll(false);
     },
-    [
-      category,
-      setTreeNode,
-      setSelectTree,
-      setPreviousTreeId,
-      previousTreeId,
-      setShowAll,
-    ]
+    [category, setTreeNode, setSelectTree, setPreviousTreeId, previousTreeId, setShowAll],
   );
 
   const handlePreviousSelectChildTree = useCallback(() => {
@@ -136,52 +113,46 @@ export function PolarisCategory(props: Props) {
     setTreeNode(tree.children);
     setPreviousTreeId(newArr);
     setShowAll(false);
-  }, [
-    category,
-    setTreeNode,
-    setSelectTree,
-    setPreviousTreeId,
-    previousTreeId,
-    setShowAll,
-  ]);
+  }, [category, setTreeNode, setSelectTree, setPreviousTreeId, previousTreeId, setShowAll]);
 
   const cat = data
     ? (category.hash as any)[String(props.value.category || 0)] || {
-      path: "",
-      name: "",
-    }
-    : { path: "", name: "" };
+        path: '',
+        name: '',
+      }
+    : { path: '', name: '' };
 
   return (
     <div>
-      {
-        !!props.created && <FormCategory active={activeForm} setActive={(v) => {
-          setActiveForm(v);
-        }} title="Categories" />
-      }
+      {!!props.created && (
+        <FormCategory
+          active={activeForm}
+          setActive={(v) => {
+            setActiveForm(v);
+          }}
+          title="Categories"
+        />
+      )}
       {!loading && category && (
         <Popover
           activator={
             <TextField
               prefix={<Icon source={SearchIcon as any} tone="base" />}
-              label={`Category${(props.value.category || 0) > 0
-                ? `: ${cat.path || ""}${cat.name || ""}`
-                : ""
-                }`}
+              label={`Category${(props.value.category || 0) > 0 ? `: ${cat.path || ''}${cat.name || ''}` : ''}`}
               autoComplete="off"
               placeholder="Search"
               onFocus={() => setActive(true)}
               value={keyword}
               onChange={handleQuery}
-              labelAction={props.created ? {
-                content: "Add New",
-                onAction: () => {
-                  setActiveForm(true)
-                }
-              } : {}}
-            // error={
-            //   context.error?.name === "category_id" && "Please search category or select category from suggestion."
-            // }
+              // labelAction={props.created ? {
+              //   content: "Add New",
+              //   onAction: () => {
+              //     setActiveForm(true)
+              //   }
+              // } : {}}
+              // error={
+              //   context.error?.name === "category_id" && "Please search category or select category from suggestion."
+              // }
             />
           }
           active={active}
@@ -204,18 +175,11 @@ export function PolarisCategory(props: Props) {
             >
               {selectTree !== null && previousTreeId.length > 1 && !keyword && (
                 <div className="flex flex-row justify-between my-[0.04125rem]">
-                  <div
-                    onClick={handlePreviousSelectChildTree}
-                    className="hover:bg-gray-400 hover: rounded-full mr-3"
-                  >
+                  <div onClick={handlePreviousSelectChildTree} className="hover:bg-gray-400 hover: rounded-full mr-3">
                     <Icon source={ChevronLeftIcon} tone="base" />
                   </div>
                   <div
-                    className={
-                      props.value.category === selectTree.id
-                        ? "bg-gray-200 flex flex-row items-center"
-                        : ""
-                    }
+                    className={props.value.category === selectTree.id ? 'bg-gray-200 flex flex-row items-center' : ''}
                     onClick={() =>
                       props.onChange({
                         ...props.value,
@@ -223,36 +187,20 @@ export function PolarisCategory(props: Props) {
                       })
                     }
                   >
-                    <div className={"p-0 w-[90px] mr-3"}>{selectTree.name}</div>
-                    {props.value.category === selectTree.id && (
-                      <Icon source={CheckIcon} tone="base" />
-                    )}
+                    <div className={'p-0 w-[90px] mr-3'}>{selectTree.name}</div>
+                    {props.value.category === selectTree.id && <Icon source={CheckIcon} tone="base" />}
                   </div>
                 </div>
               )}
-              {(treeNode.length > 6 && showAll === false
-                ? treeNode.slice(0, 6)
-                : treeNode
-              ).map((tree) => {
+              {(treeNode.length > 6 && showAll === false ? treeNode.slice(0, 6) : treeNode).map((tree) => {
                 return (
-                  <div
-                    key={tree.id}
-                    className={"flex flex-row justify-between my-[0.04125rem]"}
-                  >
+                  <div key={tree.id} className={'flex flex-row justify-between my-[0.04125rem]'}>
                     <div
-                      className={
-                        props.value.category === tree.id
-                          ? "bg-gray-200 flex flex-row items-center"
-                          : ""
-                      }
-                      onClick={() =>
-                        props.onChange({ ...props.value, category: tree.id })
-                      }
+                      className={props.value.category === tree.id ? 'bg-gray-200 flex flex-row items-center' : ''}
+                      onClick={() => props.onChange({ ...props.value, category: tree.id })}
                     >
-                      {props.value.category === tree.id && (
-                        <Icon source={CheckIcon} tone="base" />
-                      )}
-                      <div className={"p-0 w-[90px] ml-3"}>{tree.name}</div>
+                      {props.value.category === tree.id && <Icon source={CheckIcon} tone="base" />}
+                      <div className={'p-0 w-[90px] ml-3'}>{tree.name}</div>
                     </div>
                     {tree.children.length > 0 && !keyword ? (
                       <div

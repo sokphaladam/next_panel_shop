@@ -14,7 +14,7 @@ export function CheckAttandance() {
   const setting = useSetting();
   const user = useUser();
   const { toasts, setToasts } = useCustomToast();
-  const [allow, setAllow] = useState(false);
+  const [allow, setAllow] = useState(true);
   const { data, loading } = useGetAttendanceStaffTodayQuery({
     variables: {
       date: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
