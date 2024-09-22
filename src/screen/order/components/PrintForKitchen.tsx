@@ -5,7 +5,7 @@ import { LabelPrinterIcon } from '@shopify/polaris-icons';
 import React, { useCallback, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
-export function PrintForKitchen({ order, item }: { item: OrderItem; order: Order }) {
+export function PrintForKitchen({ order, item, noPreview }: { item: OrderItem; order: Order; noPreview?: boolean }) {
   const [open, setOpen] = useState(false);
   const contentToPrint = useRef(null);
   const toggleOpen = useCallback(() => setOpen(!open), [open]);
@@ -25,12 +25,16 @@ export function PrintForKitchen({ order, item }: { item: OrderItem; order: Order
       onClose={toggleOpen}
       activator={activator}
       size="small"
-      primaryAction={{
-        content: 'Print',
-        onAction: () => {
-          handlePrint(null, () => contentToPrint.current);
-        },
-      }}
+      primaryAction={
+        !noPreview
+          ? {
+              content: 'Print',
+              onAction: () => {
+                handlePrint(null, () => contentToPrint.current);
+              },
+            }
+          : undefined
+      }
     >
       <Modal.Section flush>
         <div className="flex flex-row justify-center relative overflow-x-hidden">
