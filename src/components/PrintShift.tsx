@@ -39,79 +39,6 @@ export function PrintShift(props: Props) {
     removeAfterPrint: true,
   });
 
-  // const onPrintClicked = () => {
-  //   if (ref.current && iframeRef.current) {
-  //     setDoc(
-  //       `<style type="text/css">
-  //         @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
-  //       </style>
-  //       <style>
-  //         html, body {
-  //           margin: 0;
-  //           padding: 0;
-  //           text-align: center;
-  //           color: '#3E4B5B';
-  //           font-family: "Lato", "Avenir Next W01", "Proxima Nova W01", "Rubik", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  //         }
-
-  //         #print_table {
-  //           font-family: 'Lato', sans-serif;
-  //           border-collapse: collapse;
-  //           width: 100%;
-  //           font-size: 9pt;
-  //           /* color: black; */
-  //         }
-
-  //         #print_table td,
-  //         #print_table th {
-  //           padding: 4px;
-  //           border: 1px solid #000;
-  //           border-left-width: 0;
-  //           border-right-width: 0;
-  //           color: black;
-  //         }
-
-  //         #print_table th {
-  //           padding-top: 6px;
-  //           padding-bottom: 6px;
-  //           text-align: left;
-  //         }
-
-  //         @media print {
-  //           .pagebreak {
-  //             clear: both;
-  //             page-break-before: always;
-  //           }
-  //         }
-
-  //         @media print {
-  //           @page {
-  //             margin: 0;
-  //           }
-
-  //           .pagebreak {
-  //             clear: both !important;
-  //             page-break-after: always;
-  //             page-break-before: always !important;
-  //           }
-
-  //           .center {
-  //             display: flex;
-  //             justify-content: center;
-  //             flex-direction: column;
-  //             align-items:center
-  //           }
-  //         }
-  //       </style>
-  //       <div>` +
-  //         ref.current.innerHTML +
-  //         '</div><script>window.print(); /*' +
-  //         Math.random().toString() +
-  //         '*/</script>',
-  //     );
-  //   }
-  // };
-
   const exchange = setting.find((f) => f.option === 'EXCHANGE_RATE')?.value;
   const banks: any[] = props.data.bank || [];
   const bankTotal = banks.reduce((a, b) => (a = a + Number(b.value)), 0);
@@ -191,6 +118,10 @@ export function PrintShift(props: Props) {
             })}
             <RenderItemList text="✔️ Sales" value={Number(bankTotal + usd + khr).toFixed(2) + '$'} bold />
             <hr style={{ borderColor: 'black' }} />
+            <RenderItemList text="Total number of Customers" value={Number(props.data.customer || 0).toFixed(0)} bold />
+            <hr style={{ borderColor: 'black' }} />
+            <RenderItemList text="Average Spending" value={Number(props.data.customerAvgCost || 0).toFixed(2) + '$'} />
+            <hr style={{ borderColor: 'black' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold' }}>
               <div style={{ padding: 2, width: 150 }}>✔️ Other</div>
             </div>
@@ -221,31 +152,11 @@ export function PrintShift(props: Props) {
           className="text-blue-500 cursor-pointer"
           onClick={() => {
             handlePrint(null, () => contentToPrint.current);
-            // onPrintClicked();
-            // JSPM.JSPrintManager.auto_reconnect = true;
-            // JSPM.JSPrintManager.start();
-            // var cpj = new JSPM.ClientPrintJob();
-            // cpj.clientPrinter = new JSPM.DefaultPrinter();
-            // //@ts-ignore
-            // cpj.printerCommands = JSPM.PrinterCommands.createFromHTML(ref.current?.innerHTML);
-            // cpj.sendToClient();
           }}
         >
           {'Print Shift'}
         </div>
       </div>
-      {/* <iframe
-        style={{
-          position: 'fixed',
-          width: 1,
-          height: 1,
-          left: -1000,
-          top: -1000,
-        }}
-        srcDoc={doc}
-        ref={iframeRef}
-        title="myframe"
-      ></iframe> */}
     </div>
   );
 }

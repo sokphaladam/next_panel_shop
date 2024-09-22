@@ -677,6 +677,7 @@ export type Query = {
   me?: Maybe<User>;
   order?: Maybe<Order>;
   orderBalanceSummary?: Maybe<Scalars['JSON']['output']>;
+  orderItem?: Maybe<Scalars['JSON']['output']>;
   orderList?: Maybe<Array<Maybe<Order>>>;
   overTime?: Maybe<OverTime>;
   overTimeList?: Maybe<Array<Maybe<OverTime>>>;
@@ -798,6 +799,11 @@ export type QueryOrderArgs = {
 export type QueryOrderBalanceSummaryArgs = {
   from?: InputMaybe<Scalars['String']['input']>;
   to?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryOrderItemArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -948,6 +954,8 @@ export type Shift = {
   card?: Maybe<Scalars['Int']['output']>;
   close?: Maybe<Scalars['String']['output']>;
   closeCurrency?: Maybe<CurrencyShift>;
+  customer?: Maybe<Scalars['String']['output']>;
+  customerAvgCost?: Maybe<Scalars['String']['output']>;
   deposit?: Maybe<Scalars['String']['output']>;
   expectedCurrency?: Maybe<CurrencyShift>;
   id?: Maybe<Scalars['Int']['output']>;
@@ -1513,7 +1521,7 @@ export type ShiftListQueryVariables = Exact<{
 }>;
 
 
-export type ShiftListQuery = { __typename?: 'Query', shiftList?: Array<{ __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null> | null };
+export type ShiftListQuery = { __typename?: 'Query', shiftList?: Array<{ __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, customer?: string | null, customerAvgCost?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null> | null };
 
 export type ShiftByIdQueryVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
@@ -1522,7 +1530,7 @@ export type ShiftByIdQueryVariables = Exact<{
 }>;
 
 
-export type ShiftByIdQuery = { __typename?: 'Query', shiftById?: { __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null };
+export type ShiftByIdQuery = { __typename?: 'Query', shiftById?: { __typename?: 'Shift', id?: number | null, open?: string | null, close?: string | null, card?: number | null, bill?: number | null, bank?: any | null, deposit?: string | null, note?: string | null, customer?: string | null, customerAvgCost?: string | null, openCurrency?: { __typename?: 'CurrencyShift', khr?: number | null, usd?: number | null } | null, closeCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, expectedCurrency?: { __typename?: 'CurrencyShift', usd?: number | null, khr?: number | null } | null, user?: { __typename?: 'User', id: number, username?: string | null, display?: string | null, profile?: string | null } | null } | null };
 
 export type LeaveListQueryVariables = Exact<{
   to?: InputMaybe<Scalars['String']['input']>;
@@ -1591,6 +1599,13 @@ export type TopProductSellQueryVariables = Exact<{
 
 
 export type TopProductSellQuery = { __typename?: 'Query', topProductSell?: Array<{ __typename?: 'ProductSell', qty?: number | null, total?: number | null, product?: { __typename?: 'Product', id?: number | null, code?: string | null, title?: string | null, images?: string | null } | null, sku?: { __typename?: 'SKU', id?: number | null, name?: string | null, image?: string | null, price?: number | null, discount?: number | null, unit?: string | null } | null } | null> | null };
+
+export type OrderItemQueryVariables = Exact<{
+  orderItemId: Scalars['Int']['input'];
+}>;
+
+
+export type OrderItemQuery = { __typename?: 'Query', orderItem?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -3934,6 +3949,8 @@ export const ShiftListDocument = gql`
       display
       profile
     }
+    customer
+    customerAvgCost
   }
 }
     `;
@@ -4003,6 +4020,8 @@ export const ShiftByIdDocument = gql`
       display
       profile
     }
+    customer
+    customerAvgCost
   }
 }
     `;
@@ -4523,6 +4542,44 @@ export type TopProductSellQueryHookResult = ReturnType<typeof useTopProductSellQ
 export type TopProductSellLazyQueryHookResult = ReturnType<typeof useTopProductSellLazyQuery>;
 export type TopProductSellSuspenseQueryHookResult = ReturnType<typeof useTopProductSellSuspenseQuery>;
 export type TopProductSellQueryResult = Apollo.QueryResult<TopProductSellQuery, TopProductSellQueryVariables>;
+export const OrderItemDocument = gql`
+    query orderItem($orderItemId: Int!) {
+  orderItem(id: $orderItemId)
+}
+    `;
+
+/**
+ * __useOrderItemQuery__
+ *
+ * To run a query within a React component, call `useOrderItemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderItemQuery({
+ *   variables: {
+ *      orderItemId: // value for 'orderItemId'
+ *   },
+ * });
+ */
+export function useOrderItemQuery(baseOptions: Apollo.QueryHookOptions<OrderItemQuery, OrderItemQueryVariables> & ({ variables: OrderItemQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderItemQuery, OrderItemQueryVariables>(OrderItemDocument, options);
+      }
+export function useOrderItemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderItemQuery, OrderItemQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderItemQuery, OrderItemQueryVariables>(OrderItemDocument, options);
+        }
+export function useOrderItemSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderItemQuery, OrderItemQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OrderItemQuery, OrderItemQueryVariables>(OrderItemDocument, options);
+        }
+export type OrderItemQueryHookResult = ReturnType<typeof useOrderItemQuery>;
+export type OrderItemLazyQueryHookResult = ReturnType<typeof useOrderItemLazyQuery>;
+export type OrderItemSuspenseQueryHookResult = ReturnType<typeof useOrderItemSuspenseQuery>;
+export type OrderItemQueryResult = Apollo.QueryResult<OrderItemQuery, OrderItemQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

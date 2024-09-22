@@ -1,7 +1,14 @@
 'use client';
 import React, { useCallback, useState } from 'react';
-import { Icon, IconableAction, Text, TopBar } from '@shopify/polaris';
-import { CheckSmallIcon, ExitIcon, ButtonPressIcon, ContractFilledIcon, MenuIcon } from '@shopify/polaris-icons';
+import { Icon, IconableAction, Text, TextField, TopBar } from '@shopify/polaris';
+import {
+  CheckSmallIcon,
+  ExitIcon,
+  ButtonPressIcon,
+  ContractFilledIcon,
+  MenuIcon,
+  BarcodeIcon,
+} from '@shopify/polaris-icons';
 import { deleteCookie } from 'cookies-next';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/service/UserProvider';
@@ -9,6 +16,7 @@ import { useLanguage } from '@/service/LanguageProvider';
 import { FormShift } from './polaris/form/FormShift';
 import { useToggle } from '@/service/ToggleProvider';
 import { useWindowSize } from '@/hook/useWindowSize';
+import { FormSearchOrderItem } from './polaris/form/FormSearchOrderItem';
 
 interface Props {
   mobileNavigationActive: any;
@@ -26,6 +34,7 @@ export function TopbarMarkup(props: Props) {
   const { lng, setLng } = useLanguage();
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = useState(false);
+  const [isSecondaryMenuOpenQr, setIsSecondaryMenuOpenQr] = useState(false);
 
   const toggleUserMenuActive = useCallback(() => setUserMenuActive((userMenuActive) => !userMenuActive), []);
 
@@ -36,6 +45,11 @@ export function TopbarMarkup(props: Props) {
 
   const toggleIsSecondaryMenuOpen = useCallback(
     () => setIsSecondaryMenuOpen((isSecondaryMenuOpen) => !isSecondaryMenuOpen),
+    [],
+  );
+
+  const toggleIsSecondaryMenuOpenQr = useCallback(
+    () => setIsSecondaryMenuOpenQr((isSecondaryMenuOpenQr) => !isSecondaryMenuOpenQr),
     [],
   );
 
@@ -84,32 +98,46 @@ export function TopbarMarkup(props: Props) {
   );
 
   const secondaryMenuMarkup = (
-    <TopBar.Menu
-      activatorContent={
-        <span>
-          <Text as="span">{lng.toUpperCase()}</Text>
-        </span>
-      }
-      open={isSecondaryMenuOpen}
-      onOpen={toggleIsSecondaryMenuOpen}
-      onClose={toggleIsSecondaryMenuOpen}
-      actions={[
-        {
-          items: [
-            {
-              content: 'English',
-              suffix: lng === 'en' ? <Icon source={CheckSmallIcon} /> : '',
-              onAction: () => setLng('en'),
-            },
-            {
-              content: 'Khmer',
-              suffix: lng === 'km' ? <Icon source={CheckSmallIcon} /> : '',
-              onAction: () => setLng('km'),
-            },
-          ],
-        },
-      ]}
-    />
+    <div className="flex flex-row items-center">
+      <FormSearchOrderItem open={isSecondaryMenuOpenQr} setOpen={setIsSecondaryMenuOpenQr} />
+      <TopBar.Menu
+        activatorContent={
+          <span>
+            <Icon source={BarcodeIcon} tone="inherit" />
+          </span>
+        }
+        open={isSecondaryMenuOpenQr}
+        onClose={() => {}}
+        onOpen={toggleIsSecondaryMenuOpenQr}
+        actions={[]}
+      />
+      <TopBar.Menu
+        activatorContent={
+          <span>
+            <Text as="span">{lng.toUpperCase()}</Text>
+          </span>
+        }
+        open={isSecondaryMenuOpen}
+        onOpen={toggleIsSecondaryMenuOpen}
+        onClose={toggleIsSecondaryMenuOpen}
+        actions={[
+          {
+            items: [
+              {
+                content: 'English',
+                suffix: lng === 'en' ? <Icon source={CheckSmallIcon} /> : '',
+                onAction: () => setLng('en'),
+              },
+              {
+                content: 'Khmer',
+                suffix: lng === 'km' ? <Icon source={CheckSmallIcon} /> : '',
+                onAction: () => setLng('km'),
+              },
+            ],
+          },
+        ]}
+      />
+    </div>
   );
 
   return (

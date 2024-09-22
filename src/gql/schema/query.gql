@@ -430,6 +430,8 @@ query shiftList($limit: Int, $offset: Int, $users: [Int], $fromDate: String, $to
       display
       profile
     }
+    customer
+    customerAvgCost
   }
 }
 
@@ -461,6 +463,8 @@ query shiftById($id: Int, $date: String, $userId: Int) {
       display
       profile
     }
+    customer
+    customerAvgCost
   }
 }
 
@@ -654,4 +658,8 @@ query topProductSell($from: String, $to: String, $limit: Int = 10) {
     qty
     total
   }
+}
+
+query orderItem($orderItemId: Int!) {
+  orderItem(id: $orderItemId)
 }
