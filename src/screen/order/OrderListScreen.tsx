@@ -23,10 +23,10 @@ const tabs: TabProps[] = [
     content: 'Checkout',
     id: 'CHECKOUT',
   },
-  {
-    content: 'Cancelled',
-    id: 'CANCELLED',
-  },
+  // {
+  //   content: 'Cancelled',
+  //   id: 'CANCELLED',
+  // },
 ];
 
 export function OrderListScreen() {

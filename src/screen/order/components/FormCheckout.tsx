@@ -36,6 +36,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
   const { setToasts, toasts } = useCustomToast();
   const [reasonInput, setReasonInput] = useState('');
   const [amountInput, setAmountInput] = useState<string>('');
+  const [amountInputKh, setAmountInputKh] = useState<string>('0');
   const [discountInput, setDiscountInput] = useState<string>('0');
   const [loading, setLoading] = useState(true);
   const [bank, setBank] = useState('');
@@ -53,8 +54,10 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
 
   useEffect(() => {
     if (total && !!loading && data) {
-      const bank = data.bankType + ',' + data.bankId;
-      setBank(bank);
+      if (data.bankType) {
+        const bank = data.bankType + ',' + data.bankId;
+        setBank(bank);
+      }
       setCurrency(data.currency || 'USD');
       setAmountInput(data.currency === 'KHR' ? totalKhr + '' : total + '');
       setLoading(false);
@@ -65,6 +68,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     (v: any) => {
       const x = TotalStrategy(total, currency, 0, typeDiscount, Number(exchangeRate));
       setAmountInput(x.toFixed(2) + '');
+      setAmountInputKh('0');
       setBank(v);
       setDiscountInput('0');
     },
@@ -75,6 +79,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     (v: any) => {
       const x = TotalStrategy(total, v, 0, typeDiscount, Number(exchangeRate));
       setAmountInput(x.toFixed(2) + '');
+      setAmountInputKh('0');
       setCurrency(v);
       setDiscountInput('0');
     },
@@ -105,14 +110,16 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
   const xTotal = TotalStrategy(total, currency, Number(discountInput || 0), typeDiscount, Number(exchangeRate));
 
   const handleCheckout = useCallback(() => {
-    let amount = amountInput ? Number(amountInput) : Number(total.toFixed(2));
+    let amount = amountInput
+      ? Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2))
+      : Number(total.toFixed(2));
 
     if (amount > Number(total.toFixed(2))) {
       amount = total;
     }
 
     if (currency === 'USD') {
-      if (Number(amountInput) < xTotal) {
+      if (Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) < xTotal) {
         setToasts([...toasts, { content: 'Amount input lower', status: 'error' }]);
         return;
       }
@@ -150,7 +157,10 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
       bankId: Number(bank.split(',')[1]),
       currency: currency,
       discount: Number(data.discount),
-      customerPaid: currency === 'USD' ? String(amountInput) : (Number(amountInput) / Number(exchangeRate)).toFixed(2),
+      customerPaid:
+        currency === 'USD'
+          ? String(Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)))
+          : (Number(amountInput) / Number(exchangeRate)).toFixed(2),
     };
 
     change({
@@ -163,6 +173,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
           setToasts([...toasts, { content: 'Update status was success.', status: 'success' }]);
           setReasonInput('');
           setAmountInput('');
+          setAmountInputKh('0');
           togglePaid();
           if (!data.invoice) {
             const inv = {
@@ -192,6 +203,7 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
     data,
     reasonInput,
     invoice,
+    amountInputKh,
     exchangeRate,
     change,
     xTotal,
@@ -231,14 +243,25 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             Paid:{' '}
             <span className="pl-2">
               {currency === 'USD' ? '$' : '៛'}
-              {Number(amountInput || xTotal).toFixed(2)}
+              {Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)).toFixed(2)}
             </span>
             <br />
             Return to customer:{' '}
             <span className="pl-2">
               {currency === 'USD'
-                ? `${'$' + (Number(amountInput || xTotal) - Number(xTotal)).toFixed(2)} = ${
-                    '៛' + ((Number(amountInput) - Number(xTotal)) * Number(exchangeRate)).toFixed(2)
+                ? `${
+                    '$' +
+                    (
+                      Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) -
+                      Number(xTotal)
+                    ).toFixed(2)
+                  } = ${
+                    '៛' +
+                    (
+                      (Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) -
+                        Number(xTotal)) *
+                      Number(exchangeRate)
+                    ).toFixed(2)
                   }`
                 : `
                   ${'៛' + (Number(amountInput) - Number(xTotal)).toFixed(2)} = ${
@@ -276,15 +299,48 @@ export function FormCheckout({ data, total, invoice, setInvoice, open, setOpen }
             prefix={currency === 'USD' ? '$' : '៛'}
             error={
               currency === 'USD'
-                ? Number(amountInput) < Number(xTotal.toFixed(2))
-                  ? 'Amount input lower.'
+                ? Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) <
+                  Number(xTotal.toFixed(2))
+                  ? `Amount input lower. ${(
+                      Number(amountInput) +
+                      Number(amountInputKh || 0) / Number(exchangeRate)
+                    ).toFixed(2)} smaller than ${xTotal.toFixed(2)}`
                   : ''
-                : Number(amountInput) < Number(xTotal.toFixed(2))
-                ? 'Amount input lower.'
+                : Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) <
+                  Number(xTotal.toFixed(2))
+                ? `Amount input lower. ${(
+                    Number(amountInput) +
+                    Number(amountInputKh || 0) / Number(exchangeRate)
+                  ).toFixed(2)} smaller than ${xTotal.toFixed(2)}`
                 : ''
             }
             selectTextOnFocus
           />
+          {currency === 'USD' && (
+            <TextField
+              type="number"
+              autoComplete="off"
+              value={amountInputKh}
+              onChange={setAmountInputKh}
+              label="Amount cutomer paid"
+              labelHidden
+              placeholder="Please input amount of customer are paid for order here"
+              requiredIndicator
+              prefix={'៛'}
+              selectTextOnFocus
+              error={
+                currency === 'USD'
+                  ? Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) <
+                    Number(xTotal.toFixed(2))
+                    ? 'Amount input lower.'
+                    : ''
+                  : Number((Number(amountInput) + Number(amountInputKh || 0) / Number(exchangeRate)).toFixed(2)) <
+                    Number(xTotal.toFixed(2))
+                  ? 'Amount input lower.'
+                  : ''
+              }
+            />
+          )}
           {/* <div>
             <TextField
               autoComplete="off"

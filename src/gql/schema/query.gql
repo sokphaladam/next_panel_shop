@@ -631,6 +631,27 @@ query overTime($overTimeId: Int!) {
   }
 }
 
-query orderBalanceSummary {
-  orderBalanceSummary
+query orderBalanceSummary($from: String, $to: String) {
+  orderBalanceSummary(from: $from, to: $to)
+}
+
+query topProductSell($from: String, $to: String, $limit: Int = 10) {
+  topProductSell(from: $from, to: $to, limit: $limit) {
+    product {
+      id
+      code
+      title
+      images
+    }
+    sku {
+      id
+      name
+      image
+      price
+      discount
+      unit
+    }
+    qty
+    total
+  }
 }
