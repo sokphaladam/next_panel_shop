@@ -145,3 +145,7 @@ mutation addDiscountOrder($addDiscountOrderId: Int!, $discount: Float!) {
 mutation setTypePaymentOrder($setTypePaymentOrderId: Int!, $bankType: String, $currency: String, $bankId: Int) {
   setTypePaymentOrder(id: $setTypePaymentOrderId, bankType: $bankType, currency: $currency, bankId: $bankId)
 }
+
+mutation swapOrderTable($orderId: Int!, $table: String) {
+  swapOrderTable(orderId: $orderId, table: $table)
+}

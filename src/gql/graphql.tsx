@@ -230,6 +230,7 @@ export type Mutation = {
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
   setTypePaymentOrder?: Maybe<Scalars['Boolean']['output']>;
   signatureOrder?: Maybe<Scalars['Boolean']['output']>;
+  swapOrderTable?: Maybe<Scalars['Boolean']['output']>;
   testSubscription?: Maybe<Scalars['Boolean']['output']>;
   updateBank?: Maybe<Scalars['Boolean']['output']>;
   updateBrand?: Maybe<Scalars['Boolean']['output']>;
@@ -388,6 +389,12 @@ export type MutationSignatureOrderArgs = {
   password: Scalars['String']['input'];
   userId: Scalars['Int']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationSwapOrderTableArgs = {
+  orderId: Scalars['Int']['input'];
+  table?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -656,6 +663,7 @@ export type ProductStockInput = {
 
 export type Query = {
   __typename?: 'Query';
+  activityStaff?: Maybe<Scalars['JSON']['output']>;
   attendanceListAdmin?: Maybe<Array<Maybe<Attendance>>>;
   attendanceStaff?: Maybe<Array<Maybe<Attendance>>>;
   bankInfo?: Maybe<BankInfo>;
@@ -695,6 +703,11 @@ export type Query = {
   topProductSell?: Maybe<Array<Maybe<ProductSell>>>;
   user?: Maybe<User>;
   userList?: Maybe<Array<Maybe<User>>>;
+};
+
+
+export type QueryActivityStaffArgs = {
+  userId: Scalars['Int']['input'];
 };
 
 
@@ -808,10 +821,12 @@ export type QueryOrderItemArgs = {
 
 
 export type QueryOrderListArgs = {
+  discount?: InputMaybe<Scalars['Boolean']['input']>;
   fromDate?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderId?: InputMaybe<Scalars['String']['input']>;
+  sign?: InputMaybe<Scalars['Boolean']['input']>;
   status?: InputMaybe<Array<InputMaybe<StatusOrder>>>;
   toDate?: InputMaybe<Scalars['String']['input']>;
   viewBy?: InputMaybe<OrderViewBy>;
@@ -889,6 +904,7 @@ export type QueryTableSetListArgs = {
 
 
 export type QueryTopProductSellArgs = {
+  categoryIds?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   from?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   to?: InputMaybe<Scalars['String']['input']>;
@@ -1362,6 +1378,14 @@ export type SetTypePaymentOrderMutationVariables = Exact<{
 
 
 export type SetTypePaymentOrderMutation = { __typename?: 'Mutation', setTypePaymentOrder?: boolean | null };
+
+export type SwapOrderTableMutationVariables = Exact<{
+  orderId: Scalars['Int']['input'];
+  table?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SwapOrderTableMutation = { __typename?: 'Mutation', swapOrderTable?: boolean | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2811,6 +2835,38 @@ export function useSetTypePaymentOrderMutation(baseOptions?: Apollo.MutationHook
 export type SetTypePaymentOrderMutationHookResult = ReturnType<typeof useSetTypePaymentOrderMutation>;
 export type SetTypePaymentOrderMutationResult = Apollo.MutationResult<SetTypePaymentOrderMutation>;
 export type SetTypePaymentOrderMutationOptions = Apollo.BaseMutationOptions<SetTypePaymentOrderMutation, SetTypePaymentOrderMutationVariables>;
+export const SwapOrderTableDocument = gql`
+    mutation swapOrderTable($orderId: Int!, $table: String) {
+  swapOrderTable(orderId: $orderId, table: $table)
+}
+    `;
+export type SwapOrderTableMutationFn = Apollo.MutationFunction<SwapOrderTableMutation, SwapOrderTableMutationVariables>;
+
+/**
+ * __useSwapOrderTableMutation__
+ *
+ * To run a mutation, you first call `useSwapOrderTableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSwapOrderTableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [swapOrderTableMutation, { data, loading, error }] = useSwapOrderTableMutation({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *      table: // value for 'table'
+ *   },
+ * });
+ */
+export function useSwapOrderTableMutation(baseOptions?: Apollo.MutationHookOptions<SwapOrderTableMutation, SwapOrderTableMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SwapOrderTableMutation, SwapOrderTableMutationVariables>(SwapOrderTableDocument, options);
+      }
+export type SwapOrderTableMutationHookResult = ReturnType<typeof useSwapOrderTableMutation>;
+export type SwapOrderTableMutationResult = Apollo.MutationResult<SwapOrderTableMutation>;
+export type SwapOrderTableMutationOptions = Apollo.BaseMutationOptions<SwapOrderTableMutation, SwapOrderTableMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {

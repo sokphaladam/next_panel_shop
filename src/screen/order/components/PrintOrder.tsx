@@ -62,12 +62,13 @@ export function PrintOrder(props: Props) {
   let groups: OrderItem[] = [];
 
   for (const x of props.order?.items || []) {
-    const find = groups.findIndex(
-      (f) =>
-        f.sku?.id === x?.sku?.id && f.addons?.trim() === x?.addons?.trim() && f.remark?.trim() === x?.remark?.trim(),
-    );
+    const find = groups.findIndex((f) => {
+      return (
+        f.sku?.id === x?.sku?.id && f.addons?.trim() === x?.addons?.trim() && f.remark?.trim() === x?.remark?.trim()
+      );
+    });
     if (find >= 0) {
-      groups[find].qty = Number(groups[find].qty || 0) + 1;
+      groups[find].qty = Number(groups[find].qty || 0) + (x?.qty || 0);
       if (groups[find].addons) {
         const currentAdd: any = groups[find].addons?.split('x');
         const newAdd: any = x?.addons?.split('x');
