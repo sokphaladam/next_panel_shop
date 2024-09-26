@@ -57,6 +57,7 @@ import { DiscountOrder } from '../components/DiscountOrder';
 import { useToggle } from '@/service/ToggleProvider';
 import { useWindowSize } from '@/hook/useWindowSize';
 import { FormSetPaymentType } from '../components/FormSetPaymentType';
+import { SwapTable } from '../components/SwapTable';
 
 const tabs: TabProps[] = [
   {
@@ -214,8 +215,10 @@ export default function OrderDetailScreen() {
 
   const vatPer = setting.find((f) => f.option === 'TAX')?.value;
   const lastUpdate = data?.order?.log?.find((f) => f?.text === 'Last Updated')?.date;
-  const orderItems = data?.order?.items?.filter((f: any) => f.status === 'PENDING').length || 0;
-  const orderHistory = data?.order?.items?.filter((f: any) => f.status !== 'PENDING').length || 0;
+  const orderItems =
+    data?.order?.items?.filter((f: any) => f.status === 'PENDING').reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
+  const orderHistory =
+    data?.order?.items?.filter((f: any) => f.status !== 'PENDING').reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
 
   return (
     <Page
@@ -359,9 +362,7 @@ export default function OrderDetailScreen() {
                   </div>
                 </div>
                 <div className="flex flex-col items-end">
-                  <b className="bg-emerald-500 text-white p-1 rounded-md">
-                    <small>TABLE: {data?.order?.set}</small>
-                  </b>
+                  <SwapTable order={data?.order || {}} />
                   <b className="mb-2">
                     <small>{data?.order?.uuid || ''}</small>
                   </b>
