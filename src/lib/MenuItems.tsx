@@ -109,6 +109,16 @@ export function MenuItems(user: User | null) {
       ],
     },
     {
+      title: 'Reports',
+      items: [
+        {
+          label: 'Sale Report',
+          icon: FileIcon,
+          url: '/sale',
+        },
+      ],
+    },
+    {
       title: 'Setting',
       items: [
         {
@@ -252,6 +262,16 @@ export function MenuItems(user: User | null) {
                 label: 'Overtime',
                 icon: PageClockIcon,
                 url: '/ot',
+              },
+            ],
+          },
+          {
+            title: 'Reports',
+            items: [
+              {
+                label: 'Sale Report',
+                icon: FileIcon,
+                url: '/sale',
               },
             ],
           },

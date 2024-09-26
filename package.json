@@ -14,6 +14,7 @@
     "@shopify/polaris": "^13.7.0",
     "@shopify/polaris-icons": "^9.2.0",
     "@shopify/react-i18n": "^7.13.1",
+    "@types/xlsx": "^0.0.36",
     "clsx": "^2.1.1",
     "cookies-next": "^4.2.1",
     "file-loader": "^6.2.0",
@@ -29,7 +30,8 @@
     "react-to-print": "^2.15.1",
     "tailwind-merge": "^2.5.2",
     "url-loader": "^4.1.1",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",
