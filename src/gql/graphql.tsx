@@ -1427,6 +1427,10 @@ export type OrderListQueryVariables = Exact<{
   viewBy?: InputMaybe<OrderViewBy>;
   status?: InputMaybe<Array<InputMaybe<StatusOrder>> | InputMaybe<StatusOrder>>;
   orderId?: InputMaybe<Scalars['String']['input']>;
+  sign?: InputMaybe<Scalars['Boolean']['input']>;
+  discount?: InputMaybe<Scalars['Boolean']['input']>;
+  toDate?: InputMaybe<Scalars['String']['input']>;
+  fromDate?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -3155,13 +3159,17 @@ export type CategoryLazyQueryHookResult = ReturnType<typeof useCategoryLazyQuery
 export type CategorySuspenseQueryHookResult = ReturnType<typeof useCategorySuspenseQuery>;
 export type CategoryQueryResult = Apollo.QueryResult<CategoryQuery, CategoryQueryVariables>;
 export const OrderListDocument = gql`
-    query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [StatusOrder], $orderId: String) {
+    query orderList($offset: Int, $limit: Int, $viewBy: OrderViewBy, $status: [StatusOrder], $orderId: String, $sign: Boolean, $discount: Boolean, $toDate: String, $fromDate: String) {
   orderList(
     offset: $offset
     limit: $limit
     viewBy: $viewBy
     status: $status
     orderId: $orderId
+    sign: $sign
+    discount: $discount
+    toDate: $toDate
+    fromDate: $fromDate
   ) {
     id
     code
@@ -3234,6 +3242,10 @@ export const OrderListDocument = gql`
  *      viewBy: // value for 'viewBy'
  *      status: // value for 'status'
  *      orderId: // value for 'orderId'
+ *      sign: // value for 'sign'
+ *      discount: // value for 'discount'
+ *      toDate: // value for 'toDate'
+ *      fromDate: // value for 'fromDate'
  *   },
  * });
  */
