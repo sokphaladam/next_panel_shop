@@ -34,6 +34,8 @@ export function SaleReportScreen() {
       offset: offset * limit,
       status: [StatusOrder.Checkout],
       ...filter,
+      fromDate: filter.fromDate + ' 00:00:00',
+      toDate: filter.toDate + ' 23:59:00',
     },
   });
   const query = useOrderBalanceSummaryQuery({
