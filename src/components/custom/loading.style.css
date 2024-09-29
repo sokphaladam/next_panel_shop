@@ -1,6 +1,6 @@
 .container {
   --uib-size: 70px;
-  --uib-color: #3b82f6;
+  --uib-color: #713f12;
   --uib-speed: 1.65s;
   --uib-cube-size: calc(var(--uib-size) / 5.5);
   --uib-arc-1: -80deg;
@@ -20,7 +20,7 @@
   animation: metronome var(--uib-speed) linear infinite;
 
   &::after {
-    content: "";
+    content: '';
     display: block;
     width: var(--uib-cube-size);
     height: var(--uib-cube-size);
