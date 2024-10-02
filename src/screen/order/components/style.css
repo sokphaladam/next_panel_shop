@@ -1,19 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail&display=swap');
+
+.noto-sans-khmer {
+  font-family: 'Noto Sans Khmer', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: 'width' 100;
+}
+
+.yellowtail-regular {
+  font-family: 'Yellowtail', cursive;
+  font-weight: 400;
+  font-style: normal;
+}
 
 #print_table {
-  font-family: 'Lato', sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 9pt;
+  /* font-family: 'Lato', sans-serif; */
+  font-family: 'Noto Sans Khmer', sans-serif !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  font-size: 9pt !important;
   /* color: black; */
 }
 
 #print_table td,
 #print_table th {
   padding: 4px;
-  border: 1px solid #000;
-  border-left-width: 0;
-  border-right-width: 0;
+  border: none;
   color: black;
 }
 
@@ -24,6 +38,11 @@
 }
 
 @media print {
+  html,
+  body {
+    height: initial !important;
+    overflow: initial !important;
+  }
   .pagebreak {
     clear: both;
     page-break-before: always;
