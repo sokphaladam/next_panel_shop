@@ -44,9 +44,9 @@ export function AttendanceStatisc() {
     (f) => new Date(f?.checkDate as any).getTime() === new Date(moment(today).format('YYYY-MM-DD')).getTime(),
   );
 
-  const x = (3.45 / hw) * 100;
-  const y = (28 / hww) * 100;
-  const z = (90 / hwm) * 100;
+  const x = (querySummary.data?.getSummaryAttendanceStaff.today || 0 / hw) * 100;
+  const y = (querySummary.data?.getSummaryAttendanceStaff.week || 0 / hww) * 100;
+  const z = (querySummary.data?.getSummaryAttendanceStaff.month || 0 / hwm) * 100;
 
   return (
     <Card>
@@ -93,7 +93,12 @@ export function AttendanceStatisc() {
             {querySummary.data?.getSummaryAttendanceStaff.ot || 0} / {10}
           </div>
         </div>
-        <ProgressBar size="small" animated progress={(4 / 10) * 100} tone="critical" />
+        <ProgressBar
+          size="small"
+          animated
+          progress={(querySummary.data?.getSummaryAttendanceStaff.ot || 0 / 10) * 100}
+          tone="critical"
+        />
       </Box>
     </Card>
   );
