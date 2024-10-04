@@ -121,9 +121,11 @@ export function CheckAttandance() {
     return <></>;
   }
 
+  console.log(user);
+
   const today = moment(new Date()).format('DD-MMM-YYYY');
-  const start = setting.find((f) => f.option === 'DEFAULT_STARTWORK')?.value || '0';
-  const end = setting.find((f) => f.option === 'DEFAULT_ENDWORK')?.value || '0';
+  const start = user?.fromTime;
+  const end = user?.toTime;
   const break_time = setting.find((f) => f.option === 'DEFAULT_BREAKWORK')?.value;
 
   if (loading || !!propUpdate.loading) {

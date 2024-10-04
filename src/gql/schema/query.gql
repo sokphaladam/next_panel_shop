@@ -20,6 +20,8 @@ query me {
     type
     profile
     username
+    fromTime
+    toTime
   }
 }
 

@@ -1391,7 +1391,7 @@ export type SwapOrderTableMutation = { __typename?: 'Mutation', swapOrderTable?:
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, display?: string | null, contact?: string | null, gender?: string | null, createdDate?: string | null, isActive?: boolean | null, ownerId?: string | null, startingAt?: string | null, bankName?: string | null, bankAcc?: string | null, bankType?: string | null, position?: string | null, baseSalary?: string | null, type?: string | null, profile?: string | null, username?: string | null, role?: { __typename?: 'Role', name?: string | null, id?: number | null } | null } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, display?: string | null, contact?: string | null, gender?: string | null, createdDate?: string | null, isActive?: boolean | null, ownerId?: string | null, startingAt?: string | null, bankName?: string | null, bankAcc?: string | null, bankType?: string | null, position?: string | null, baseSalary?: string | null, type?: string | null, profile?: string | null, username?: string | null, fromTime?: string | null, toTime?: string | null, role?: { __typename?: 'Role', name?: string | null, id?: number | null } | null } | null };
 
 export type ProductListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2895,6 +2895,8 @@ export const MeDocument = gql`
     type
     profile
     username
+    fromTime
+    toTime
   }
 }
     `;
