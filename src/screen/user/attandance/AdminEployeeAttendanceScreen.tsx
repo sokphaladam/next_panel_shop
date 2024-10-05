@@ -85,7 +85,7 @@ export default function AdminEployeeAttendanceScreen() {
     }),
   ];
 
-  const group = groupBy(data?.attendanceListAdmin || [], ({ user }: any) => user.id);
+  const group = groupBy(data?.attendanceListAdmin || [], ({ user }: any) => (user ? user.id : 0));
 
   const users = queryUser.data
     ? (queryUser.data as any).userList
