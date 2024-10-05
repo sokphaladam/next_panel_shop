@@ -18,9 +18,10 @@ import { IndexTableHeading } from '@shopify/polaris/build/ts/src/components/Inde
 import { NonEmptyArray } from '@shopify/polaris/build/ts/src/types';
 import moment from 'moment';
 import { useSetting } from '@/service/useSettingProvider';
-import { CheckSmallIcon, MinusCircleIcon, XSmallIcon } from '@shopify/polaris-icons';
+import { CheckSmallIcon, InfoIcon, MinusCircleIcon, XSmallIcon } from '@shopify/polaris-icons';
 import { groupBy } from '@/lib/grouBy';
 import { Modal } from '@/hook/modal';
+import downloadExcelFile from '@/lib/DownloadExcelFile';
 
 function getDayOfMonth(year: number, month: number) {
   const last_day_of_month = new Date(year, month + 1, 0).getDate();
@@ -76,6 +77,7 @@ export default function AdminEployeeAttendanceScreen() {
     });
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const heading: NonEmptyArray<IndexTableHeading> = [
     { title: '#' },
     ...getDayOfMonth(Number(selectYear), Number(selectMonth)).map((x) => {
@@ -87,6 +89,7 @@ export default function AdminEployeeAttendanceScreen() {
 
   const group = groupBy(data?.attendanceListAdmin || [], ({ user }: any) => (user ? user.id : 0));
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const users = queryUser.data
     ? (queryUser.data as any).userList
         .filter((x: any) => x?.type === 'STAFF' && !!x.isActive)
@@ -95,7 +98,63 @@ export default function AdminEployeeAttendanceScreen() {
 
   const { selectedResources, handleSelectionChange } = useIndexResourceState(users);
 
-  const handleReportAttendance = useCallback(() => {}, []);
+  const handleReportAttendance = useCallback(() => {
+    const days = getDayOfMonth(Number(selectYear), Number(selectMonth));
+    const items = users
+      .filter((f: any) => selectedResources.includes(f.id + ''))
+      .map((x: any) => {
+        const checklist = group[x?.id || 0] ? group[x?.id || 0] || [] : [];
+        return [
+          x.display,
+          `${x.fromTime}-${x.toTime}`,
+          ...days.map((d) => {
+            const find = checklist.filter((f: any) => {
+              const c = moment(f.checkDate).date();
+              return c === d + 1;
+            });
+            const date = find.length > 0 ? find[0] : null;
+            if (date) {
+              if (date.type === 'WORK') {
+                const cin: any = date.checkIn ? moment(date.checkIn).format('HH:mm') : '--';
+                const cout: any = date.checkOut ? moment(date.checkOut).format('HH:mm') : '--';
+                const st = moment(date.checkDate + ' ' + x.fromTime);
+                const ed = moment(date.checkDate + ' ' + x.toTime);
+
+                const diffcin = st.diff(moment(date.checkDate + ' ' + cin), 'minutes') / 60;
+
+                const diffcout = moment(date.checkDate + ' ' + cout).diff(ed, 'minutes') / 60;
+
+                return `${cin} - ${cout} (CIN: ${diffcin.toFixed(2)}, COUT: ${diffcout.toFixed(2)})`;
+              }
+
+              return date.type;
+            }
+            return '--';
+          }),
+        ];
+      });
+
+    const excel = [
+      [
+        'Staff',
+        'Work Time',
+        ...heading
+          .filter((f) => f.title !== '#')
+          .map((x) =>
+            isNaN(Number(x.title))
+              ? x.title
+              : moment(`${selectYear}-${Number(selectMonth) + 1}-${x.title}`).format('DD-ddd'),
+          ),
+      ],
+      ...items,
+    ];
+
+    downloadExcelFile(
+      `Attendance Staff ${selectYear}-${Number(selectMonth) + 1}.xlsx`,
+      `${selectYear}-${Number(selectMonth) + 1}`,
+      excel,
+    );
+  }, [selectYear, selectMonth, users, heading, selectedResources, group]);
 
   return (
     <PolarisLayout
@@ -103,29 +162,58 @@ export default function AdminEployeeAttendanceScreen() {
       fullWidth
       subtitle={
         (
-          <div suppressHydrationWarning className="flex flex-row gap-2 items-center">
-            <Select
-              options={[...new Array(12)].map((_, i) => {
-                return {
-                  label: (i + 1).toString().padStart(2, '0'),
-                  value: i + '',
-                };
-              })}
-              label="Month"
-              value={selectMonth + ''}
-              onChange={setSelectMonth}
-            />
-            <Select
-              options={[...new Array(5)].map((_, i) => {
-                return {
-                  label: (today.year() - i).toString(),
-                  value: (today.year() - i).toString(),
-                };
-              })}
-              label="Year"
-              value={selectYear + ''}
-              onChange={setSelectYear}
-            />
+          <div>
+            <div suppressHydrationWarning className="flex flex-row gap-2 items-center">
+              <Select
+                options={[...new Array(12)].map((_, i) => {
+                  return {
+                    label: (i + 1).toString().padStart(2, '0'),
+                    value: i + '',
+                  };
+                })}
+                label="Month"
+                value={selectMonth + ''}
+                onChange={setSelectMonth}
+              />
+              <Select
+                options={[...new Array(5)].map((_, i) => {
+                  return {
+                    label: (today.year() - i).toString(),
+                    value: (today.year() - i).toString(),
+                  };
+                })}
+                label="Year"
+                value={selectYear + ''}
+                onChange={setSelectYear}
+              />
+            </div>
+            <br />
+            <div className="flex flex-row items-center gap-4">
+              <div className="flex flex-row items-center gap-1">
+                <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-green-700 text-white">
+                  <Icon source={CheckSmallIcon} tone="inherit" />
+                </div>
+                <div>Work Or Leave</div>
+              </div>
+              <div className="flex flex-row items-center gap-1">
+                <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-orange-600 text-white">
+                  <Icon source={MinusCircleIcon} tone="inherit" />
+                </div>
+                <div>Incomplete Attendance</div>
+              </div>
+              <div className="flex flex-row items-center gap-1">
+                <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-red-700 text-white">
+                  <Icon source={XSmallIcon} tone="inherit" />
+                </div>
+                <div>Absent</div>
+              </div>
+              <div className="flex flex-row items-center gap-1">
+                <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-yellow-500 text-white">
+                  <Icon source={InfoIcon} tone="inherit" />
+                </div>
+                <div>Public Holiday</div>
+              </div>
+            </div>
           </div>
         ) as any
       }
