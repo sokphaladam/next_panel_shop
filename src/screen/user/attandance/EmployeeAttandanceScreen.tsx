@@ -8,7 +8,7 @@ import { CheckAttandance } from './components/CheckAttandance';
 import { AttendanceStatisc } from './components/AttendanceStatiscs';
 import { AttendanceStaffList } from './components/AttendanceStafffList';
 
-export function EmployeeAttandanceScreen() {
+export default function EmployeeAttandanceScreen() {
   return (
     <Page title="Attendance" fullWidth>
       <Layout>
