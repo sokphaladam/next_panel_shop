@@ -43,6 +43,7 @@ export type Attendance = {
   leave?: Maybe<Leave>;
   overTimeIn?: Maybe<Scalars['String']['output']>;
   overTimeOut?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
 };
 
@@ -1390,7 +1391,7 @@ export type SwapOrderTableMutation = { __typename?: 'Mutation', swapOrderTable?:
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, display?: string | null, contact?: string | null, gender?: string | null, createdDate?: string | null, isActive?: boolean | null, ownerId?: string | null, startingAt?: string | null, bankName?: string | null, bankAcc?: string | null, bankType?: string | null, position?: string | null, baseSalary?: string | null, type?: string | null, profile?: string | null, username?: string | null, role?: { __typename?: 'Role', name?: string | null, id?: number | null } | null } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, display?: string | null, contact?: string | null, gender?: string | null, createdDate?: string | null, isActive?: boolean | null, ownerId?: string | null, startingAt?: string | null, bankName?: string | null, bankAcc?: string | null, bankType?: string | null, position?: string | null, baseSalary?: string | null, type?: string | null, profile?: string | null, username?: string | null, fromTime?: string | null, toTime?: string | null, role?: { __typename?: 'Role', name?: string | null, id?: number | null } | null } | null };
 
 export type ProductListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1538,7 +1539,7 @@ export type GetAttendanceStaffQueryVariables = Exact<{
 }>;
 
 
-export type GetAttendanceStaffQuery = { __typename?: 'Query', getAttendanceStaff?: Array<{ __typename?: 'Attendance', id?: number | null, checkIn?: string | null, checkOut?: string | null, overTimeIn?: string | null, overTimeOut?: string | null, checkDate?: string | null, user?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null };
+export type GetAttendanceStaffQuery = { __typename?: 'Query', getAttendanceStaff?: Array<{ __typename?: 'Attendance', id?: number | null, checkIn?: string | null, checkOut?: string | null, overTimeIn?: string | null, overTimeOut?: string | null, checkDate?: string | null, type?: string | null, user?: { __typename?: 'User', id: number, display?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, startDate?: string | null, endDate?: string | null, leaveReason?: string | null, leaveType?: string | null, approvedDate?: string | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null } | null } | null } | null> | null };
 
 export type ShiftListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1584,7 +1585,7 @@ export type AttendanceListAdminQueryVariables = Exact<{
 }>;
 
 
-export type AttendanceListAdminQuery = { __typename?: 'Query', attendanceListAdmin?: Array<{ __typename?: 'Attendance', checkIn?: string | null, checkOut?: string | null, checkDate?: string | null, id?: number | null, user?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null, fromTime?: string | null, toTime?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, leaveReason?: string | null, leaveType?: string | null } | null } | null> | null };
+export type AttendanceListAdminQuery = { __typename?: 'Query', attendanceListAdmin?: Array<{ __typename?: 'Attendance', checkIn?: string | null, checkOut?: string | null, checkDate?: string | null, id?: number | null, type?: string | null, overTimeOut?: string | null, overTimeIn?: string | null, user?: { __typename?: 'User', id: number, display?: string | null, profile?: string | null, fromTime?: string | null, toTime?: string | null } | null, leave?: { __typename?: 'Leave', id?: number | null, startDate?: string | null, endDate?: string | null, leaveReason?: string | null, leaveType?: string | null, approvedDate?: string | null, approvedBy?: { __typename?: 'User', id: number, display?: string | null } | null } | null } | null> | null };
 
 export type GetSummaryAttendanceStaffQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -2894,6 +2895,8 @@ export const MeDocument = gql`
     type
     profile
     username
+    fromTime
+    toTime
   }
 }
     `;
@@ -3943,6 +3946,21 @@ export const GetAttendanceStaffDocument = gql`
     overTimeIn
     overTimeOut
     checkDate
+    leave {
+      id
+      startDate
+      endDate
+      leaveReason
+      leaveType
+      approvedBy {
+        id
+        display
+      }
+      approvedDate
+    }
+    type
+    overTimeOut
+    overTimeIn
   }
 }
     `;
@@ -4288,9 +4306,19 @@ export const AttendanceListAdminDocument = gql`
     }
     leave {
       id
+      startDate
+      endDate
       leaveReason
       leaveType
+      approvedBy {
+        id
+        display
+      }
+      approvedDate
     }
+    type
+    overTimeOut
+    overTimeIn
   }
 }
     `;

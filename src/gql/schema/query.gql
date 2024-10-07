@@ -20,6 +20,8 @@ query me {
     type
     profile
     username
+    fromTime
+    toTime
   }
 }
 
@@ -419,6 +421,21 @@ query getAttendanceStaff($limit: Int, $offset: Int, $from: String, $to: String) 
     overTimeIn
     overTimeOut
     checkDate
+    leave {
+      id
+      startDate
+      endDate
+      leaveReason
+      leaveType
+      approvedBy {
+        id
+        display
+      }
+      approvedDate
+    }
+    type
+    overTimeOut
+    overTimeIn
   }
 }
 
@@ -575,9 +592,19 @@ query attendanceListAdmin($month: Int!, $year: Int!) {
     }
     leave {
       id
+      startDate
+      endDate
       leaveReason
       leaveType
+      approvedBy {
+        id
+        display
+      }
+      approvedDate
     }
+    type
+    overTimeOut
+    overTimeIn
   }
 }
 
