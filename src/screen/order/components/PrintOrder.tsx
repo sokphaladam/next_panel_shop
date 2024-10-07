@@ -333,6 +333,7 @@ function DispalyInvoice(props: Props) {
         </table>
         <div></div>
       </div>
+      <div className="text-center">Contact us: 093988143</div>
       {!props.kitchen && <div className="text-center">Thank you, see you again!</div>}
     </div>
   );
