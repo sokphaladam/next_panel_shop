@@ -695,6 +695,8 @@ export type Query = {
   productList?: Maybe<Array<Maybe<Product>>>;
   productStock?: Maybe<ProductStock>;
   productStockList?: Maybe<Array<Maybe<ProductStock>>>;
+  reportSaleByDay?: Maybe<Scalars['JSON']['output']>;
+  reportStaffPayroll?: Maybe<Scalars['JSON']['output']>;
   roleList?: Maybe<Array<Maybe<Role>>>;
   settingList?: Maybe<Array<Maybe<Setting>>>;
   shiftById?: Maybe<Shift>;
@@ -874,6 +876,18 @@ export type QueryProductStockArgs = {
 export type QueryProductStockListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryReportSaleByDayArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryReportStaffPayrollArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1635,6 +1649,14 @@ export type OrderItemQueryVariables = Exact<{
 
 
 export type OrderItemQuery = { __typename?: 'Query', orderItem?: any | null };
+
+export type ReportSaleByDayQueryVariables = Exact<{
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ReportSaleByDayQuery = { __typename?: 'Query', reportSaleByDay?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -4676,6 +4698,45 @@ export type OrderItemQueryHookResult = ReturnType<typeof useOrderItemQuery>;
 export type OrderItemLazyQueryHookResult = ReturnType<typeof useOrderItemLazyQuery>;
 export type OrderItemSuspenseQueryHookResult = ReturnType<typeof useOrderItemSuspenseQuery>;
 export type OrderItemQueryResult = Apollo.QueryResult<OrderItemQuery, OrderItemQueryVariables>;
+export const ReportSaleByDayDocument = gql`
+    query reportSaleByDay($from: String, $to: String) {
+  reportSaleByDay(from: $from, to: $to)
+}
+    `;
+
+/**
+ * __useReportSaleByDayQuery__
+ *
+ * To run a query within a React component, call `useReportSaleByDayQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportSaleByDayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportSaleByDayQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useReportSaleByDayQuery(baseOptions?: Apollo.QueryHookOptions<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>(ReportSaleByDayDocument, options);
+      }
+export function useReportSaleByDayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>(ReportSaleByDayDocument, options);
+        }
+export function useReportSaleByDaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>(ReportSaleByDayDocument, options);
+        }
+export type ReportSaleByDayQueryHookResult = ReturnType<typeof useReportSaleByDayQuery>;
+export type ReportSaleByDayLazyQueryHookResult = ReturnType<typeof useReportSaleByDayLazyQuery>;
+export type ReportSaleByDaySuspenseQueryHookResult = ReturnType<typeof useReportSaleByDaySuspenseQuery>;
+export type ReportSaleByDayQueryResult = Apollo.QueryResult<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

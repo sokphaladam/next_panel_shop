@@ -27,6 +27,7 @@ interface PropsMenuItem {
   label: string;
   icon: FunctionComponent<SVGProps<SVGSVGElement>>;
   url: string;
+  items?: any[];
 }
 
 export function MenuItems(user: User | null) {
@@ -112,9 +113,21 @@ export function MenuItems(user: User | null) {
       title: 'Reports',
       items: [
         {
-          label: 'Sale Report',
+          label: 'Sale',
           icon: FileIcon,
           url: '/sale',
+          items: [
+            {
+              label: 'Sale Report',
+              url: '/sale',
+              icon: FileIcon,
+            },
+            {
+              label: 'Sale By Day Report',
+              url: '/sale/byday',
+              icon: FileIcon,
+            },
+          ],
         },
       ],
     },
