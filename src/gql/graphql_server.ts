@@ -1,21 +1,44 @@
-import { getClient } from "@/lib/client";
-import { OrderDocument, Query } from "./graphql";
-import { ApolloClient, NetworkStatus } from "@apollo/client";
+import { getClient } from '@/lib/client';
+import { OrderDocument, Query, ReportSaleByDayDocument } from './graphql';
+import { ApolloClient, NetworkStatus } from '@apollo/client';
 
-class graphql_server {
+export class graphql_server {
   // private client: ApolloClient<any> | null;
 
   // constructor() {
   //   this.client = getClient();
   // }
 
-  async getOrderByID(id: number) {
+  static async getOrderByID(id: number) {
     const client = getClient();
     if (client) {
       const query = await client.query<Query>({
         query: OrderDocument,
         variables: {
           id: Number(id),
+        },
+      });
+
+      return query;
+    }
+
+    return {
+      data: {
+        order: null,
+      },
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+    };
+  }
+
+  static async getReportSaleByDay(from: string, to: string) {
+    const client = getClient();
+    if (client) {
+      const query = await client.query<Query>({
+        query: ReportSaleByDayDocument,
+        variables: {
+          from,
+          to,
         },
       });
 

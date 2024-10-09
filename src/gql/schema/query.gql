@@ -710,3 +710,7 @@ query topProductSell($from: String, $to: String, $limit: Int = 10) {
 query orderItem($orderItemId: Int!) {
   orderItem(id: $orderItemId)
 }
+
+query reportSaleByDay($from: String, $to: String) {
+  reportSaleByDay(from: $from, to: $to)
+}
