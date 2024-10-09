@@ -1658,6 +1658,14 @@ export type ReportSaleByDayQueryVariables = Exact<{
 
 export type ReportSaleByDayQuery = { __typename?: 'Query', reportSaleByDay?: any | null };
 
+export type ReportStaffPayrollQueryVariables = Exact<{
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ReportStaffPayrollQuery = { __typename?: 'Query', reportStaffPayroll?: any | null };
+
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -4737,6 +4745,45 @@ export type ReportSaleByDayQueryHookResult = ReturnType<typeof useReportSaleByDa
 export type ReportSaleByDayLazyQueryHookResult = ReturnType<typeof useReportSaleByDayLazyQuery>;
 export type ReportSaleByDaySuspenseQueryHookResult = ReturnType<typeof useReportSaleByDaySuspenseQuery>;
 export type ReportSaleByDayQueryResult = Apollo.QueryResult<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>;
+export const ReportStaffPayrollDocument = gql`
+    query reportStaffPayroll($from: String, $to: String) {
+  reportStaffPayroll(from: $from, to: $to)
+}
+    `;
+
+/**
+ * __useReportStaffPayrollQuery__
+ *
+ * To run a query within a React component, call `useReportStaffPayrollQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportStaffPayrollQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportStaffPayrollQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useReportStaffPayrollQuery(baseOptions?: Apollo.QueryHookOptions<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>(ReportStaffPayrollDocument, options);
+      }
+export function useReportStaffPayrollLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>(ReportStaffPayrollDocument, options);
+        }
+export function useReportStaffPayrollSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>(ReportStaffPayrollDocument, options);
+        }
+export type ReportStaffPayrollQueryHookResult = ReturnType<typeof useReportStaffPayrollQuery>;
+export type ReportStaffPayrollLazyQueryHookResult = ReturnType<typeof useReportStaffPayrollLazyQuery>;
+export type ReportStaffPayrollSuspenseQueryHookResult = ReturnType<typeof useReportStaffPayrollSuspenseQuery>;
+export type ReportStaffPayrollQueryResult = Apollo.QueryResult<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

@@ -714,3 +714,7 @@ query orderItem($orderItemId: Int!) {
 query reportSaleByDay($from: String, $to: String) {
   reportSaleByDay(from: $from, to: $to)
 }
+
+query reportStaffPayroll($from: String, $to: String) {
+  reportStaffPayroll(from: $from, to: $to)
+}

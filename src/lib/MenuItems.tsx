@@ -15,6 +15,7 @@ import {
   StarIcon,
   CreditCardIcon,
   MoneyFilledIcon,
+  PaymentFilledIcon,
 } from '@shopify/polaris-icons';
 import { FunctionComponent, SVGProps } from 'react';
 
@@ -128,6 +129,11 @@ export function MenuItems(user: User | null) {
               icon: FileIcon,
             },
           ],
+        },
+        {
+          label: 'Staff Payroll',
+          icon: PaymentFilledIcon,
+          url: '/staff/payroll',
         },
       ],
     },

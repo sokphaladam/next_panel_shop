@@ -288,7 +288,7 @@ export default function AdminEployeeAttendanceScreen() {
                             ...x,
                             checkIn: checkIn.format('MM-DD hh:mm A'),
                             checkOut: checkOut.format('MM-DD hh:mm A'),
-                            hour: checkOut.diff(checkIn, 'hour'),
+                            hour: (checkOut.diff(checkIn, 'minutes') / 60).toFixed(2),
                             user: x.user.display,
                           };
                         });
