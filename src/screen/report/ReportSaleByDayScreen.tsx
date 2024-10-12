@@ -19,6 +19,9 @@ export function ReportSaleByDayScreen() {
     },
   });
 
+  const list =
+    data?.reportSaleByDay.data && data.reportSaleByDay.data.map((x: any) => ({ ...x, date: new Date(x.date) }));
+
   const handleDownloadExcel = useCallback(() => {
     const header = [
       'Date',
@@ -31,26 +34,28 @@ export function ReportSaleByDayScreen() {
       }),
     ];
 
-    const items = data?.reportSaleByDay.data.map((x: any) => {
-      const product = data.reportSaleByDay.header.map((h: any) =>
-        x[h].qty === 0 ? '--' : `${x[h].qty} ($${x[h].total})`,
-      );
-      return [
-        x.date,
-        x.qty,
-        Number(x.totalAmount).toFixed(2),
-        Number(x.totalDiscount).toFixed(2),
-        Number(x.totalAfterDiscount).toFixed(2),
-        ...product,
-      ];
-    });
+    const items = list
+      .sort((a: any, b: any) => b.date - a.date)
+      .map((x: any) => {
+        const product = data?.reportSaleByDay.header.map((h: any) =>
+          x[h].qty === 0 ? '--' : `${x[h].qty} ($${x[h].total})`,
+        );
+        return [
+          x.date,
+          x.qty,
+          Number(x.totalAmount).toFixed(2),
+          Number(x.totalDiscount).toFixed(2),
+          Number(x.totalAfterDiscount).toFixed(2),
+          ...product,
+        ];
+      });
 
     downloadExcelFile(
       `Sale By Day Report ${moment(new Date()).format('YYYY-MM-DD HH_mm_ss')}.xlsx`,
       `${filter.fromDate}-${filter.toDate} (${items.length})`,
       [header, ...(items as any[])],
     );
-  }, [data, filter]);
+  }, [data, filter, list]);
 
   return (
     <PolarisLayout
@@ -114,50 +119,53 @@ export function ReportSaleByDayScreen() {
                 itemCount={data?.reportSaleByDay.data.length || 0}
                 selectable={false}
               >
-                {data?.reportSaleByDay.data.map((x: any, i: number) => {
-                  return (
-                    <IndexTable.Row key={i} id={i + ''} position={i}>
-                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
-                        <Text as="p" variant="bodySm">
-                          {x.date}
-                        </Text>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
-                        <Text as="p" variant="bodySm">
-                          {x.qty}
-                        </Text>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
-                        <Text as="p" variant="bodySm">
-                          ${Number(x.totalAmount).toFixed(2)}
-                        </Text>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
-                        <Text as="p" variant="bodySm">
-                          ${Number(x.totalDiscount).toFixed(2)}
-                        </Text>
-                      </IndexTable.Cell>
-                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
-                        <Text as="p" variant="bodySm">
-                          ${Number(x.totalAfterDiscount).toFixed(2)}
-                        </Text>
-                      </IndexTable.Cell>
-                      {data.reportSaleByDay.header.map((h: any, ii: number) => {
-                        return (
-                          <IndexTable.Cell key={ii} className="border-collapse border-solid border-r-[0.5px]">
-                            <Text
-                              as="p"
-                              variant="bodySm"
-                              alignment={ii === data.reportSaleByDay.header.length - 1 ? 'end' : 'end'}
-                            >
-                              {x[h].qty === 0 ? '--' : `${x[h].qty} ($${x[h].total})`}
+                {list &&
+                  list
+                    .sort((a: any, b: any) => b.date - a.date)
+                    .map((x: any, i: number) => {
+                      return (
+                        <IndexTable.Row key={i} id={i + ''} position={i}>
+                          <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                            <Text as="p" variant="bodySm">
+                              {moment(x.date).format('YYYY-MMM-DD')}
                             </Text>
                           </IndexTable.Cell>
-                        );
-                      })}
-                    </IndexTable.Row>
-                  );
-                })}
+                          <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                            <Text as="p" variant="bodySm">
+                              {x.qty}
+                            </Text>
+                          </IndexTable.Cell>
+                          <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                            <Text as="p" variant="bodySm">
+                              ${Number(x.totalAmount).toFixed(2)}
+                            </Text>
+                          </IndexTable.Cell>
+                          <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                            <Text as="p" variant="bodySm">
+                              ${Number(x.totalDiscount).toFixed(2)}
+                            </Text>
+                          </IndexTable.Cell>
+                          <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                            <Text as="p" variant="bodySm">
+                              ${Number(x.totalAfterDiscount).toFixed(2)}
+                            </Text>
+                          </IndexTable.Cell>
+                          {data?.reportSaleByDay.header.map((h: any, ii: number) => {
+                            return (
+                              <IndexTable.Cell key={ii} className="border-collapse border-solid border-r-[0.5px]">
+                                <Text
+                                  as="p"
+                                  variant="bodySm"
+                                  alignment={ii === data.reportSaleByDay.header.length - 1 ? 'end' : 'end'}
+                                >
+                                  {x[h].qty === 0 ? '--' : `${x[h].qty} ($${x[h].total})`}
+                                </Text>
+                              </IndexTable.Cell>
+                            );
+                          })}
+                        </IndexTable.Row>
+                      );
+                    })}
               </IndexTable>
             </Box>
           </Card>

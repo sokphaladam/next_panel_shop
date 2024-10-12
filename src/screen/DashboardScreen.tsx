@@ -5,10 +5,15 @@ import moment from 'moment';
 import React from 'react';
 import { Balance } from './dashboard/Balance';
 import { TopSell } from './dashboard/TopSell';
+import { PolarisLayout, role_permission } from '@/components/polaris/PolarisLayout';
 
 export function DashboardScreen() {
   return (
-    <Page>
+    <PolarisLayout
+      title=""
+      titleHidden
+      permission={[role_permission.ADMIN, role_permission.SUPER_ADMIN, role_permission.MANAGER]}
+    >
       <Balance />
       <br />
       <hr />
@@ -17,6 +22,6 @@ export function DashboardScreen() {
         <TopSell />
         <Layout.Section variant="oneHalf"></Layout.Section>
       </Layout>
-    </Page>
+    </PolarisLayout>
   );
 }

@@ -149,3 +149,15 @@ mutation setTypePaymentOrder($setTypePaymentOrderId: Int!, $bankType: String, $c
 mutation swapOrderTable($orderId: Int!, $table: String) {
   swapOrderTable(orderId: $orderId, table: $table)
 }
+
+mutation checkProductCode($code: String!) {
+  checkProductCode(code: $code)
+}
+
+mutation createHoliday($data: HolidayInput) {
+  createHoliday(data: $data)
+}
+
+mutation updateHoliday($updateHolidayId: Int!, $data: HolidayInput) {
+  updateHoliday(id: $updateHolidayId, data: $data)
+}

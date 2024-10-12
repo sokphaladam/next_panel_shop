@@ -15,6 +15,9 @@ import {
   StarIcon,
   CreditCardIcon,
   MoneyFilledIcon,
+  PaymentFilledIcon,
+  PersonalizedTextIcon,
+  CalendarTimeIcon,
 } from '@shopify/polaris-icons';
 import { FunctionComponent, SVGProps } from 'react';
 
@@ -81,31 +84,48 @@ export function MenuItems(user: User | null) {
           label: 'Attendance',
           icon: AttachmentIcon,
           url: '/employee/attendance',
+          items: [
+            {
+              label: 'Check In & Out',
+              url: '/employee/attendance',
+            },
+            {
+              label: 'Attendance (Admin)',
+              url: '/attendance',
+            },
+          ],
         },
         {
-          label: 'Attendance (Admin)',
-          icon: AttachmentIcon,
-          url: '/attendance',
-        },
-        {
-          label: 'Leave',
-          icon: FileIcon,
-          url: '/leave',
-        },
-        {
-          label: 'Staff',
-          icon: PersonIcon,
+          label: 'Manage Staff',
+          icon: PersonalizedTextIcon,
           url: '/staff',
-        },
-        {
-          label: 'Overtime',
-          icon: PageClockIcon,
-          url: '/ot',
+          items: [
+            {
+              label: 'Leave',
+              icon: FileIcon,
+              url: '/leave',
+            },
+            {
+              label: 'Staff',
+              icon: PersonIcon,
+              url: '/staff',
+            },
+            {
+              label: 'Overtime',
+              icon: PageClockIcon,
+              url: '/ot',
+            },
+          ],
         },
         {
           label: 'Shift Handover',
           icon: MoneyFilledIcon,
           url: '/shift',
+        },
+        {
+          label: 'Public Holiday',
+          icon: CalendarTimeIcon,
+          url: '/holiday',
         },
       ],
     },
@@ -128,6 +148,11 @@ export function MenuItems(user: User | null) {
               icon: FileIcon,
             },
           ],
+        },
+        {
+          label: 'Staff Payroll',
+          icon: PaymentFilledIcon,
+          url: '/staff/payroll',
         },
       ],
     },
