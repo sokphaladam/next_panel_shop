@@ -210,6 +210,7 @@ export type Mutation = {
   addOrderItem?: Maybe<Scalars['Boolean']['output']>;
   changeOrderStatus?: Maybe<Scalars['Boolean']['output']>;
   checkAttendance?: Maybe<Scalars['Boolean']['output']>;
+  checkProductCode?: Maybe<Scalars['Boolean']['output']>;
   createBank?: Maybe<Scalars['Boolean']['output']>;
   createBrand?: Maybe<Scalars['Boolean']['output']>;
   createCategory?: Maybe<Scalars['Boolean']['output']>;
@@ -273,6 +274,11 @@ export type MutationChangeOrderStatusArgs = {
 export type MutationCheckAttendanceArgs = {
   date: Scalars['String']['input'];
   userId: Scalars['Int']['input'];
+};
+
+
+export type MutationCheckProductCodeArgs = {
+  code: Scalars['String']['input'];
 };
 
 
@@ -1401,6 +1407,13 @@ export type SwapOrderTableMutationVariables = Exact<{
 
 
 export type SwapOrderTableMutation = { __typename?: 'Mutation', swapOrderTable?: boolean | null };
+
+export type CheckProductCodeMutationVariables = Exact<{
+  code: Scalars['String']['input'];
+}>;
+
+
+export type CheckProductCodeMutation = { __typename?: 'Mutation', checkProductCode?: boolean | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2902,6 +2915,37 @@ export function useSwapOrderTableMutation(baseOptions?: Apollo.MutationHookOptio
 export type SwapOrderTableMutationHookResult = ReturnType<typeof useSwapOrderTableMutation>;
 export type SwapOrderTableMutationResult = Apollo.MutationResult<SwapOrderTableMutation>;
 export type SwapOrderTableMutationOptions = Apollo.BaseMutationOptions<SwapOrderTableMutation, SwapOrderTableMutationVariables>;
+export const CheckProductCodeDocument = gql`
+    mutation checkProductCode($code: String!) {
+  checkProductCode(code: $code)
+}
+    `;
+export type CheckProductCodeMutationFn = Apollo.MutationFunction<CheckProductCodeMutation, CheckProductCodeMutationVariables>;
+
+/**
+ * __useCheckProductCodeMutation__
+ *
+ * To run a mutation, you first call `useCheckProductCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckProductCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkProductCodeMutation, { data, loading, error }] = useCheckProductCodeMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useCheckProductCodeMutation(baseOptions?: Apollo.MutationHookOptions<CheckProductCodeMutation, CheckProductCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckProductCodeMutation, CheckProductCodeMutationVariables>(CheckProductCodeDocument, options);
+      }
+export type CheckProductCodeMutationHookResult = ReturnType<typeof useCheckProductCodeMutation>;
+export type CheckProductCodeMutationResult = Apollo.MutationResult<CheckProductCodeMutation>;
+export type CheckProductCodeMutationOptions = Apollo.BaseMutationOptions<CheckProductCodeMutation, CheckProductCodeMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {

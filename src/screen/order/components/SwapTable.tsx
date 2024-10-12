@@ -1,5 +1,7 @@
 import { useCustomToast } from '@/components/custom/CustomToast';
+import { role_permission } from '@/components/polaris/PolarisLayout';
 import { Order, useSwapOrderTableMutation, useTableSetListQuery } from '@/gql/graphql';
+import { useUser } from '@/service/UserProvider';
 import { Button, Modal, Select } from '@shopify/polaris';
 import React, { useCallback, useState } from 'react';
 
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export function SwapTable(props: Props) {
+  const user = useUser();
   const [select, setSelect] = useState('');
   const { setToasts, toasts } = useCustomToast();
   const [open, setOpen] = useState(false);
@@ -46,7 +49,21 @@ export function SwapTable(props: Props) {
   }, [props, select, setToasts, swap, toasts]);
 
   const activator = (
-    <b className="bg-emerald-500 text-white p-1 rounded-md cursor-pointer" onClick={toggleActive}>
+    <b
+      className="bg-emerald-500 text-white p-1 rounded-md cursor-pointer"
+      onClick={() => {
+        if (
+          [
+            role_permission.CASHIER,
+            role_permission.ADMIN,
+            role_permission.SUPER_ADMIN,
+            role_permission.MANAGER,
+          ].includes(user?.role?.id || 0)
+        ) {
+          toggleActive();
+        }
+      }}
+    >
       <small>TABLE: {props.order?.set}</small>
     </b>
   );

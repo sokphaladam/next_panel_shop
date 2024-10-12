@@ -10,6 +10,7 @@ import { ProductInput, Sku } from '@/gql/graphql';
 import { PolarisCategory } from '@/components/polaris/PolarisCategory';
 import { UploadProductAddon } from './components/upload/UploadProductAddon';
 import { UploadIntegration } from './components/upload/UploadIntegration';
+import { ProductCode } from './components/ProductCode';
 
 interface Props {
   value: ProductInput;
@@ -209,14 +210,17 @@ export function UploadProduct({ value, setValue, onSubmit, loading, isEdit }: Pr
                 onLoading={setUploading}
               />
               <br />
-              <TextField
-                disabled={loading || uploading}
-                requiredIndicator
-                autoComplete="off"
-                label="Code"
-                placeholder="Enter the product code"
-                value={value.code || ''}
-                onChange={(v) => setValue({ ...value, code: v })}
+              <ProductCode
+                loading={loading || uploading}
+                value={value}
+                setValue={setValue}
+                onError={(err) => {
+                  if (!!err) {
+                    setError([...errors, { type: 'code', message: '' }]);
+                  } else {
+                    setError(errors.filter((f) => f.type !== 'code'));
+                  }
+                }}
               />
               <br />
               {/* {!uploading && (

@@ -19,6 +19,8 @@ export function ReportPayrollStaffScreen() {
     },
   });
 
+  const list = data?.reportStaffPayroll.filter((f: any) => ![null, 'Shareholder'].includes(f.user.position));
+
   return (
     <PolarisLayout
       title="Staff Payroll"
@@ -75,11 +77,11 @@ export function ReportPayrollStaffScreen() {
                   { title: 'Deduction' },
                   { title: 'Net Pay' },
                 ]}
-                itemCount={data?.reportStaffPayroll?.length || 1}
+                itemCount={list?.length || 1}
                 loading={loading}
                 selectable={false}
               >
-                {data?.reportStaffPayroll?.map((x: any, i: number) => {
+                {list?.map((x: any, i: number) => {
                   const salaryCut = Number(x.absentPay) + Number(x.checkInLatePay) + Number(x.checkOutEarlyPay);
                   const salaryFixed = Number(x.user.salary) + Number(x.ot.pay) + Number(x.holiday);
                   return (
