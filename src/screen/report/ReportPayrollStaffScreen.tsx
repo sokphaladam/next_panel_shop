@@ -1,7 +1,7 @@
 'use client';
 import { PolarisLayout, role_permission } from '@/components/polaris/PolarisLayout';
 import { useReportStaffPayrollQuery } from '@/gql/graphql';
-import { Box, Card, Icon, IndexTable, Layout, Text, TextField, Tooltip } from '@shopify/polaris';
+import { Avatar, Box, Card, Icon, IndexTable, Layout, Text, TextField, Tooltip } from '@shopify/polaris';
 import { InfoIcon } from '@shopify/polaris-icons';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -73,6 +73,7 @@ export function ReportPayrollStaffScreen() {
                   { title: 'Check Out Early' },
                   { title: 'OT' },
                   { title: 'Holiday Bonus' },
+                  { title: 'Total Work' },
                   { title: 'Earning' },
                   { title: 'Deduction' },
                   { title: 'Net Pay' },
@@ -83,30 +84,39 @@ export function ReportPayrollStaffScreen() {
               >
                 {list?.map((x: any, i: number) => {
                   const salaryCut = Number(x.absentPay) + Number(x.checkInLatePay) + Number(x.checkOutEarlyPay);
-                  const salaryFixed = Number(x.user.salary) + Number(x.ot.pay) + Number(x.holiday);
+                  const salaryFixed =
+                    Number(x.totalWorkDays) * Number(x.user.salaryDay) + Number(x.ot.pay) + Number(x.holiday);
                   return (
                     <IndexTable.Row key={i} id={i + ''} position={i}>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm">
                           EMP{String(x.user.id).padStart(3, '0')}
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
-                        <Text as="p" variant="bodySm">
-                          {x.user.name}
-                        </Text>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <div className="flex flex-row items-center gap-2">
+                          <Avatar
+                            initials={String(x.user.name)
+                              .split(' ')
+                              .map((x) => x.charAt(0).toUpperCase())
+                              .join('')}
+                          />
+                          <Text as="p" variant="bodySm">
+                            {x.user.name}
+                          </Text>
+                        </div>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm">
                           {x.user.position || '--'}
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm">
                           {x.user.work.from} - {x.user.work.to} ({Math.abs(Number(x.user.work.duration))} hrs)
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Tooltip
                           content={
                             <div>
@@ -128,42 +138,47 @@ export function ReportPayrollStaffScreen() {
                           </div>
                         </Tooltip>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone={x.absent > 0 ? 'critical' : 'base'}>
                           {x.absent || 0} (${x.absentPay || 0})
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone={x.checkInLate > 0 ? 'critical' : 'base'}>
                           {x.checkInLate || 0} (${x.checkInLatePay || 0})
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone={x.checkOutEarly > 0 ? 'critical' : 'base'}>
                           {x.checkOutEarly || 0} (${x.checkOutEarlyPay || 0})
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone={x.ot.duration > 0 ? 'success' : 'base'}>
                           {x.ot.duration || 0} hrs (${x.ot.pay || 0})
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone={x.holiday > 0 ? 'success' : 'base'}>
                           ${x.holiday || 0}
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <Text as="p" variant="bodySm" tone="success">
+                          {x.totalWorkDays || 0} days
+                        </Text>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone="success">
                           ${salaryFixed.toFixed(2)}
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone="critical">
                           ${salaryCut.toFixed(2)}
                         </Text>
                       </IndexTable.Cell>
-                      <IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone="success">
                           ${(salaryFixed - salaryCut).toFixed(2)}
                         </Text>

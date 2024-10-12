@@ -718,3 +718,21 @@ query reportSaleByDay($from: String, $to: String) {
 query reportStaffPayroll($from: String, $to: String) {
   reportStaffPayroll(from: $from, to: $to)
 }
+
+query holidayList {
+  holidayList {
+    date
+    extra
+    id
+    name
+  }
+}
+
+query holiday($holidayId: Int!) {
+  holiday(id: $holidayId) {
+    id
+    name
+    date
+    extra
+  }
+}

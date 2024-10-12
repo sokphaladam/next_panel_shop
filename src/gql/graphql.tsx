@@ -154,6 +154,20 @@ export enum Gender {
   Other = 'OTHER'
 }
 
+export type Holiday = {
+  __typename?: 'Holiday';
+  date?: Maybe<Scalars['String']['output']>;
+  extra?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type HolidayInput = {
+  date?: InputMaybe<Scalars['String']['input']>;
+  extra?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Integrate = {
   __typename?: 'Integrate';
   id?: Maybe<Scalars['Int']['output']>;
@@ -215,6 +229,7 @@ export type Mutation = {
   createBrand?: Maybe<Scalars['Boolean']['output']>;
   createCategory?: Maybe<Scalars['Boolean']['output']>;
   createDelivery?: Maybe<Scalars['Boolean']['output']>;
+  createHoliday?: Maybe<Scalars['Boolean']['output']>;
   createLeave?: Maybe<Scalars['Boolean']['output']>;
   createOrder?: Maybe<Scalars['Boolean']['output']>;
   createOverTime?: Maybe<Scalars['Boolean']['output']>;
@@ -239,6 +254,7 @@ export type Mutation = {
   updateCategory?: Maybe<Scalars['Boolean']['output']>;
   updateCategoryIndex?: Maybe<Scalars['Boolean']['output']>;
   updateDelivery?: Maybe<Scalars['Boolean']['output']>;
+  updateHoliday?: Maybe<Scalars['Boolean']['output']>;
   updateLeave?: Maybe<Scalars['Boolean']['output']>;
   updateLeaveStatus?: Maybe<Scalars['Boolean']['output']>;
   updateOverTime?: Maybe<Scalars['Boolean']['output']>;
@@ -300,6 +316,11 @@ export type MutationCreateCategoryArgs = {
 
 export type MutationCreateDeliveryArgs = {
   data?: InputMaybe<DeliveryInput>;
+};
+
+
+export type MutationCreateHolidayArgs = {
+  data?: InputMaybe<HolidayInput>;
 };
 
 
@@ -438,6 +459,12 @@ export type MutationUpdateCategoryIndexArgs = {
 
 export type MutationUpdateDeliveryArgs = {
   data?: InputMaybe<DeliveryInput>;
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateHolidayArgs = {
+  data?: InputMaybe<HolidayInput>;
   id: Scalars['Int']['input'];
 };
 
@@ -687,6 +714,8 @@ export type Query = {
   getPositionList?: Maybe<Array<Maybe<Position>>>;
   getSummaryAttendanceStaff?: Maybe<Scalars['JSON']['output']>;
   getbankList?: Maybe<Array<Maybe<BankInfo>>>;
+  holiday?: Maybe<Holiday>;
+  holidayList?: Maybe<Array<Maybe<Holiday>>>;
   leave?: Maybe<Leave>;
   leaveList?: Maybe<Array<Maybe<Leave>>>;
   me?: Maybe<User>;
@@ -794,6 +823,11 @@ export type QueryGetSummaryAttendanceStaffArgs = {
 export type QueryGetbankListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryHolidayArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -1415,6 +1449,21 @@ export type CheckProductCodeMutationVariables = Exact<{
 
 export type CheckProductCodeMutation = { __typename?: 'Mutation', checkProductCode?: boolean | null };
 
+export type CreateHolidayMutationVariables = Exact<{
+  data?: InputMaybe<HolidayInput>;
+}>;
+
+
+export type CreateHolidayMutation = { __typename?: 'Mutation', createHoliday?: boolean | null };
+
+export type UpdateHolidayMutationVariables = Exact<{
+  updateHolidayId: Scalars['Int']['input'];
+  data?: InputMaybe<HolidayInput>;
+}>;
+
+
+export type UpdateHolidayMutation = { __typename?: 'Mutation', updateHoliday?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1678,6 +1727,18 @@ export type ReportStaffPayrollQueryVariables = Exact<{
 
 
 export type ReportStaffPayrollQuery = { __typename?: 'Query', reportStaffPayroll?: any | null };
+
+export type HolidayListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HolidayListQuery = { __typename?: 'Query', holidayList?: Array<{ __typename?: 'Holiday', date?: string | null, extra?: number | null, id?: number | null, name?: string | null } | null> | null };
+
+export type HolidayQueryVariables = Exact<{
+  holidayId: Scalars['Int']['input'];
+}>;
+
+
+export type HolidayQuery = { __typename?: 'Query', holiday?: { __typename?: 'Holiday', id?: number | null, name?: string | null, date?: string | null, extra?: number | null } | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -2946,6 +3007,69 @@ export function useCheckProductCodeMutation(baseOptions?: Apollo.MutationHookOpt
 export type CheckProductCodeMutationHookResult = ReturnType<typeof useCheckProductCodeMutation>;
 export type CheckProductCodeMutationResult = Apollo.MutationResult<CheckProductCodeMutation>;
 export type CheckProductCodeMutationOptions = Apollo.BaseMutationOptions<CheckProductCodeMutation, CheckProductCodeMutationVariables>;
+export const CreateHolidayDocument = gql`
+    mutation createHoliday($data: HolidayInput) {
+  createHoliday(data: $data)
+}
+    `;
+export type CreateHolidayMutationFn = Apollo.MutationFunction<CreateHolidayMutation, CreateHolidayMutationVariables>;
+
+/**
+ * __useCreateHolidayMutation__
+ *
+ * To run a mutation, you first call `useCreateHolidayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHolidayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHolidayMutation, { data, loading, error }] = useCreateHolidayMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateHolidayMutation(baseOptions?: Apollo.MutationHookOptions<CreateHolidayMutation, CreateHolidayMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateHolidayMutation, CreateHolidayMutationVariables>(CreateHolidayDocument, options);
+      }
+export type CreateHolidayMutationHookResult = ReturnType<typeof useCreateHolidayMutation>;
+export type CreateHolidayMutationResult = Apollo.MutationResult<CreateHolidayMutation>;
+export type CreateHolidayMutationOptions = Apollo.BaseMutationOptions<CreateHolidayMutation, CreateHolidayMutationVariables>;
+export const UpdateHolidayDocument = gql`
+    mutation updateHoliday($updateHolidayId: Int!, $data: HolidayInput) {
+  updateHoliday(id: $updateHolidayId, data: $data)
+}
+    `;
+export type UpdateHolidayMutationFn = Apollo.MutationFunction<UpdateHolidayMutation, UpdateHolidayMutationVariables>;
+
+/**
+ * __useUpdateHolidayMutation__
+ *
+ * To run a mutation, you first call `useUpdateHolidayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateHolidayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateHolidayMutation, { data, loading, error }] = useUpdateHolidayMutation({
+ *   variables: {
+ *      updateHolidayId: // value for 'updateHolidayId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateHolidayMutation(baseOptions?: Apollo.MutationHookOptions<UpdateHolidayMutation, UpdateHolidayMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateHolidayMutation, UpdateHolidayMutationVariables>(UpdateHolidayDocument, options);
+      }
+export type UpdateHolidayMutationHookResult = ReturnType<typeof useUpdateHolidayMutation>;
+export type UpdateHolidayMutationResult = Apollo.MutationResult<UpdateHolidayMutation>;
+export type UpdateHolidayMutationOptions = Apollo.BaseMutationOptions<UpdateHolidayMutation, UpdateHolidayMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -4828,6 +4952,91 @@ export type ReportStaffPayrollQueryHookResult = ReturnType<typeof useReportStaff
 export type ReportStaffPayrollLazyQueryHookResult = ReturnType<typeof useReportStaffPayrollLazyQuery>;
 export type ReportStaffPayrollSuspenseQueryHookResult = ReturnType<typeof useReportStaffPayrollSuspenseQuery>;
 export type ReportStaffPayrollQueryResult = Apollo.QueryResult<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>;
+export const HolidayListDocument = gql`
+    query holidayList {
+  holidayList {
+    date
+    extra
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useHolidayListQuery__
+ *
+ * To run a query within a React component, call `useHolidayListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHolidayListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHolidayListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHolidayListQuery(baseOptions?: Apollo.QueryHookOptions<HolidayListQuery, HolidayListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HolidayListQuery, HolidayListQueryVariables>(HolidayListDocument, options);
+      }
+export function useHolidayListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HolidayListQuery, HolidayListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HolidayListQuery, HolidayListQueryVariables>(HolidayListDocument, options);
+        }
+export function useHolidayListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HolidayListQuery, HolidayListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HolidayListQuery, HolidayListQueryVariables>(HolidayListDocument, options);
+        }
+export type HolidayListQueryHookResult = ReturnType<typeof useHolidayListQuery>;
+export type HolidayListLazyQueryHookResult = ReturnType<typeof useHolidayListLazyQuery>;
+export type HolidayListSuspenseQueryHookResult = ReturnType<typeof useHolidayListSuspenseQuery>;
+export type HolidayListQueryResult = Apollo.QueryResult<HolidayListQuery, HolidayListQueryVariables>;
+export const HolidayDocument = gql`
+    query holiday($holidayId: Int!) {
+  holiday(id: $holidayId) {
+    id
+    name
+    date
+    extra
+  }
+}
+    `;
+
+/**
+ * __useHolidayQuery__
+ *
+ * To run a query within a React component, call `useHolidayQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHolidayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHolidayQuery({
+ *   variables: {
+ *      holidayId: // value for 'holidayId'
+ *   },
+ * });
+ */
+export function useHolidayQuery(baseOptions: Apollo.QueryHookOptions<HolidayQuery, HolidayQueryVariables> & ({ variables: HolidayQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HolidayQuery, HolidayQueryVariables>(HolidayDocument, options);
+      }
+export function useHolidayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HolidayQuery, HolidayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HolidayQuery, HolidayQueryVariables>(HolidayDocument, options);
+        }
+export function useHolidaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HolidayQuery, HolidayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HolidayQuery, HolidayQueryVariables>(HolidayDocument, options);
+        }
+export type HolidayQueryHookResult = ReturnType<typeof useHolidayQuery>;
+export type HolidayLazyQueryHookResult = ReturnType<typeof useHolidayLazyQuery>;
+export type HolidaySuspenseQueryHookResult = ReturnType<typeof useHolidaySuspenseQuery>;
+export type HolidayQueryResult = Apollo.QueryResult<HolidayQuery, HolidayQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

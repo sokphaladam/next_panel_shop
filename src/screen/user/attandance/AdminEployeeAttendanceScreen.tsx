@@ -92,7 +92,7 @@ export default function AdminEployeeAttendanceScreen() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const users = queryUser.data
     ? (queryUser.data as any).userList
-        .filter((x: any) => x?.type === 'STAFF' && !!x.isActive)
+        .filter((x: any) => x?.type === 'STAFF' && !!x.isActive && ![null, 'Shareholder'].includes(x.position))
         .map((x: any) => ({ ...x, id: String(x.id + '') })) || []
     : [];
 
@@ -323,6 +323,15 @@ export default function AdminEployeeAttendanceScreen() {
                                           </div>
                                         );
                                       }
+                                      if (log.type === 'DAY_OFF') {
+                                        return (
+                                          <div key={i}>
+                                            <div className="flex flex-row items-center gap-1">
+                                              <small>{log.type}</small>
+                                            </div>
+                                          </div>
+                                        );
+                                      }
                                       return (
                                         <div key={i}>
                                           <div className="flex flex-row items-center gap-1">
@@ -361,6 +370,10 @@ export default function AdminEployeeAttendanceScreen() {
                                   ) : logs.find((f: any) => f.type === 'LEAVE_REQUEST') ? (
                                     <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-green-700 text-white">
                                       <Icon source={CheckSmallIcon} tone="inherit" />
+                                    </div>
+                                  ) : logs.find((f: any) => f.type === 'DAY_OFF') ? (
+                                    <div className="p-[1px] w-[15px] h-[15px] rounded-full bg-yellow-500 text-white">
+                                      <Icon source={InfoIcon} tone="inherit" />
                                     </div>
                                   ) : (
                                     <>
