@@ -736,3 +736,7 @@ query holiday($holidayId: Int!) {
     extra
   }
 }
+
+query reportSaleProduct($from: String, $to: String, $filters: ReportSaleFilter, $groupBy: ReportSaleGroupBy) {
+  reportSaleProduct(from: $from, to: $to, filters: $filters, groupBy: $groupBy)
+}

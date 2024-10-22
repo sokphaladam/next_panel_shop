@@ -147,6 +147,11 @@ export function MenuItems(user: User | null) {
               url: '/sale/byday',
               icon: FileIcon,
             },
+            {
+              label: 'Sale Product Select',
+              url: '/sale/byday/products',
+              icon: FileIcon,
+            },
           ],
         },
         {
@@ -310,6 +315,11 @@ export function MenuItems(user: User | null) {
                 label: 'Sale Report',
                 icon: FileIcon,
                 url: '/sale',
+              },
+              {
+                label: 'Sale Product Select',
+                url: '/sale/byday/products',
+                icon: FileIcon,
               },
             ],
           },
