@@ -88,12 +88,23 @@ export function SaleProductFilter(props: Props) {
     });
   }, [props]);
 
-  const handleFiltersClearAll = useCallback(() => {
+  const handleRemoveCategory = useCallback(() => {
     props.setFilter({
       ...props.filter,
+      filters: {
+        category: [],
+      },
+    });
+  }, [props]);
+
+  const handleFiltersClearAll = useCallback(() => {
+    props.setFilter({
       fromDate: moment(new Date()).subtract(7, 'days').format('YYYY-MM-DD'),
       groupBy: ReportSaleGroupBy.Product,
       toDate: moment(new Date()).format('YYYY-MM-DD'),
+      filters: {
+        category: [],
+      },
     });
   }, [props]);
 
@@ -213,6 +224,15 @@ export function SaleProductFilter(props: Props) {
     });
   }
 
+  if (props.filter.filters && !isEmpty(props.filter.filters.category)) {
+    const key = 'category';
+    appliedFilters.push({
+      key,
+      label: disambiguateLabel(key, props.filter.filters.category),
+      onRemove: handleRemoveCategory,
+    });
+  }
+
   return (
     <IndexFilters
       filters={filters}
@@ -234,12 +254,10 @@ export function SaleProductFilter(props: Props) {
         return `Start Date ${value}`;
       case 'end_date':
         return `End Date ${value}`;
-      case 'discount':
-        return `Discount ${value ? 'Yes' : 'No'}`;
-      case 'signature':
-        return `Signature ${value ? 'Yes' : 'No'}`;
       case 'groupBy':
         return `Group By ${value}`;
+      case 'category':
+        return `Category ${value.length}`;
       default:
         return value as string;
     }
