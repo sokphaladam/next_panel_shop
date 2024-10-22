@@ -1,10 +1,11 @@
 'use client';
 import { PolarisLayout, role_permission } from '@/components/polaris/PolarisLayout';
 import { useReportStaffPayrollQuery } from '@/gql/graphql';
+import downloadExcelFile from '@/lib/DownloadExcelFile';
 import { Avatar, Box, Card, Icon, IndexTable, Layout, Text, TextField, Tooltip } from '@shopify/polaris';
 import { InfoIcon } from '@shopify/polaris-icons';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 export function ReportPayrollStaffScreen() {
   const now = moment(new Date());
@@ -21,11 +22,61 @@ export function ReportPayrollStaffScreen() {
 
   const list = data?.reportStaffPayroll.filter((f: any) => ![null, 'Shareholder'].includes(f.user.position));
 
+  const handleDownloadExcel = useCallback(() => {
+    const header = [
+      'ID',
+      'Staff Name',
+      'Position',
+      'Working',
+      'Base Salary',
+      'Absent',
+      'Check In Late',
+      'Check Out Early',
+      'Uncheck Out',
+      'OT',
+      'Holiday Bonus',
+      'Total Work',
+      'Earning',
+      'Deduction',
+      'Net Pay',
+    ];
+
+    const items = list.map((x: any) => {
+      const salaryCut =
+        Number(x.absentPay) + Number(x.checkInLatePay) + Number(x.checkOutEarlyPay) + Number(x.checkOutEmptyPay);
+      const salaryFixed = Number(x.totalWorkDays) * Number(x.user.salaryDay) + Number(x.ot.pay) + Number(x.holiday);
+      return [
+        `EMP${String(x.user.id).padStart(3, '0')}`,
+        x.user.name,
+        x.user.position || '--',
+        `${x.user.work.from} - ${x.user.work.to} (${Math.abs(Number(x.user.work.duration))} hrs)`,
+        x.user.salary || 0,
+        `${x.absent || 0} ($${x.absentPay || 0})`,
+        `${x.checkInLate || 0} ($${x.checkInLatePay || 0})`,
+        `${x.checkOutEarly || 0} ($${x.checkOutEarlyPay || 0})`,
+        `${x.checkOutEmpty || 0} ($${x.checkOutEmptyPay || 0})`,
+        `${x.ot.duration || 0} hrs ($${x.ot.pay || 0})`,
+        `$${x.holiday || 0}`,
+        `${x.totalWorkDays || 0} days`,
+        `$${salaryFixed.toFixed(2)}`,
+        `$${salaryCut.toFixed(2)}`,
+        `$${(salaryFixed - salaryCut).toFixed(2)}`,
+      ];
+    });
+
+    downloadExcelFile(
+      `Staff_Payroll_${filter.fromDate}_${filter.toDate}.xlsx`,
+      `${filter.fromDate}-${filter.toDate} (${items.length})`,
+      [header, ...(items as any[])],
+    );
+  }, [filter, list]);
+
   return (
     <PolarisLayout
       title="Staff Payroll"
       fullWidth
       permission={[role_permission.ADMIN, role_permission.MANAGER, role_permission.SUPER_ADMIN]}
+      secondaryActions={[{ content: 'Download Excel', onAction: handleDownloadExcel }]}
     >
       <Layout>
         <Layout.Section>
@@ -71,6 +122,7 @@ export function ReportPayrollStaffScreen() {
                   { title: 'Absent' },
                   { title: 'Check In Late' },
                   { title: 'Check Out Early' },
+                  { title: 'Uncheck Out' },
                   { title: 'OT' },
                   { title: 'Holiday Bonus' },
                   { title: 'Total Work' },
@@ -83,7 +135,11 @@ export function ReportPayrollStaffScreen() {
                 selectable={false}
               >
                 {list?.map((x: any, i: number) => {
-                  const salaryCut = Number(x.absentPay) + Number(x.checkInLatePay) + Number(x.checkOutEarlyPay);
+                  const salaryCut =
+                    Number(x.absentPay) +
+                    Number(x.checkInLatePay) +
+                    Number(x.checkOutEarlyPay) +
+                    Number(x.checkOutEmptyPay);
                   const salaryFixed =
                     Number(x.totalWorkDays) * Number(x.user.salaryDay) + Number(x.ot.pay) + Number(x.holiday);
                   return (
@@ -100,6 +156,7 @@ export function ReportPayrollStaffScreen() {
                               .split(' ')
                               .map((x) => x.charAt(0).toUpperCase())
                               .join('')}
+                            source={x.user.profile}
                           />
                           <Text as="p" variant="bodySm">
                             {x.user.name}
@@ -151,6 +208,11 @@ export function ReportPayrollStaffScreen() {
                       <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                         <Text as="p" variant="bodySm" tone={x.checkOutEarly > 0 ? 'critical' : 'base'}>
                           {x.checkOutEarly || 0} (${x.checkOutEarlyPay || 0})
+                        </Text>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <Text as="p" variant="bodySm" tone={x.checkOutEmpty > 0 ? 'critical' : 'base'}>
+                          {x.checkOutEmpty || 0} (${x.checkOutEmptyPay || 0})
                         </Text>
                       </IndexTable.Cell>
                       <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
