@@ -731,6 +731,7 @@ export type Query = {
   productStock?: Maybe<ProductStock>;
   productStockList?: Maybe<Array<Maybe<ProductStock>>>;
   reportSaleByDay?: Maybe<Scalars['JSON']['output']>;
+  reportSaleProduct?: Maybe<Scalars['JSON']['output']>;
   reportStaffPayroll?: Maybe<Scalars['JSON']['output']>;
   roleList?: Maybe<Array<Maybe<Role>>>;
   settingList?: Maybe<Array<Maybe<Setting>>>;
@@ -925,6 +926,14 @@ export type QueryReportSaleByDayArgs = {
 };
 
 
+export type QueryReportSaleProductArgs = {
+  filters?: InputMaybe<ReportSaleFilter>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  groupBy?: InputMaybe<ReportSaleGroupBy>;
+  to?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryReportStaffPayrollArgs = {
   from?: InputMaybe<Scalars['String']['input']>;
   to?: InputMaybe<Scalars['String']['input']>;
@@ -978,6 +987,15 @@ export type QueryUserListArgs = {
   roles?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   search?: InputMaybe<Scalars['String']['input']>;
 };
+
+export type ReportSaleFilter = {
+  category?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+};
+
+export enum ReportSaleGroupBy {
+  Date = 'DATE',
+  Product = 'PRODUCT'
+}
 
 export type Role = {
   __typename?: 'Role';
@@ -1739,6 +1757,16 @@ export type HolidayQueryVariables = Exact<{
 
 
 export type HolidayQuery = { __typename?: 'Query', holiday?: { __typename?: 'Holiday', id?: number | null, name?: string | null, date?: string | null, extra?: number | null } | null };
+
+export type ReportSaleProductQueryVariables = Exact<{
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+  filters?: InputMaybe<ReportSaleFilter>;
+  groupBy?: InputMaybe<ReportSaleGroupBy>;
+}>;
+
+
+export type ReportSaleProductQuery = { __typename?: 'Query', reportSaleProduct?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -5037,6 +5065,47 @@ export type HolidayQueryHookResult = ReturnType<typeof useHolidayQuery>;
 export type HolidayLazyQueryHookResult = ReturnType<typeof useHolidayLazyQuery>;
 export type HolidaySuspenseQueryHookResult = ReturnType<typeof useHolidaySuspenseQuery>;
 export type HolidayQueryResult = Apollo.QueryResult<HolidayQuery, HolidayQueryVariables>;
+export const ReportSaleProductDocument = gql`
+    query reportSaleProduct($from: String, $to: String, $filters: ReportSaleFilter, $groupBy: ReportSaleGroupBy) {
+  reportSaleProduct(from: $from, to: $to, filters: $filters, groupBy: $groupBy)
+}
+    `;
+
+/**
+ * __useReportSaleProductQuery__
+ *
+ * To run a query within a React component, call `useReportSaleProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportSaleProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportSaleProductQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *      filters: // value for 'filters'
+ *      groupBy: // value for 'groupBy'
+ *   },
+ * });
+ */
+export function useReportSaleProductQuery(baseOptions?: Apollo.QueryHookOptions<ReportSaleProductQuery, ReportSaleProductQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReportSaleProductQuery, ReportSaleProductQueryVariables>(ReportSaleProductDocument, options);
+      }
+export function useReportSaleProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportSaleProductQuery, ReportSaleProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReportSaleProductQuery, ReportSaleProductQueryVariables>(ReportSaleProductDocument, options);
+        }
+export function useReportSaleProductSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReportSaleProductQuery, ReportSaleProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ReportSaleProductQuery, ReportSaleProductQueryVariables>(ReportSaleProductDocument, options);
+        }
+export type ReportSaleProductQueryHookResult = ReturnType<typeof useReportSaleProductQuery>;
+export type ReportSaleProductLazyQueryHookResult = ReturnType<typeof useReportSaleProductLazyQuery>;
+export type ReportSaleProductSuspenseQueryHookResult = ReturnType<typeof useReportSaleProductSuspenseQuery>;
+export type ReportSaleProductQueryResult = Apollo.QueryResult<ReportSaleProductQuery, ReportSaleProductQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

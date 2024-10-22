@@ -59,58 +59,79 @@ export function Balance() {
           Today
         </Text>
       </Layout.Section>
-      <Layout.Section variant="oneThird">
-        <Card>
-          <Box>
-            <Text as="h4" variant="headingMd">
-              <span className="flex flex-row items-center gap-2">
-                Order Balance <SelectDate value={dateInput} setValue={setDateInput} />
-              </span>
-            </Text>
-            <br />
-            {loading && !data ? (
-              <SkeletonDisplayText size="medium" />
-            ) : (
-              <Text as="h3" variant="heading2xl" tone="success">
-                ${Number(data?.orderBalanceSummary.order || 0).toFixed(2)}
-              </Text>
-            )}
-          </Box>
-        </Card>
-      </Layout.Section>
-      <Layout.Section variant="oneThird">
-        <Card>
-          <Box>
-            <Text as="h4" variant="headingMd">
-              Products
-            </Text>
-            <br />
-            {loading && !data ? (
-              <SkeletonDisplayText size="medium" />
-            ) : (
-              <Text as="h3" variant="heading2xl" tone="magic">
-                {data?.orderBalanceSummary.product}
-              </Text>
-            )}
-          </Box>
-        </Card>
-      </Layout.Section>
-      <Layout.Section variant="oneThird">
-        <Card>
-          <Box>
-            <Text as="h4" variant="headingMd">
-              Staffs
-            </Text>
-            <br />
-            {loading && !data ? (
-              <SkeletonDisplayText size="medium" />
-            ) : (
-              <Text as="h3" variant="heading2xl" tone="caution">
-                {data?.orderBalanceSummary.staff}
-              </Text>
-            )}
-          </Box>
-        </Card>
+      <Layout.Section variant="fullWidth">
+        <div className="flex flex-row gap-10 items-center flex-wrap">
+          <div className="min-w-[247px]">
+            <Card>
+              <Box>
+                <Text as="h4" variant="headingMd">
+                  <span className="flex flex-row items-center gap-2">
+                    Order Balance <SelectDate value={dateInput} setValue={setDateInput} />
+                  </span>
+                </Text>
+                <br />
+                {loading && !data ? (
+                  <SkeletonDisplayText size="medium" />
+                ) : (
+                  <Text as="h3" variant="heading2xl" tone="success">
+                    ${Number(data?.orderBalanceSummary.order || 0).toFixed(2)}
+                  </Text>
+                )}
+              </Box>
+            </Card>
+          </div>
+          <div className="min-w-[247px]">
+            <Card>
+              <Box>
+                <Text as="h4" variant="headingMd">
+                  Expected Order Balance
+                </Text>
+                <br />
+                {loading && !data ? (
+                  <SkeletonDisplayText size="medium" />
+                ) : (
+                  <Text as="h3" variant="heading2xl" tone="critical">
+                    ${Number(data?.orderBalanceSummary.expct_order || 0).toFixed(2)}
+                  </Text>
+                )}
+              </Box>
+            </Card>
+          </div>
+          <div className="min-w-[247px]">
+            <Card>
+              <Box>
+                <Text as="h4" variant="headingMd">
+                  Products
+                </Text>
+                <br />
+                {loading && !data ? (
+                  <SkeletonDisplayText size="medium" />
+                ) : (
+                  <Text as="h3" variant="heading2xl" tone="magic">
+                    {data?.orderBalanceSummary.product}
+                  </Text>
+                )}
+              </Box>
+            </Card>
+          </div>
+          <div className="min-w-[247px]">
+            <Card>
+              <Box>
+                <Text as="h4" variant="headingMd">
+                  Staffs
+                </Text>
+                <br />
+                {loading && !data ? (
+                  <SkeletonDisplayText size="medium" />
+                ) : (
+                  <Text as="h3" variant="heading2xl" tone="caution">
+                    {data?.orderBalanceSummary.staff}
+                  </Text>
+                )}
+              </Box>
+            </Card>
+          </div>
+        </div>
       </Layout.Section>
       <Layout.Section>
         <br />

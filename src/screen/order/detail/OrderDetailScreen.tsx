@@ -310,7 +310,13 @@ export default function OrderDetailScreen() {
               <div className="flex flex-row justify-between items-baseline">
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row gap-4">
-                    <PrintOrder order={data?.order} subtotal={total} vat={vatPer + ''} total={total} />
+                    <PrintOrder
+                      firstCall={data?.order?.status === StatusOrder.Checkout}
+                      order={data?.order}
+                      subtotal={total}
+                      vat={vatPer + ''}
+                      total={total}
+                    />
                     {/* <PrintOrder order={data?.order} subtotal={total} vat={vat + ''} total={totalAfterVat} kitchen /> */}
                     {/* <PrintOrderToKitchen order={data?.order} /> */}
                     <SignatureOrder order={data?.order || {}} size="micro" />
@@ -351,14 +357,16 @@ export default function OrderDetailScreen() {
                           Checkout
                         </Button>
                       )}
-                    <Button
-                      size="micro"
-                      tone="critical"
-                      variant="primary"
-                      onClick={() => handleUpdate(StatusOrder.Cancelled)}
-                    >
-                      Cancel
-                    </Button>
+                    {data?.order?.status !== StatusOrder.Cancelled && (
+                      <Button
+                        size="micro"
+                        tone="critical"
+                        variant="primary"
+                        onClick={() => handleUpdate(StatusOrder.Cancelled)}
+                      >
+                        Cancel
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col items-end">

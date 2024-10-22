@@ -3,7 +3,7 @@
 import { Order, OrderItem } from '@/gql/graphql';
 import { Button, Modal, Text } from '@shopify/polaris';
 import moment from 'moment';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './style.css';
 import { useSetting } from '@/service/useSettingProvider';
 import { useReactToPrint } from 'react-to-print';
@@ -16,6 +16,7 @@ interface Props {
   vat?: string;
   total?: string;
   kitchen?: boolean;
+  firstCall?: boolean;
 }
 
 function formatKHR(value: number) {
@@ -35,6 +36,12 @@ export function PrintOrder(props: Props) {
   const [open, setOpen] = useState(false);
 
   const toggleOpen = useCallback(() => setOpen(!open), [open]);
+
+  useEffect(() => {
+    if (!!props.firstCall) {
+      setOpen(true);
+    }
+  }, [props.firstCall]);
 
   const handlePrint = useReactToPrint({
     documentTitle: 'Print This Document',

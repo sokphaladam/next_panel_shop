@@ -9,7 +9,7 @@ import React, { useCallback, useState } from 'react';
 export function ReportSaleByDayScreen() {
   const now = moment(new Date());
   const [filter, setFilter] = useState({
-    fromDate: moment(new Date()).subtract(30, 'days').format('YYYY-MM-DD'),
+    fromDate: moment(new Date()).subtract(7, 'days').format('YYYY-MM-DD'),
     toDate: now.format('YYYY-MM-DD'),
   });
   const { data, loading } = useReportSaleByDayQuery({
