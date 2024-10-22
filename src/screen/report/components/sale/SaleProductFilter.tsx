@@ -1,5 +1,5 @@
 'use client';
-import { ReportSaleGroupBy } from '@/gql/graphql';
+import { ReportSaleGroupBy, useCategoryListQuery } from '@/gql/graphql';
 import {
   ChoiceList,
   FilterInterface,
@@ -22,6 +22,7 @@ interface Props {
 export function SaleProductFilter(props: Props) {
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   const { mode, setMode } = useSetIndexFiltersMode(IndexFiltersMode.Filtering);
+  const { data, loading } = useCategoryListQuery();
 
   const handleChangeStartDate = useCallback(
     (value: any) => {
@@ -42,11 +43,25 @@ export function SaleProductFilter(props: Props) {
     },
     [props],
   );
+
   const handleChangeGroup = useCallback(
     (value: any) => {
       props.setFilter({
         ...props.filter,
         groupBy: value[0],
+      });
+    },
+    [props],
+  );
+
+  const handleChangeCategory = useCallback(
+    (value: any) => {
+      // console.log(value);
+      props.setFilter({
+        ...props.filter,
+        filters: {
+          category: value.map((x: any) => Number(x)),
+        },
       });
     },
     [props],
@@ -74,10 +89,13 @@ export function SaleProductFilter(props: Props) {
   }, [props]);
 
   const handleFiltersClearAll = useCallback(() => {
-    handleRemoveStartDate();
-    handleRemoveEndDate();
-    handleRemoveGroup();
-  }, [handleRemoveStartDate, handleRemoveEndDate, handleRemoveGroup]);
+    props.setFilter({
+      ...props.filter,
+      fromDate: moment(new Date()).subtract(7, 'days').format('YYYY-MM-DD'),
+      groupBy: ReportSaleGroupBy.Product,
+      toDate: moment(new Date()).format('YYYY-MM-DD'),
+    });
+  }, [props]);
 
   const filters: FilterInterface[] = [
     {
@@ -137,6 +155,32 @@ export function SaleProductFilter(props: Props) {
       ),
       pinned: true,
       shortcut: true,
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      pinned: true,
+      shortcut: true,
+      filter: (
+        <ChoiceList
+          title
+          titleHidden
+          choices={
+            data
+              ? data?.categoryList.raw.map((x: any) => {
+                  return {
+                    label: x.name,
+                    value: x.id + '',
+                  };
+                })
+              : []
+          }
+          selected={props.filter.filters.category.map((x: any) => x + '')}
+          disabled={loading || props.filter.groupBy === ReportSaleGroupBy.Date}
+          allowMultiple={true}
+          onChange={handleChangeCategory}
+        />
+      ),
     },
   ];
 
