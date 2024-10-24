@@ -95,7 +95,12 @@ export function SaleReportScreen() {
   return (
     <PolarisLayout
       title="Sale Report"
-      permission={[role_permission.ADMIN, role_permission.MANAGER, role_permission.SUPER_ADMIN]}
+      permission={[
+        role_permission.ADMIN,
+        role_permission.MANAGER,
+        role_permission.SUPER_ADMIN,
+        role_permission.CASHIER,
+      ]}
       fullWidth
       actionGroups={[
         {

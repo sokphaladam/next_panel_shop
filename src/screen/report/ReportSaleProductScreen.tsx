@@ -30,12 +30,22 @@ export function ReportSaleProductScreen() {
   const handleDownloadExcel = useCallback(() => {
     const header =
       filter.groupBy === ReportSaleGroupBy.Product
-        ? ['Date', 'Category', 'Product', 'Price', 'Qty', 'Total Amount']
-        : ['Date', 'Cash', 'ABA Bank', 'Discount', 'Total Amount'];
+        ? ['Date', 'Category', 'Product', 'Qty', 'Price', 'Total Amount']
+        : [
+            'Date',
+            'Cash',
+            'ABA Bank',
+            'Discount',
+            'Total Amount',
+            'Total Customers',
+            'Average Spending',
+            'Qty. of bills',
+            'Qty. of card slips',
+          ];
 
     const items = data?.reportSaleProduct.map((x: any) => {
       if (filter.groupBy === ReportSaleGroupBy.Product) {
-        return [x.data, x.categoryName, x.productName, x.price, x.qty, Number(Number(x.amount).toFixed(2))];
+        return [x.data, x.categoryName, x.productName, x.qty, x.price, Number(Number(x.amount).toFixed(2))];
       }
       return [
         x.date,
@@ -43,6 +53,10 @@ export function ReportSaleProductScreen() {
         Number(Number(x.aba).toFixed(2)),
         Number(Number(x.discount).toFixed(2)),
         Number(Number(x.amount).toFixed(2)),
+        Number(Number(x.customer).toFixed(0)),
+        Number((Number(x.amount) / Number(x.customer)).toFixed(2)),
+        Number(x.bill),
+        Number(x.card),
       ];
     });
 
@@ -56,7 +70,12 @@ export function ReportSaleProductScreen() {
   return (
     <PolarisLayout
       title="Report Product"
-      permission={[role_permission.ADMIN, role_permission.SUPER_ADMIN, role_permission.MANAGER]}
+      permission={[
+        role_permission.ADMIN,
+        role_permission.SUPER_ADMIN,
+        role_permission.MANAGER,
+        role_permission.CASHIER,
+      ]}
       secondaryActions={[{ content: 'Download Excel', onAction: handleDownloadExcel }]}
     >
       <Card padding={'0'}>
@@ -71,8 +90,8 @@ export function ReportSaleProductScreen() {
                     { title: 'Date' },
                     { title: 'Category' },
                     { title: 'Product' },
-                    { title: 'Price' },
                     { title: 'Qty' },
+                    { title: 'Price' },
                     { title: 'Total Amount' },
                   ]
                 : [
@@ -81,6 +100,10 @@ export function ReportSaleProductScreen() {
                     { title: 'ABA Bank' },
                     { title: 'Discount' },
                     { title: 'Total Amount' },
+                    { title: 'Total Customers' },
+                    { title: 'Average Spending' },
+                    { title: 'Qty. of bills' },
+                    { title: 'Qty. of card slips' },
                   ]
             }
             loading={loading}
@@ -117,6 +140,26 @@ export function ReportSaleProductScreen() {
                           ${Number(x.amount).toFixed(2)}
                         </Text>
                       </IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <Text as="p" variant="bodySm">
+                          {Number(x.customer).toFixed(0)}
+                        </Text>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <Text as="p" variant="bodySm">
+                          ${(Number(x.amount) / Number(x.customer)).toFixed(2)}
+                        </Text>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <Text as="p" variant="bodySm">
+                          {Number(x.bill).toFixed(0)}
+                        </Text>
+                      </IndexTable.Cell>
+                      <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
+                        <Text as="p" variant="bodySm">
+                          {Number(x.card).toFixed(0)}
+                        </Text>
+                      </IndexTable.Cell>
                     </IndexTable.Row>
                   );
                 }
@@ -146,12 +189,12 @@ export function ReportSaleProductScreen() {
                     </IndexTable.Cell>
                     <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                       <Text as="p" variant="bodySm">
-                        ${x.price}
+                        {x.qty}
                       </Text>
                     </IndexTable.Cell>
                     <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
                       <Text as="p" variant="bodySm">
-                        {x.qty}
+                        ${x.price}
                       </Text>
                     </IndexTable.Cell>
                     <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">

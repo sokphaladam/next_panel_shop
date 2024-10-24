@@ -1,5 +1,5 @@
 'use client';
-import { PolarisLayout } from '@/components/polaris/PolarisLayout';
+import { PolarisLayout, role_permission } from '@/components/polaris/PolarisLayout';
 import { useReportSaleByDayQuery } from '@/gql/graphql';
 import downloadExcelFile from '@/lib/DownloadExcelFile';
 import { IndexTable, Layout, Text, Card, Box, TextField } from '@shopify/polaris';
@@ -62,6 +62,12 @@ export function ReportSaleByDayScreen() {
       title="Sale By Day"
       fullWidth
       secondaryActions={[{ content: 'Download Excel', onAction: handleDownloadExcel }]}
+      permission={[
+        role_permission.ADMIN,
+        role_permission.MANAGER,
+        role_permission.SUPER_ADMIN,
+        role_permission.CASHIER,
+      ]}
     >
       <Layout>
         <Layout.Section>
