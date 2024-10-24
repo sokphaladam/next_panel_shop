@@ -312,14 +312,31 @@ export function MenuItems(user: User | null) {
             title: 'Reports',
             items: [
               {
-                label: 'Sale Report',
+                label: 'Sale',
                 icon: FileIcon,
                 url: '/sale',
+                items: [
+                  {
+                    label: 'Sale Report',
+                    url: '/sale',
+                    icon: FileIcon,
+                  },
+                  {
+                    label: 'Sale By Day Report',
+                    url: '/sale/byday',
+                    icon: FileIcon,
+                  },
+                  {
+                    label: 'Sale Product Select',
+                    url: '/sale/byday/products',
+                    icon: FileIcon,
+                  },
+                ],
               },
               {
-                label: 'Sale Product Select',
-                url: '/sale/byday/products',
-                icon: FileIcon,
+                label: 'Staff Payroll',
+                icon: PaymentFilledIcon,
+                url: '/staff/payroll',
               },
             ],
           },
@@ -399,6 +416,33 @@ export function MenuItems(user: User | null) {
                 label: 'Overtime',
                 icon: PageClockIcon,
                 url: '/ot',
+              },
+            ],
+          },
+          {
+            title: 'Reports',
+            items: [
+              {
+                label: 'Sale',
+                icon: FileIcon,
+                url: '/sale',
+                items: [
+                  {
+                    label: 'Sale Report',
+                    url: '/sale',
+                    icon: FileIcon,
+                  },
+                  {
+                    label: 'Sale By Day Report',
+                    url: '/sale/byday',
+                    icon: FileIcon,
+                  },
+                  {
+                    label: 'Sale Product Select',
+                    url: '/sale/byday/products',
+                    icon: FileIcon,
+                  },
+                ],
               },
             ],
           },
