@@ -13,7 +13,7 @@ export function HolidayListScreen() {
 
   return (
     <Layout>
-      <Layout.Section variant="oneThird">
+      <Layout.Section variant="oneHalf">
         <PolarisLayout
           title="Public Holiday"
           permission={[role_permission.ADMIN, role_permission.SUPER_ADMIN, role_permission.MANAGER]}
@@ -33,7 +33,7 @@ export function HolidayListScreen() {
             />
           )}
           <Layout>
-            <Layout.Section>
+            <Layout.Section variant="fullWidth">
               <Card padding={'0'}>
                 <Box padding={'0'}>
                   <IndexTable
@@ -51,8 +51,8 @@ export function HolidayListScreen() {
                                 {row?.date}
                               </Text>
                             </IndexTable.Cell>
-                            <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px]">
-                              <Text as="p" variant="bodySm">
+                            <IndexTable.Cell className="border-collapse border-solid border-r-[0.5px] max-w-[200px] whitespace-pre-wrap">
+                              <Text as="p" variant="bodySm" breakWord>
                                 {row?.name}
                               </Text>
                             </IndexTable.Cell>
