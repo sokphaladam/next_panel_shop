@@ -114,7 +114,7 @@ export function ReportSaleByDayScreen() {
                         { title: 'Total After Discount' },
                         ...data.reportSaleByDay.header.map((x: any) => {
                           return {
-                            title: x.split('(')[1].replace(')', ''),
+                            title: x,
                             alignment: 'end',
                           };
                         }),
