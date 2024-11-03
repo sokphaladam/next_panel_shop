@@ -25,8 +25,8 @@ query me {
   }
 }
 
-query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct) {
-  productList(offset: $offset, limit: $limit, code: $code, filter: $filter) {
+query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct, $schedule: Boolean) {
+  productList(offset: $offset, limit: $limit, code: $code, filter: $filter, schedule: $schedule) {
     id
     title
     description
@@ -739,4 +739,48 @@ query holiday($holidayId: Int!) {
 
 query reportSaleProduct($from: String, $to: String, $filters: ReportSaleFilter, $groupBy: ReportSaleGroupBy) {
   reportSaleProduct(from: $from, to: $to, filters: $filters, groupBy: $groupBy)
+}
+
+query orderScheduleList {
+  orderScheduleList {
+    id
+    startAt
+    endAt
+    name
+    items {
+      sku {
+        id
+        image
+        price
+        discount
+        product {
+          id
+          images
+          title
+        }
+      }
+    }
+  }
+}
+
+query orderSchedule($orderScheduleId: Int!) {
+  orderSchedule(id: $orderScheduleId) {
+    id
+    startAt
+    endAt
+    name
+    items {
+      sku {
+        id
+        image
+        price
+        discount
+        product {
+          id
+          images
+          title
+        }
+      }
+    }
+  }
 }

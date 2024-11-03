@@ -339,6 +339,7 @@ export function PolarisProductPickerAddCart({
       filter: {
         type: [Type_Product.Production],
       },
+      schedule: true,
     },
   });
   const [addCart] = useAddOrderItemMutation({

@@ -18,6 +18,7 @@ import {
   PaymentFilledIcon,
   PersonalizedTextIcon,
   CalendarTimeIcon,
+  PageClockFilledIcon,
 } from '@shopify/polaris-icons';
 import { FunctionComponent, SVGProps } from 'react';
 
@@ -74,6 +75,11 @@ export function MenuItems(user: User | null) {
           label: 'Customer Order',
           icon: CartFilledIcon,
           url: '/order/list',
+        },
+        {
+          label: 'Order Schedule',
+          icon: PageClockFilledIcon,
+          url: '/order/schedule',
         },
       ],
     },
@@ -276,6 +282,11 @@ export function MenuItems(user: User | null) {
                 icon: CartFilledIcon,
                 url: '/order/list',
               },
+              {
+                label: 'Order Schedule',
+                icon: PageClockFilledIcon,
+                url: '/order/schedule',
+              },
             ],
           },
           {
@@ -391,6 +402,11 @@ export function MenuItems(user: User | null) {
                 label: 'Order',
                 icon: CartFilledIcon,
                 url: '/order/list',
+              },
+              {
+                label: 'Order Schedule',
+                icon: PageClockFilledIcon,
+                url: '/order/schedule',
               },
             ],
           },
