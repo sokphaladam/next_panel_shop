@@ -161,3 +161,15 @@ mutation createHoliday($data: HolidayInput) {
 mutation updateHoliday($updateHolidayId: Int!, $data: HolidayInput) {
   updateHoliday(id: $updateHolidayId, data: $data)
 }
+
+mutation createOrderSchedule($data: OrderScheduleInput) {
+  createOrderSchedule(data: $data)
+}
+
+mutation updateOrderSchedule($updateOrderScheduleId: Int!, $data: OrderScheduleInput) {
+  updateOrderSchedule(id: $updateOrderScheduleId, data: $data)
+}
+
+mutation deleteOrderSchedule($deleteOrderScheduleId: Int!) {
+  deleteOrderSchedule(id: $deleteOrderScheduleId)
+}

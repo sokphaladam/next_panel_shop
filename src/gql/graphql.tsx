@@ -232,6 +232,7 @@ export type Mutation = {
   createHoliday?: Maybe<Scalars['Boolean']['output']>;
   createLeave?: Maybe<Scalars['Boolean']['output']>;
   createOrder?: Maybe<Scalars['Boolean']['output']>;
+  createOrderSchedule?: Maybe<Scalars['Boolean']['output']>;
   createOverTime?: Maybe<Scalars['Boolean']['output']>;
   createPosition?: Maybe<Scalars['Boolean']['output']>;
   createProduct?: Maybe<Scalars['Boolean']['output']>;
@@ -239,6 +240,7 @@ export type Mutation = {
   createShift?: Maybe<Scalars['Boolean']['output']>;
   createUser?: Maybe<Scalars['Boolean']['output']>;
   decreaseOrderItem?: Maybe<Scalars['Boolean']['output']>;
+  deleteOrderSchedule?: Maybe<Scalars['Boolean']['output']>;
   generateTableSet?: Maybe<Scalars['Boolean']['output']>;
   generateTokenOrder?: Maybe<Scalars['String']['output']>;
   increaseOrderItem?: Maybe<Scalars['Boolean']['output']>;
@@ -257,6 +259,7 @@ export type Mutation = {
   updateHoliday?: Maybe<Scalars['Boolean']['output']>;
   updateLeave?: Maybe<Scalars['Boolean']['output']>;
   updateLeaveStatus?: Maybe<Scalars['Boolean']['output']>;
+  updateOrderSchedule?: Maybe<Scalars['Boolean']['output']>;
   updateOverTime?: Maybe<Scalars['Boolean']['output']>;
   updateOverTimeStatus?: Maybe<Scalars['Boolean']['output']>;
   updatePosition?: Maybe<Scalars['Boolean']['output']>;
@@ -335,6 +338,11 @@ export type MutationCreateOrderArgs = {
 };
 
 
+export type MutationCreateOrderScheduleArgs = {
+  data?: InputMaybe<OrderScheduleInput>;
+};
+
+
 export type MutationCreateOverTimeArgs = {
   data?: InputMaybe<OverTimeInput>;
   userId: Scalars['Int']['input'];
@@ -367,6 +375,11 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDecreaseOrderItemArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteOrderScheduleArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -478,6 +491,12 @@ export type MutationUpdateLeaveArgs = {
 export type MutationUpdateLeaveStatusArgs = {
   id: Scalars['Int']['input'];
   status?: InputMaybe<LeaveStatus>;
+};
+
+
+export type MutationUpdateOrderScheduleArgs = {
+  data?: InputMaybe<OrderScheduleInput>;
+  id: Scalars['Int']['input'];
 };
 
 
@@ -595,6 +614,31 @@ export type OrderLog = {
   by?: Maybe<User>;
   date?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrderSchedule = {
+  __typename?: 'OrderSchedule';
+  endAt?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  items?: Maybe<Array<Maybe<OrderScheduleItem>>>;
+  name?: Maybe<Scalars['String']['output']>;
+  startAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrderScheduleInput = {
+  endAt?: InputMaybe<Scalars['String']['input']>;
+  items?: InputMaybe<Array<InputMaybe<OrderScheduleItemInput>>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  startAt?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OrderScheduleItem = {
+  __typename?: 'OrderScheduleItem';
+  sku?: Maybe<Sku>;
+};
+
+export type OrderScheduleItemInput = {
+  skuId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export enum OrderViewBy {
@@ -723,6 +767,8 @@ export type Query = {
   orderBalanceSummary?: Maybe<Scalars['JSON']['output']>;
   orderItem?: Maybe<Scalars['JSON']['output']>;
   orderList?: Maybe<Array<Maybe<Order>>>;
+  orderSchedule?: Maybe<OrderSchedule>;
+  orderScheduleList?: Maybe<Array<Maybe<OrderSchedule>>>;
   overTime?: Maybe<OverTime>;
   overTimeList?: Maybe<Array<Maybe<OverTime>>>;
   position?: Maybe<Position>;
@@ -877,6 +923,11 @@ export type QueryOrderListArgs = {
 };
 
 
+export type QueryOrderScheduleArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type QueryOverTimeArgs = {
   id: Scalars['Int']['input'];
 };
@@ -906,6 +957,7 @@ export type QueryProductListArgs = {
   filter?: InputMaybe<FilterProduct>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  schedule?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -1010,6 +1062,7 @@ export type Sku = {
   image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Product>;
   status?: Maybe<Status_Product>;
   unit?: Maybe<Scalars['String']['output']>;
 };
@@ -1482,6 +1535,28 @@ export type UpdateHolidayMutationVariables = Exact<{
 
 export type UpdateHolidayMutation = { __typename?: 'Mutation', updateHoliday?: boolean | null };
 
+export type CreateOrderScheduleMutationVariables = Exact<{
+  data?: InputMaybe<OrderScheduleInput>;
+}>;
+
+
+export type CreateOrderScheduleMutation = { __typename?: 'Mutation', createOrderSchedule?: boolean | null };
+
+export type UpdateOrderScheduleMutationVariables = Exact<{
+  updateOrderScheduleId: Scalars['Int']['input'];
+  data?: InputMaybe<OrderScheduleInput>;
+}>;
+
+
+export type UpdateOrderScheduleMutation = { __typename?: 'Mutation', updateOrderSchedule?: boolean | null };
+
+export type DeleteOrderScheduleMutationVariables = Exact<{
+  deleteOrderScheduleId: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteOrderScheduleMutation = { __typename?: 'Mutation', deleteOrderSchedule?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1492,6 +1567,7 @@ export type ProductListQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
   code?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FilterProduct>;
+  schedule?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -1767,6 +1843,18 @@ export type ReportSaleProductQueryVariables = Exact<{
 
 
 export type ReportSaleProductQuery = { __typename?: 'Query', reportSaleProduct?: any | null };
+
+export type OrderScheduleListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OrderScheduleListQuery = { __typename?: 'Query', orderScheduleList?: Array<{ __typename?: 'OrderSchedule', id?: number | null, startAt?: string | null, endAt?: string | null, name?: string | null, items?: Array<{ __typename?: 'OrderScheduleItem', sku?: { __typename?: 'SKU', id?: number | null, image?: string | null, price?: number | null, discount?: number | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null } | null> | null } | null> | null };
+
+export type OrderScheduleQueryVariables = Exact<{
+  orderScheduleId: Scalars['Int']['input'];
+}>;
+
+
+export type OrderScheduleQuery = { __typename?: 'Query', orderSchedule?: { __typename?: 'OrderSchedule', id?: number | null, startAt?: string | null, endAt?: string | null, name?: string | null, items?: Array<{ __typename?: 'OrderScheduleItem', sku?: { __typename?: 'SKU', id?: number | null, image?: string | null, price?: number | null, discount?: number | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null } | null> | null } | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -3098,6 +3186,100 @@ export function useUpdateHolidayMutation(baseOptions?: Apollo.MutationHookOption
 export type UpdateHolidayMutationHookResult = ReturnType<typeof useUpdateHolidayMutation>;
 export type UpdateHolidayMutationResult = Apollo.MutationResult<UpdateHolidayMutation>;
 export type UpdateHolidayMutationOptions = Apollo.BaseMutationOptions<UpdateHolidayMutation, UpdateHolidayMutationVariables>;
+export const CreateOrderScheduleDocument = gql`
+    mutation createOrderSchedule($data: OrderScheduleInput) {
+  createOrderSchedule(data: $data)
+}
+    `;
+export type CreateOrderScheduleMutationFn = Apollo.MutationFunction<CreateOrderScheduleMutation, CreateOrderScheduleMutationVariables>;
+
+/**
+ * __useCreateOrderScheduleMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderScheduleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderScheduleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderScheduleMutation, { data, loading, error }] = useCreateOrderScheduleMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateOrderScheduleMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderScheduleMutation, CreateOrderScheduleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderScheduleMutation, CreateOrderScheduleMutationVariables>(CreateOrderScheduleDocument, options);
+      }
+export type CreateOrderScheduleMutationHookResult = ReturnType<typeof useCreateOrderScheduleMutation>;
+export type CreateOrderScheduleMutationResult = Apollo.MutationResult<CreateOrderScheduleMutation>;
+export type CreateOrderScheduleMutationOptions = Apollo.BaseMutationOptions<CreateOrderScheduleMutation, CreateOrderScheduleMutationVariables>;
+export const UpdateOrderScheduleDocument = gql`
+    mutation updateOrderSchedule($updateOrderScheduleId: Int!, $data: OrderScheduleInput) {
+  updateOrderSchedule(id: $updateOrderScheduleId, data: $data)
+}
+    `;
+export type UpdateOrderScheduleMutationFn = Apollo.MutationFunction<UpdateOrderScheduleMutation, UpdateOrderScheduleMutationVariables>;
+
+/**
+ * __useUpdateOrderScheduleMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderScheduleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderScheduleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderScheduleMutation, { data, loading, error }] = useUpdateOrderScheduleMutation({
+ *   variables: {
+ *      updateOrderScheduleId: // value for 'updateOrderScheduleId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateOrderScheduleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrderScheduleMutation, UpdateOrderScheduleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOrderScheduleMutation, UpdateOrderScheduleMutationVariables>(UpdateOrderScheduleDocument, options);
+      }
+export type UpdateOrderScheduleMutationHookResult = ReturnType<typeof useUpdateOrderScheduleMutation>;
+export type UpdateOrderScheduleMutationResult = Apollo.MutationResult<UpdateOrderScheduleMutation>;
+export type UpdateOrderScheduleMutationOptions = Apollo.BaseMutationOptions<UpdateOrderScheduleMutation, UpdateOrderScheduleMutationVariables>;
+export const DeleteOrderScheduleDocument = gql`
+    mutation deleteOrderSchedule($deleteOrderScheduleId: Int!) {
+  deleteOrderSchedule(id: $deleteOrderScheduleId)
+}
+    `;
+export type DeleteOrderScheduleMutationFn = Apollo.MutationFunction<DeleteOrderScheduleMutation, DeleteOrderScheduleMutationVariables>;
+
+/**
+ * __useDeleteOrderScheduleMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderScheduleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderScheduleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrderScheduleMutation, { data, loading, error }] = useDeleteOrderScheduleMutation({
+ *   variables: {
+ *      deleteOrderScheduleId: // value for 'deleteOrderScheduleId'
+ *   },
+ * });
+ */
+export function useDeleteOrderScheduleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteOrderScheduleMutation, DeleteOrderScheduleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteOrderScheduleMutation, DeleteOrderScheduleMutationVariables>(DeleteOrderScheduleDocument, options);
+      }
+export type DeleteOrderScheduleMutationHookResult = ReturnType<typeof useDeleteOrderScheduleMutation>;
+export type DeleteOrderScheduleMutationResult = Apollo.MutationResult<DeleteOrderScheduleMutation>;
+export type DeleteOrderScheduleMutationOptions = Apollo.BaseMutationOptions<DeleteOrderScheduleMutation, DeleteOrderScheduleMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3159,8 +3341,14 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const ProductListDocument = gql`
-    query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct) {
-  productList(offset: $offset, limit: $limit, code: $code, filter: $filter) {
+    query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct, $schedule: Boolean) {
+  productList(
+    offset: $offset
+    limit: $limit
+    code: $code
+    filter: $filter
+    schedule: $schedule
+  ) {
     id
     title
     description
@@ -3208,6 +3396,7 @@ export const ProductListDocument = gql`
  *      limit: // value for 'limit'
  *      code: // value for 'code'
  *      filter: // value for 'filter'
+ *      schedule: // value for 'schedule'
  *   },
  * });
  */
@@ -5106,6 +5295,117 @@ export type ReportSaleProductQueryHookResult = ReturnType<typeof useReportSalePr
 export type ReportSaleProductLazyQueryHookResult = ReturnType<typeof useReportSaleProductLazyQuery>;
 export type ReportSaleProductSuspenseQueryHookResult = ReturnType<typeof useReportSaleProductSuspenseQuery>;
 export type ReportSaleProductQueryResult = Apollo.QueryResult<ReportSaleProductQuery, ReportSaleProductQueryVariables>;
+export const OrderScheduleListDocument = gql`
+    query orderScheduleList {
+  orderScheduleList {
+    id
+    startAt
+    endAt
+    name
+    items {
+      sku {
+        id
+        image
+        price
+        discount
+        product {
+          id
+          images
+          title
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useOrderScheduleListQuery__
+ *
+ * To run a query within a React component, call `useOrderScheduleListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderScheduleListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderScheduleListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOrderScheduleListQuery(baseOptions?: Apollo.QueryHookOptions<OrderScheduleListQuery, OrderScheduleListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderScheduleListQuery, OrderScheduleListQueryVariables>(OrderScheduleListDocument, options);
+      }
+export function useOrderScheduleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderScheduleListQuery, OrderScheduleListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderScheduleListQuery, OrderScheduleListQueryVariables>(OrderScheduleListDocument, options);
+        }
+export function useOrderScheduleListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderScheduleListQuery, OrderScheduleListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OrderScheduleListQuery, OrderScheduleListQueryVariables>(OrderScheduleListDocument, options);
+        }
+export type OrderScheduleListQueryHookResult = ReturnType<typeof useOrderScheduleListQuery>;
+export type OrderScheduleListLazyQueryHookResult = ReturnType<typeof useOrderScheduleListLazyQuery>;
+export type OrderScheduleListSuspenseQueryHookResult = ReturnType<typeof useOrderScheduleListSuspenseQuery>;
+export type OrderScheduleListQueryResult = Apollo.QueryResult<OrderScheduleListQuery, OrderScheduleListQueryVariables>;
+export const OrderScheduleDocument = gql`
+    query orderSchedule($orderScheduleId: Int!) {
+  orderSchedule(id: $orderScheduleId) {
+    id
+    startAt
+    endAt
+    name
+    items {
+      sku {
+        id
+        image
+        price
+        discount
+        product {
+          id
+          images
+          title
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useOrderScheduleQuery__
+ *
+ * To run a query within a React component, call `useOrderScheduleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderScheduleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderScheduleQuery({
+ *   variables: {
+ *      orderScheduleId: // value for 'orderScheduleId'
+ *   },
+ * });
+ */
+export function useOrderScheduleQuery(baseOptions: Apollo.QueryHookOptions<OrderScheduleQuery, OrderScheduleQueryVariables> & ({ variables: OrderScheduleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OrderScheduleQuery, OrderScheduleQueryVariables>(OrderScheduleDocument, options);
+      }
+export function useOrderScheduleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OrderScheduleQuery, OrderScheduleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OrderScheduleQuery, OrderScheduleQueryVariables>(OrderScheduleDocument, options);
+        }
+export function useOrderScheduleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderScheduleQuery, OrderScheduleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OrderScheduleQuery, OrderScheduleQueryVariables>(OrderScheduleDocument, options);
+        }
+export type OrderScheduleQueryHookResult = ReturnType<typeof useOrderScheduleQuery>;
+export type OrderScheduleLazyQueryHookResult = ReturnType<typeof useOrderScheduleLazyQuery>;
+export type OrderScheduleSuspenseQueryHookResult = ReturnType<typeof useOrderScheduleSuspenseQuery>;
+export type OrderScheduleQueryResult = Apollo.QueryResult<OrderScheduleQuery, OrderScheduleQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)
