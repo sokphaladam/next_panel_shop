@@ -34,7 +34,10 @@ export function DeleteOrderSchedule({ id }: { id: number }) {
   }, [remove, id, toasts, setToasts, toggleActive]);
 
   const activator = (
-    <div className="bg-rose-700 h-11 px-3 flex flex-row justify-center cursor-not-allowed" onClick={toggleActive}>
+    <div
+      className="bg-rose-700 text-white h-11 px-3 flex flex-row justify-center cursor-not-allowed"
+      onClick={toggleActive}
+    >
       <Icon source={DeleteIcon} />
     </div>
   );

@@ -48,16 +48,26 @@ export function OrderScheduleScreen() {
                   const times = arrayRange(Number(x?.startAt?.split(':')[0]), Number(x?.endAt?.split(':')[0]));
                   return (
                     <IndexTable.Row key={i} id={i + ''} position={i}>
-                      <IndexTable.Cell>
-                        <Text as="p" variant="bodySm">
-                          {x?.name || ''}
-                        </Text>
+                      <IndexTable.Cell className="!max-w-[150px]">
+                        <div className="flex flex-row justify-between items-center">
+                          <Text as="p" variant="bodySm">
+                            {x?.name || ''}
+                          </Text>
+                          <div className="flex flex-row items-center justify-end">
+                            <Link url={`/order/schedule/edit/${x?.id}`}>
+                              <div className="bg-sky-700 text-white h-11 px-3 flex flex-row justify-center">
+                                <Icon source={EditIcon} tone="inherit" />
+                              </div>
+                            </Link>
+                            <DeleteOrderSchedule id={x?.id || 0} />
+                          </div>
+                        </div>
                       </IndexTable.Cell>
                       {arrTimes.map((arr, arri) => {
                         const isInRange = times.includes(arr);
                         const position = arrTimes.findIndex((f) => f === times[Math.round(times.length / 2)]);
                         const lastPosition = arrTimes.findIndex((f) => f === times[times.length - 1]);
-                        const firstPosition = arrTimes.findIndex((f) => f === times[0]);
+                        // const firstPosition = arrTimes.findIndex((f) => f === times[0]);
                         const fixedWidth = 100 / arrTimes.length;
                         return (
                           <IndexTable.Cell key={arr} className={`!p-0 !w-[${fixedWidth}%]`}>
@@ -71,7 +81,7 @@ export function OrderScheduleScreen() {
                               <small className="flex flex-row items-end justify-end">
                                 {position === arri && `(${x?.items?.length} items)`}
                               </small>
-                              {firstPosition === arri && (
+                              {/* {firstPosition === arri && (
                                 <div className="flex flex-row items-center justify-end absolute">
                                   <Link url={`/order/schedule/edit/${x?.id}`}>
                                     <div className="bg-sky-700 text-white h-11 px-3 flex flex-row justify-center">
@@ -79,10 +89,8 @@ export function OrderScheduleScreen() {
                                     </div>
                                   </Link>
                                   <DeleteOrderSchedule id={x?.id || 0} />
-                                  {/* <Button icon={DeleteIcon} tone="critical" variant="tertiary"></Button>
-                                  <Button icon={DeleteIcon} tone="critical" variant="tertiary"></Button> */}
                                 </div>
-                              )}
+                              )} */}
                             </div>
                           </IndexTable.Cell>
                         );
