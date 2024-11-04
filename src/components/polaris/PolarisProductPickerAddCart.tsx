@@ -23,7 +23,7 @@ import {
   TextField,
   Thumbnail,
 } from '@shopify/polaris';
-import { ArrowLeftIcon, CartAbandonedFilledIcon } from '@shopify/polaris-icons';
+import { ArrowLeftIcon, CartAbandonedFilledIcon, PackageOnHoldIcon } from '@shopify/polaris-icons';
 import { useCallback, useMemo, useState } from 'react';
 import { useCustomToast } from '../custom/CustomToast';
 import Image from 'next/image';
@@ -110,7 +110,9 @@ function ProductItem({
       <div
         key={x?.id}
         className={`pb-2 overflow-hidden cursor-pointer border-collapse rounded-md border-gray-300 border-[0.5px] ${
-          x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock
+          x.status === Status_Product.OutOfStock ||
+          defaultSku?.status === Status_Product.OutOfStock ||
+          defaultSku?.status === Status_Product.TimeOut
             ? 'bg-gray-400'
             : ''
         }`}
@@ -148,6 +150,14 @@ function ProductItem({
               <small className="text-red-500">(Out Of Stock)</small>
             </div>
           )}
+          {defaultSku?.status === Status_Product.TimeOut && (
+            <div className="flex flex-row items-center gap-1">
+              <div>
+                <Icon source={PackageOnHoldIcon} tone="critical" />
+              </div>
+              <small className="text-red-500">(Time Out)</small>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -156,7 +166,11 @@ function ProductItem({
     <div
       key={x?.id}
       className={`pb-2 cursor-pointer px-2 border-collapse border-gray-300 border-b-[0.5px] flex flex-row justify-between items-center ${
-        x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock ? 'bg-gray-400' : ''
+        x.status === Status_Product.OutOfStock ||
+        defaultSku?.status === Status_Product.OutOfStock ||
+        defaultSku?.status === Status_Product.TimeOut
+          ? 'bg-gray-400'
+          : ''
       }`}
       onClick={() => {
         if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
@@ -184,6 +198,14 @@ function ProductItem({
                 <Icon source={CartAbandonedFilledIcon} tone="critical" />
               </div>
               <small className="text-red-500">(Out Of Stock)</small>
+            </div>
+          )}
+          {defaultSku?.status === Status_Product.TimeOut && (
+            <div className="flex flex-row items-center gap-1">
+              <div>
+                <Icon source={PackageOnHoldIcon} tone="critical" />
+              </div>
+              <small className="text-red-500">(Time Out)</small>
             </div>
           )}
         </div>
@@ -246,7 +268,7 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
                 label={x?.name}
                 key={i}
                 helpText={(<div>${x?.price}</div>) as any}
-                disabled={x?.status === Status_Product.OutOfStock}
+                disabled={x?.status === Status_Product.OutOfStock || x?.status === Status_Product.TimeOut}
               />
             );
           })}
