@@ -49,7 +49,7 @@ export function MenuItems(user: User | null) {
       ],
     },
     {
-      title: 'Inventory',
+      title: lng.menu_inventory,
       items: [
         {
           label: lng.menu_product,
@@ -64,129 +64,129 @@ export function MenuItems(user: User | null) {
       ],
     },
     {
-      title: 'Orders',
+      title: lng.menu_order,
       items: [
         {
-          label: 'Table',
+          label: lng.menu_table,
           icon: TabletIcon,
           url: '/set',
         },
         {
-          label: 'Customer Order',
+          label: lng.menu_customer_order,
           icon: CartFilledIcon,
           url: '/order/list',
         },
         {
-          label: 'Order Schedule',
+          label: lng.menu_order_schedule,
           icon: PageClockFilledIcon,
           url: '/order/schedule',
         },
       ],
     },
     {
-      title: 'Employee',
+      title: lng.menu_employee,
       items: [
         {
-          label: 'Attendance',
+          label: lng.menu_attendance,
           icon: AttachmentIcon,
           url: '/employee/attendance',
           items: [
             {
-              label: 'Check In & Out',
+              label: lng.menu_check_in_out,
               url: '/employee/attendance',
             },
             {
-              label: 'Attendance (Admin)',
+              label: lng.menu_attendance_admin,
               url: '/attendance',
             },
           ],
         },
         {
-          label: 'Manage Staff',
+          label: lng.menu_manage_staff,
           icon: PersonalizedTextIcon,
           url: '/staff',
           items: [
             {
-              label: 'Leave',
+              label: lng.title_leave,
               icon: FileIcon,
               url: '/leave',
             },
             {
-              label: 'Staff',
+              label: lng.staff,
               icon: PersonIcon,
               url: '/staff',
             },
             {
-              label: 'Overtime',
+              label: lng.overtime,
               icon: PageClockIcon,
               url: '/ot',
             },
           ],
         },
         {
-          label: 'Shift Handover',
+          label: lng.menu_shift_handover,
           icon: MoneyFilledIcon,
           url: '/shift',
         },
         {
-          label: 'Public Holiday',
+          label: lng.menu_public_holiday,
           icon: CalendarTimeIcon,
           url: '/holiday',
         },
       ],
     },
     {
-      title: 'Reports',
+      title: lng.menu_report,
       items: [
         {
-          label: 'Sale',
+          label: lng.menu_sale,
           icon: FileIcon,
           url: '/sale',
           items: [
             {
-              label: 'Sale Report',
+              label: lng.menu_report_sale,
               url: '/sale',
               icon: FileIcon,
             },
             {
-              label: 'Sale By Day Report',
+              label: lng.menu_report_sale_by_day,
               url: '/sale/byday',
               icon: FileIcon,
             },
             {
-              label: 'Sale Product Select',
+              label: lng.menu_report_product_select,
               url: '/sale/byday/products',
               icon: FileIcon,
             },
           ],
         },
         {
-          label: 'Staff Payroll',
+          label: lng.menu_staff_payroll,
           icon: PaymentFilledIcon,
           url: '/staff/payroll',
         },
       ],
     },
     {
-      title: 'Setting',
+      title: lng.menu_setting,
       items: [
         {
-          label: 'Option',
+          label: lng.menu_option,
           icon: SettingsIcon,
           url: '/setting',
         },
         {
-          label: 'Delivery',
+          label: lng.menu_delivery,
           icon: DeliveryIcon,
           url: '/delivery',
         },
         {
-          label: 'Position',
+          label: lng.menu_position,
           icon: StarIcon,
           url: '/position',
         },
         {
-          label: 'Payment Info',
+          label: lng.menu_payment_info,
           icon: CreditCardIcon,
           url: '/payment',
         },
@@ -207,45 +207,45 @@ export function MenuItems(user: User | null) {
       case 3:
         MenuItem = [
           {
-            title: 'Orders',
+            title: lng.menu_order,
             items: [
               {
-                label: 'Table',
+                label: lng.menu_table,
                 icon: TabletIcon,
                 url: '/set',
               },
               {
-                label: 'Order',
+                label: lng.menu_customer_order,
                 icon: CartFilledIcon,
                 url: '/order/list',
               },
             ],
           },
           {
-            title: 'Employee',
+            title: lng.menu_employee,
             items: [
               {
-                label: 'Attendance',
+                label: lng.menu_attendance,
                 icon: AttachmentIcon,
                 url: '/employee/attendance',
               },
               {
-                label: 'Leave',
+                label: lng.title_leave,
                 icon: FileIcon,
                 url: '/leave',
               },
               {
-                label: 'Overtime',
+                label: lng.overtime,
                 icon: PageClockIcon,
                 url: '/ot',
               },
             ],
           },
           {
-            title: 'Setting',
+            title: lng.menu_setting,
             items: [
               {
-                label: 'Delivery',
+                label: lng.menu_delivery,
                 icon: DeliveryIcon,
                 url: '/delivery',
               },
@@ -270,107 +270,124 @@ export function MenuItems(user: User | null) {
       case 5:
         MenuItem = [
           {
-            title: 'Orders',
+            title: lng.menu_order,
             items: [
               {
-                label: 'Table',
+                label: lng.menu_table,
                 icon: TabletIcon,
                 url: '/set',
               },
               {
-                label: 'Order',
+                label: lng.menu_customer_order,
                 icon: CartFilledIcon,
                 url: '/order/list',
               },
               {
-                label: 'Order Schedule',
+                label: lng.menu_order_schedule,
                 icon: PageClockFilledIcon,
                 url: '/order/schedule',
               },
             ],
           },
           {
-            title: 'Employee',
+            title: lng.menu_employee,
             items: [
               {
-                label: 'Attendance',
+                label: lng.menu_attendance,
                 icon: AttachmentIcon,
                 url: '/employee/attendance',
+                items: [
+                  {
+                    label: lng.menu_check_in_out,
+                    url: '/employee/attendance',
+                  },
+                  {
+                    label: lng.menu_attendance_admin,
+                    url: '/attendance',
+                  },
+                ],
               },
               {
-                label: 'Shift Handover',
+                label: lng.menu_manage_staff,
+                icon: PersonalizedTextIcon,
+                url: '/staff',
+                items: [
+                  {
+                    label: lng.title_leave,
+                    icon: FileIcon,
+                    url: '/leave',
+                  },
+                  {
+                    label: lng.staff,
+                    icon: PersonIcon,
+                    url: '/staff',
+                  },
+                  {
+                    label: lng.overtime,
+                    icon: PageClockIcon,
+                    url: '/ot',
+                  },
+                ],
+              },
+              {
+                label: lng.menu_shift_handover,
                 icon: MoneyFilledIcon,
                 url: '/shift',
               },
               {
-                label: 'Attendance (Admin)',
-                icon: AttachmentIcon,
-                url: '/attendance',
-              },
-              {
-                label: 'Leave',
-                icon: FileIcon,
-                url: '/leave',
-              },
-              {
-                label: 'Overtime',
-                icon: PageClockIcon,
-                url: '/ot',
+                label: lng.menu_public_holiday,
+                icon: CalendarTimeIcon,
+                url: '/holiday',
               },
             ],
           },
           {
-            title: 'Reports',
+            title: lng.menu_report,
             items: [
               {
-                label: 'Sale',
+                label: lng.menu_sale,
                 icon: FileIcon,
                 url: '/sale',
                 items: [
                   {
-                    label: 'Sale Report',
+                    label: lng.menu_report_sale,
                     url: '/sale',
                     icon: FileIcon,
                   },
                   {
-                    label: 'Sale By Day Report',
+                    label: lng.menu_report_sale_by_day,
                     url: '/sale/byday',
                     icon: FileIcon,
                   },
                   {
-                    label: 'Sale Product Select',
+                    label: lng.menu_report_product_select,
                     url: '/sale/byday/products',
                     icon: FileIcon,
                   },
                 ],
               },
               {
-                label: 'Staff Payroll',
+                label: lng.menu_staff_payroll,
                 icon: PaymentFilledIcon,
                 url: '/staff/payroll',
               },
             ],
           },
           {
-            title: 'Setting',
+            title: lng.menu_setting,
             items: [
               {
-                label: 'Table',
-                icon: TabletIcon,
-                url: '/set',
-              },
-              {
-                label: 'Delivery',
+                label: lng.menu_delivery,
                 icon: DeliveryIcon,
                 url: '/delivery',
               },
               {
-                label: 'Position',
+                label: lng.menu_position,
                 icon: StarIcon,
                 url: '/position',
               },
               {
-                label: 'Payment Info',
+                label: lng.menu_payment_info,
                 icon: CreditCardIcon,
                 url: '/payment',
               },
@@ -381,7 +398,7 @@ export function MenuItems(user: User | null) {
       case 6:
         MenuItem = [
           {
-            title: 'Inventory',
+            title: lng.menu_inventory,
             items: [
               {
                 label: lng.menu_product,
@@ -391,70 +408,70 @@ export function MenuItems(user: User | null) {
             ],
           },
           {
-            title: 'Orders',
+            title: lng.menu_order,
             items: [
               {
-                label: 'Table',
+                label: lng.menu_table,
                 icon: TabletIcon,
                 url: '/set',
               },
               {
-                label: 'Order',
+                label: lng.menu_customer_order,
                 icon: CartFilledIcon,
                 url: '/order/list',
               },
               {
-                label: 'Order Schedule',
+                label: lng.menu_order_schedule,
                 icon: PageClockFilledIcon,
                 url: '/order/schedule',
               },
             ],
           },
           {
-            title: 'Employee',
+            title: lng.menu_employee,
             items: [
               {
-                label: 'Attendance',
+                label: lng.menu_attendance,
                 icon: AttachmentIcon,
                 url: '/employee/attendance',
               },
               {
-                label: 'Shift Handover',
+                label: lng.menu_shift_handover,
                 icon: MoneyFilledIcon,
                 url: '/shift',
               },
               {
-                label: 'Leave',
+                label: lng.title_leave,
                 icon: FileIcon,
                 url: '/leave',
               },
               {
-                label: 'Overtime',
+                label: lng.overtime,
                 icon: PageClockIcon,
                 url: '/ot',
               },
             ],
           },
           {
-            title: 'Reports',
+            title: lng.menu_report,
             items: [
               {
-                label: 'Sale',
+                label: lng.menu_sale,
                 icon: FileIcon,
                 url: '/sale',
                 items: [
                   {
-                    label: 'Sale Report',
+                    label: lng.menu_report_sale,
                     url: '/sale',
                     icon: FileIcon,
                   },
                   {
-                    label: 'Sale By Day Report',
+                    label: lng.menu_report_sale_by_day,
                     url: '/sale/byday',
                     icon: FileIcon,
                   },
                   {
-                    label: 'Sale Product Select',
+                    label: lng.menu_report_product_select,
                     url: '/sale/byday/products',
                     icon: FileIcon,
                   },
@@ -463,10 +480,10 @@ export function MenuItems(user: User | null) {
             ],
           },
           {
-            title: 'Setting',
+            title: lng.menu_setting,
             items: [
               {
-                label: 'Delivery',
+                label: lng.menu_delivery,
                 icon: DeliveryIcon,
                 url: '/delivery',
               },
