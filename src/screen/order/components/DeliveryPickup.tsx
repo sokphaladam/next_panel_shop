@@ -2,7 +2,7 @@
 import { useCustomToast } from '@/components/custom/CustomToast';
 import { Order, useChangeOrderStatusMutation, useDeliveryListQuery } from '@/gql/graphql';
 import { Button, InlineGrid, Modal, Select, Text, TextField } from '@shopify/polaris';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface Props {
   order?: Order;
@@ -12,8 +12,8 @@ interface Props {
 export function DeliveryPickup(props: Props) {
   const { setToasts, toasts } = useCustomToast();
   const [open, setOpen] = useState(false);
-  const [deliveryId, setDeliveryId] = useState('');
-  const [deliveryCode, setDeliveryCode] = useState('');
+  const [deliveryId, setDeliveryId] = useState(props.order?.delivery?.id + '');
+  const [deliveryCode, setDeliveryCode] = useState(props.order?.deliveryCode || '');
   const queryDelivery = useDeliveryListQuery({
     variables: {
       limit: 1000,
@@ -23,6 +23,13 @@ export function DeliveryPickup(props: Props) {
   const [change] = useChangeOrderStatusMutation({
     refetchQueries: ['order', 'orderList'],
   });
+
+  useEffect(() => {
+    if (open && props.order?.delivery) {
+      setDeliveryId(props.order.delivery.id + '' || '');
+      setDeliveryCode(props.order.deliveryCode || '');
+    }
+  }, [props, open]);
 
   const toggleOpen = useCallback(() => setOpen(!open), [open]);
 
@@ -59,9 +66,7 @@ export function DeliveryPickup(props: Props) {
       });
   }, [change, deliveryCode, deliveryId, props.order?.id, setToasts, toasts, toggleOpen]);
 
-  const activator = props.order?.delivery ? (
-    <></>
-  ) : (
+  const activator = (
     <Button size={props.size} onClick={() => toggleOpen()}>
       Delivery Pickup
     </Button>
@@ -98,8 +103,8 @@ export function DeliveryPickup(props: Props) {
                   ]
                 : []
             }
-            value={deliveryId}
-            onChange={setDeliveryId}
+            value={deliveryId || props.order?.delivery?.id + ''}
+            onChange={setDeliveryId || props.order?.deliveryCode + ''}
           />
           <TextField autoComplete="off" label="Delivery Code" value={deliveryCode} onChange={setDeliveryCode} />
         </InlineGrid>

@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { config_app } from '@/lib/config_app';
 import { useLoginMutation } from '@/gql/graphql';
 import { HideIcon, ViewIcon } from '@shopify/polaris-icons';
+import { FormResetPassword } from '@/components/polaris/form/FormResetPassword';
 
 export function LoginScreen() {
   const [show, setShow] = useState(false);
@@ -18,6 +19,7 @@ export function LoginScreen() {
   const [checkStatus, setCheckStatus] = useState(null);
   const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+  const [isReset, setIsReset] = useState(false);
   const [login, { loading }] = useLoginMutation();
 
   useEffect(() => {
@@ -49,25 +51,38 @@ export function LoginScreen() {
         username: usernameInput,
         password: passwordInput,
       },
-    }).then((res) => {
-      setMsg({
-        success: !!res.data?.login,
-        message: res.data?.login ? 'Login success' : 'Fail login',
-      });
-      setToasts([
-        ...toasts,
-        {
-          content: res.data?.login ? 'Login success' : 'Fail login',
-          status: res.data?.login ? 'success' : 'error',
-        },
-      ]);
-      if (res.data?.login) {
-        setCookie('tk_token', res.data.login, {
-          expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365),
+    })
+      .then((res) => {
+        setMsg({
+          success: !!res.data?.login,
+          message: res.data?.login ? 'Login success' : 'Fail login',
         });
-        setTimeout(() => process.browser && window.location.reload(), 500);
-      }
-    });
+        setToasts([
+          ...toasts,
+          {
+            content: res.data?.login ? 'Login success' : 'Fail login',
+            status: res.data?.login ? 'success' : 'error',
+          },
+        ]);
+        if (res.data?.login) {
+          setCookie('tk_token', res.data.login, {
+            expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365),
+          });
+          setTimeout(() => process.browser && window.location.reload(), 500);
+        }
+      })
+      .catch((err) => {
+        if (err.message === 'Your password was reset change new password!') {
+          setIsReset(true);
+        }
+        setToasts([
+          ...toasts,
+          {
+            content: err.message,
+            status: 'error',
+          },
+        ]);
+      });
   }, [login, passwordInput, setToasts, toasts, usernameInput]);
 
   const handleSubmit = (e: any) => {
@@ -84,6 +99,9 @@ export function LoginScreen() {
               <p>{msg.message}</p>
             </Banner>
           </div>
+        )}
+        {isReset && (
+          <FormResetPassword username={usernameInput} oldPassword={passwordInput} onClose={() => setIsReset(false)} />
         )}
         <Card>
           <Box padding={'0'}>
