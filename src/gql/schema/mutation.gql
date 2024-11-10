@@ -173,3 +173,7 @@ mutation updateOrderSchedule($updateOrderScheduleId: Int!, $data: OrderScheduleI
 mutation deleteOrderSchedule($deleteOrderScheduleId: Int!) {
   deleteOrderSchedule(id: $deleteOrderScheduleId)
 }
+
+mutation resetPassword($username: String!, $oldPassowrd: String!, $password: String!) {
+  resetPassword(username: $username, oldPassowrd: $oldPassowrd, password: $password)
+}

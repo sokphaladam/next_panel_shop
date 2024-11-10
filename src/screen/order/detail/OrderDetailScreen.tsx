@@ -18,6 +18,7 @@ import {
   Icon,
   Tabs,
   TabProps,
+  Banner,
 } from '@shopify/polaris';
 import {
   StatusOrder,
@@ -202,6 +203,18 @@ export default function OrderDetailScreen() {
         <Loading />
       </Frame>
     </Page>;
+  }
+
+  if (!user?.isHaveShift && ![1, 2].includes(user?.role?.id || 0)) {
+    return (
+      <Page>
+        <Banner title="Permission Shift" tone="critical">
+          <p>តម្រូវការ openshift របស់អ្នកមុនពេលដំណើរការ!</p>
+          <br />
+          <p>your need open shift before proccess!</p>
+        </Banner>
+      </Page>
+    );
   }
 
   const total =
@@ -560,7 +573,7 @@ export default function OrderDetailScreen() {
               </div>
             </Box>
             <Divider />
-            <Box padding={'300'}>
+            {/* <Box padding={'300'}>
               <div className="flex flex-row justify-between items-start">
                 <div>
                   <div>
@@ -583,7 +596,7 @@ export default function OrderDetailScreen() {
                 </div>
                 <DeliveryPickup order={data?.order || {}} />
               </div>
-            </Box>
+            </Box> */}
           </Card>
         </Layout.Section>
         <Layout.Section variant="oneThird">
@@ -682,6 +695,24 @@ export default function OrderDetailScreen() {
               </Box>
             </Card>
           )}
+          <br />
+          <Card padding={'0'}>
+            <Box padding={'400'}>
+              <div className="flex flex-row justify-between items-center">
+                {data?.order?.delivery && (
+                  <div className="mt-3">
+                    <Text as="p" variant="bodySm" tone="base">
+                      {data?.order?.delivery?.name}
+                    </Text>
+                    <Text as="p" variant="bodySm" tone="base">
+                      #{data?.order?.deliveryCode}
+                    </Text>
+                  </div>
+                )}
+                <DeliveryPickup order={data?.order || {}} />
+              </div>
+            </Box>
+          </Card>
           <br />
           <Card padding={'0'}>
             <Box padding={'400'}>

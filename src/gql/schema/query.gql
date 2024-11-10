@@ -784,3 +784,7 @@ query orderSchedule($orderScheduleId: Int!) {
     }
   }
 }
+
+query checkHaveOpenShiftToday {
+  checkHaveOpenShiftToday
+}

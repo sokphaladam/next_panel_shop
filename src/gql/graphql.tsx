@@ -145,6 +145,7 @@ export type DeliveryInput = {
 export type FilterProduct = {
   category?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   isLowStock?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Array<InputMaybe<Status_Product>>>;
   type?: InputMaybe<Array<InputMaybe<Type_Product>>>;
 };
 
@@ -247,6 +248,7 @@ export type Mutation = {
   login?: Maybe<Scalars['String']['output']>;
   markOrderItemStatus?: Maybe<Scalars['Boolean']['output']>;
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
+  resetPassword?: Maybe<Scalars['Boolean']['output']>;
   setTypePaymentOrder?: Maybe<Scalars['Boolean']['output']>;
   signatureOrder?: Maybe<Scalars['Boolean']['output']>;
   swapOrderTable?: Maybe<Scalars['Boolean']['output']>;
@@ -414,6 +416,13 @@ export type MutationMarkOrderItemStatusArgs = {
 export type MutationPeopleInOrderArgs = {
   count: Scalars['Int']['input'];
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationResetPasswordArgs = {
+  oldPassowrd: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 
@@ -750,6 +759,7 @@ export type Query = {
   brandList?: Maybe<Array<Maybe<Brand>>>;
   category?: Maybe<Category>;
   categoryList?: Maybe<Scalars['JSON']['output']>;
+  checkHaveOpenShiftToday?: Maybe<Scalars['Boolean']['output']>;
   deliveryById?: Maybe<Delivery>;
   deliveryList?: Maybe<Array<Maybe<Delivery>>>;
   getAttendanceStaff?: Maybe<Array<Maybe<Attendance>>>;
@@ -1079,6 +1089,7 @@ export type SkuInput = {
 
 export enum Status_Product {
   Available = 'AVAILABLE',
+  Inactive = 'INACTIVE',
   OutOfStock = 'OUT_OF_STOCK',
   TimeOut = 'TIME_OUT'
 }
@@ -1558,6 +1569,15 @@ export type DeleteOrderScheduleMutationVariables = Exact<{
 
 export type DeleteOrderScheduleMutation = { __typename?: 'Mutation', deleteOrderSchedule?: boolean | null };
 
+export type ResetPasswordMutationVariables = Exact<{
+  username: Scalars['String']['input'];
+  oldPassowrd: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1856,6 +1876,11 @@ export type OrderScheduleQueryVariables = Exact<{
 
 
 export type OrderScheduleQuery = { __typename?: 'Query', orderSchedule?: { __typename?: 'OrderSchedule', id?: number | null, startAt?: string | null, endAt?: string | null, name?: string | null, items?: Array<{ __typename?: 'OrderScheduleItem', sku?: { __typename?: 'SKU', id?: number | null, image?: string | null, price?: number | null, discount?: number | null, product?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null } | null> | null } | null };
+
+export type CheckHaveOpenShiftTodayQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CheckHaveOpenShiftTodayQuery = { __typename?: 'Query', checkHaveOpenShiftToday?: boolean | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -3281,6 +3306,43 @@ export function useDeleteOrderScheduleMutation(baseOptions?: Apollo.MutationHook
 export type DeleteOrderScheduleMutationHookResult = ReturnType<typeof useDeleteOrderScheduleMutation>;
 export type DeleteOrderScheduleMutationResult = Apollo.MutationResult<DeleteOrderScheduleMutation>;
 export type DeleteOrderScheduleMutationOptions = Apollo.BaseMutationOptions<DeleteOrderScheduleMutation, DeleteOrderScheduleMutationVariables>;
+export const ResetPasswordDocument = gql`
+    mutation resetPassword($username: String!, $oldPassowrd: String!, $password: String!) {
+  resetPassword(
+    username: $username
+    oldPassowrd: $oldPassowrd
+    password: $password
+  )
+}
+    `;
+export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
+
+/**
+ * __useResetPasswordMutation__
+ *
+ * To run a mutation, you first call `useResetPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetPasswordMutation, { data, loading, error }] = useResetPasswordMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      oldPassowrd: // value for 'oldPassowrd'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOptions<ResetPasswordMutation, ResetPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetPasswordMutation, ResetPasswordMutationVariables>(ResetPasswordDocument, options);
+      }
+export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
+export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
+export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -5407,6 +5469,43 @@ export type OrderScheduleQueryHookResult = ReturnType<typeof useOrderScheduleQue
 export type OrderScheduleLazyQueryHookResult = ReturnType<typeof useOrderScheduleLazyQuery>;
 export type OrderScheduleSuspenseQueryHookResult = ReturnType<typeof useOrderScheduleSuspenseQuery>;
 export type OrderScheduleQueryResult = Apollo.QueryResult<OrderScheduleQuery, OrderScheduleQueryVariables>;
+export const CheckHaveOpenShiftTodayDocument = gql`
+    query checkHaveOpenShiftToday {
+  checkHaveOpenShiftToday
+}
+    `;
+
+/**
+ * __useCheckHaveOpenShiftTodayQuery__
+ *
+ * To run a query within a React component, call `useCheckHaveOpenShiftTodayQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckHaveOpenShiftTodayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckHaveOpenShiftTodayQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCheckHaveOpenShiftTodayQuery(baseOptions?: Apollo.QueryHookOptions<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>(CheckHaveOpenShiftTodayDocument, options);
+      }
+export function useCheckHaveOpenShiftTodayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>(CheckHaveOpenShiftTodayDocument, options);
+        }
+export function useCheckHaveOpenShiftTodaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>(CheckHaveOpenShiftTodayDocument, options);
+        }
+export type CheckHaveOpenShiftTodayQueryHookResult = ReturnType<typeof useCheckHaveOpenShiftTodayQuery>;
+export type CheckHaveOpenShiftTodayLazyQueryHookResult = ReturnType<typeof useCheckHaveOpenShiftTodayLazyQuery>;
+export type CheckHaveOpenShiftTodaySuspenseQueryHookResult = ReturnType<typeof useCheckHaveOpenShiftTodaySuspenseQuery>;
+export type CheckHaveOpenShiftTodayQueryResult = Apollo.QueryResult<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)
