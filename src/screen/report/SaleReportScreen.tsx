@@ -4,19 +4,16 @@ import {
   Order,
   StatusOrder,
   useOrderBalanceSummaryQuery,
-  useOrderListLazyQuery,
   useOrderListQuery,
 } from '@/gql/graphql';
-import { Box, Card, Divider, Icon, Layout, SkeletonDisplayText, Spinner, Text } from '@shopify/polaris';
+import { Box, Card, Divider, Layout, SkeletonDisplayText, Text } from '@shopify/polaris';
 import React, { useCallback, useEffect, useState } from 'react';
 import { SaleTable } from './components/sale/SaleTable';
 import { SaleFilter } from './components/sale/SaleFilter';
 import moment from 'moment';
 import { usePagination } from '@/hook/usePagination';
 import downloadExcelFile from '@/lib/DownloadExcelFile';
-import { Modal } from '@/hook/modal';
 import { DownloadAll } from './components/sale/DownloadAll';
-import { ChevronDownIcon } from '@shopify/polaris-icons';
 
 export function SaleReportScreen() {
   const now = moment(new Date());
