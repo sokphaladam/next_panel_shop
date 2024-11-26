@@ -14,6 +14,7 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
+  output: 'standalone',
 };
 
 export default nextConfig;
