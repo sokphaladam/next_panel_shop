@@ -1,18 +1,33 @@
 'use client';
 import { PolarisLayout, role_permission } from '@/components/polaris/PolarisLayout';
-import { useProductListQuery } from '@/gql/graphql';
+import { Status_Product, Type_Product, useProductListQuery } from '@/gql/graphql';
 import { usePagination } from '@/hook/usePagination';
 import { Box, Button, Card, IndexTable, Layout } from '@shopify/polaris';
 import React, { useState } from 'react';
 import { ProductListItem } from './components/ProductListItem';
+import { ProductListFilter } from './components/filter/ProductListFilter';
 
 export function ProductScreen() {
   const { offset, setOffset, limit, setLimit } = usePagination();
+  const [filter, setFilter] = useState({
+    code: '',
+    filters: {
+      category: [],
+      status: ['AVAILABLE', 'OUT_OF_STOCK'],
+      type: ['PRODUCTION'],
+    },
+  });
   const { data, loading } = useProductListQuery({
     fetchPolicy: 'no-cache',
     variables: {
       offset: offset * limit,
       limit,
+      code: filter.code,
+      filter: {
+        category: filter.filters.category.length > 0 ? filter.filters.category : undefined,
+        status: filter.filters.status.length > 0 ? (filter.filters.status as Status_Product[]) : undefined,
+        type: filter.filters.type.length > 0 ? (filter.filters.type as Type_Product[]) : undefined,
+      },
     },
   });
 
@@ -36,6 +51,9 @@ export function ProductScreen() {
       <Layout>
         <Layout.Section>
           <Card padding={'0'}>
+            <Box>
+              <ProductListFilter filter={filter} setFilter={setFilter} />
+            </Box>
             <Box padding={'0'}>
               <IndexTable
                 headings={[
