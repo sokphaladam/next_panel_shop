@@ -19,7 +19,7 @@ interface Props {
   firstCall?: boolean;
 }
 
-function formatKHR(value: number) {
+export function formatKHR(value: number) {
   const formatter = new Intl.NumberFormat('km-Kh', {
     style: 'currency',
     currency: 'KHR',
@@ -111,7 +111,7 @@ export function PrintOrder(props: Props) {
   );
 }
 
-function DispalyInvoice(props: Props) {
+export function DispalyInvoice(props: Props) {
   const user = useUser();
   const setting = useSetting();
 
