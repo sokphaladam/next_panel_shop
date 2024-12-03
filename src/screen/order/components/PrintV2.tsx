@@ -68,7 +68,9 @@ export function PrintV2(props: Props) {
 
   return (
     <>
-      <button onClick={onPrintClicked}>Print</button>
+      <button onClick={onPrintClicked} className="bg-indigo-800 p-1 text-white rounded-md max-h-[24px] text-[0.75rem]">
+        Print Recipt(Beta)
+      </button>
       <div
         style={{
           position: 'fixed',
@@ -320,9 +322,9 @@ export function PrintV2(props: Props) {
               </table>
               <div></div>
             </div>
-            <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {/* <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <QRcode value={`https://app.mood.international/?token=${props.order?.set}@${props.order?.uuid}`} />
-            </div>
+            </div> */}
             <div style={{ textAlign: 'center' }}>Contact us: 093988143</div>
             {!props.kitchen && <div style={{ textAlign: 'center' }}>Thank you, see you again!</div>}
           </div>
