@@ -59,6 +59,7 @@ import { useToggle } from '@/service/ToggleProvider';
 import { useWindowSize } from '@/hook/useWindowSize';
 import { FormSetPaymentType } from '../components/FormSetPaymentType';
 import { SwapTable } from '../components/SwapTable';
+import { PrintV2 } from '../components/PrintV2';
 
 const tabs: TabProps[] = [
   {
@@ -324,6 +325,13 @@ export default function OrderDetailScreen() {
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row gap-4">
                     <PrintOrder
+                      firstCall={data?.order?.status === StatusOrder.Checkout}
+                      order={data?.order}
+                      subtotal={total}
+                      vat={vatPer + ''}
+                      total={total}
+                    />
+                    <PrintV2
                       firstCall={data?.order?.status === StatusOrder.Checkout}
                       order={data?.order}
                       subtotal={total}

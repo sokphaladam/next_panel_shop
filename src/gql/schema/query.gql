@@ -25,8 +25,22 @@ query me {
   }
 }
 
-query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct, $schedule: Boolean) {
-  productList(offset: $offset, limit: $limit, code: $code, filter: $filter, schedule: $schedule) {
+query ProductList(
+  $offset: Int
+  $limit: Int
+  $code: String
+  $filter: FilterProduct
+  $schedule: Boolean
+  $enabledOn: [String]
+) {
+  productList(
+    offset: $offset
+    limit: $limit
+    code: $code
+    filter: $filter
+    schedule: $schedule
+    enabledOn: $enabledOn
+  ) {
     id
     title
     description
@@ -44,6 +58,7 @@ query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProdu
       unit
       image
       status
+      enabledOn
     }
     code
     images
@@ -78,6 +93,7 @@ query product($productId: Int!) {
       unit
       image
       status
+      enabledOn
     }
     code
     images

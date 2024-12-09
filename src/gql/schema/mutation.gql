@@ -177,3 +177,7 @@ mutation deleteOrderSchedule($deleteOrderScheduleId: Int!) {
 mutation resetPassword($username: String!, $oldPassowrd: String!, $password: String!) {
   resetPassword(username: $username, oldPassowrd: $oldPassowrd, password: $password)
 }
+
+mutation setItemShowOn($productId: Int!, $skuId: Int, $status: String) {
+  setItemShowOn(productId: $productId, skuId: $skuId, status: $status)
+}

@@ -232,7 +232,7 @@ export type Mutation = {
   createDelivery?: Maybe<Scalars['Boolean']['output']>;
   createHoliday?: Maybe<Scalars['Boolean']['output']>;
   createLeave?: Maybe<Scalars['Boolean']['output']>;
-  createOrder?: Maybe<Scalars['Boolean']['output']>;
+  createOrder?: Maybe<Scalars['Int']['output']>;
   createOrderSchedule?: Maybe<Scalars['Boolean']['output']>;
   createOverTime?: Maybe<Scalars['Boolean']['output']>;
   createPosition?: Maybe<Scalars['Boolean']['output']>;
@@ -249,6 +249,7 @@ export type Mutation = {
   markOrderItemStatus?: Maybe<Scalars['Boolean']['output']>;
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
+  setItemShowOn?: Maybe<Scalars['Boolean']['output']>;
   setTypePaymentOrder?: Maybe<Scalars['Boolean']['output']>;
   signatureOrder?: Maybe<Scalars['Boolean']['output']>;
   swapOrderTable?: Maybe<Scalars['Boolean']['output']>;
@@ -426,6 +427,13 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationSetItemShowOnArgs = {
+  productId: Scalars['Int']['input'];
+  skuId?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationSetTypePaymentOrderArgs = {
   bankId?: InputMaybe<Scalars['Int']['input']>;
   bankType?: InputMaybe<Scalars['String']['input']>;
@@ -597,8 +605,16 @@ export type Order = {
 
 export type OrderInput = {
   address?: InputMaybe<Scalars['String']['input']>;
+  amount?: InputMaybe<Scalars['String']['input']>;
+  bankId?: InputMaybe<Scalars['Int']['input']>;
+  bankType?: InputMaybe<Scalars['String']['input']>;
   carts?: InputMaybe<Array<InputMaybe<CartItemInput>>>;
+  currency?: InputMaybe<Scalars['String']['input']>;
+  customerPaid?: InputMaybe<Scalars['String']['input']>;
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  invoice?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  note?: InputMaybe<Scalars['String']['input']>;
   set?: InputMaybe<Scalars['String']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
@@ -653,6 +669,7 @@ export type OrderScheduleItemInput = {
 export enum OrderViewBy {
   Admin = 'ADMIN',
   Kitchen = 'KITCHEN',
+  QuickOrder = 'QUICK_ORDER',
   User = 'USER'
 }
 
@@ -802,7 +819,10 @@ export type Query = {
 
 
 export type QueryActivityStaffArgs = {
-  userId: Scalars['Int']['input'];
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -964,6 +984,7 @@ export type QueryProductArgs = {
 
 export type QueryProductListArgs = {
   code?: InputMaybe<Scalars['String']['input']>;
+  enabledOn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   filter?: InputMaybe<FilterProduct>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1068,6 +1089,7 @@ export type Role = {
 export type Sku = {
   __typename?: 'SKU';
   discount?: Maybe<Scalars['Float']['output']>;
+  enabledOn?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -1270,7 +1292,7 @@ export type CreateOrderMutationVariables = Exact<{
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: boolean | null };
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder?: number | null };
 
 export type AddOrderItemMutationVariables = Exact<{
   orderId: Scalars['Int']['input'];
@@ -1578,6 +1600,15 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: boolean | null };
 
+export type SetItemShowOnMutationVariables = Exact<{
+  productId: Scalars['Int']['input'];
+  skuId?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SetItemShowOnMutation = { __typename?: 'Mutation', setItemShowOn?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1589,17 +1620,18 @@ export type ProductListQueryVariables = Exact<{
   code?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<FilterProduct>;
   schedule?: InputMaybe<Scalars['Boolean']['input']>;
+  enabledOn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
 }>;
 
 
-export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, status?: Status_Product | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null, status?: Status_Product | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
+export type ProductListQuery = { __typename?: 'Query', productList?: Array<{ __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, code?: string | null, images?: string | null, status?: Status_Product | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null, status?: Status_Product | null, enabledOn?: string | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null> | null };
 
 export type ProductQueryVariables = Exact<{
   productId: Scalars['Int']['input'];
 }>;
 
 
-export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, status?: Status_Product | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null, status?: Status_Product | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
+export type ProductQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id?: number | null, title?: string | null, description?: string | null, type?: Array<Type_Product | null> | null, status?: Status_Product | null, stockAlter?: number | null, code?: string | null, images?: string | null, category?: { __typename?: 'Category', id?: number | null, name?: string | null, root?: number | null } | null, sku?: Array<{ __typename?: 'SKU', id?: number | null, name?: string | null, price?: number | null, discount?: number | null, unit?: string | null, image?: string | null, status?: Status_Product | null, enabledOn?: string | null } | null> | null, integrates?: Array<{ __typename?: 'Integrate', qty?: string | null, id?: number | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, id?: number | null } | null, integrate?: { __typename?: 'Product', id?: number | null, images?: string | null, title?: string | null } | null } | null> | null, addons?: Array<{ __typename?: 'AddonProduct', value?: string | null, name?: string | null, isRequired?: boolean | null, id?: number | null } | null> | null } | null };
 
 export type CategoryListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3343,6 +3375,39 @@ export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOption
 export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
 export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export const SetItemShowOnDocument = gql`
+    mutation setItemShowOn($productId: Int!, $skuId: Int, $status: String) {
+  setItemShowOn(productId: $productId, skuId: $skuId, status: $status)
+}
+    `;
+export type SetItemShowOnMutationFn = Apollo.MutationFunction<SetItemShowOnMutation, SetItemShowOnMutationVariables>;
+
+/**
+ * __useSetItemShowOnMutation__
+ *
+ * To run a mutation, you first call `useSetItemShowOnMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetItemShowOnMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setItemShowOnMutation, { data, loading, error }] = useSetItemShowOnMutation({
+ *   variables: {
+ *      productId: // value for 'productId'
+ *      skuId: // value for 'skuId'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useSetItemShowOnMutation(baseOptions?: Apollo.MutationHookOptions<SetItemShowOnMutation, SetItemShowOnMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetItemShowOnMutation, SetItemShowOnMutationVariables>(SetItemShowOnDocument, options);
+      }
+export type SetItemShowOnMutationHookResult = ReturnType<typeof useSetItemShowOnMutation>;
+export type SetItemShowOnMutationResult = Apollo.MutationResult<SetItemShowOnMutation>;
+export type SetItemShowOnMutationOptions = Apollo.BaseMutationOptions<SetItemShowOnMutation, SetItemShowOnMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3395,8 +3460,8 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
         }
-export function useMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<MeQuery, MeQueryVariables>(MeDocument, options);
         }
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
@@ -3404,13 +3469,14 @@ export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const ProductListDocument = gql`
-    query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct, $schedule: Boolean) {
+    query ProductList($offset: Int, $limit: Int, $code: String, $filter: FilterProduct, $schedule: Boolean, $enabledOn: [String]) {
   productList(
     offset: $offset
     limit: $limit
     code: $code
     filter: $filter
     schedule: $schedule
+    enabledOn: $enabledOn
   ) {
     id
     title
@@ -3429,6 +3495,7 @@ export const ProductListDocument = gql`
       unit
       image
       status
+      enabledOn
     }
     code
     images
@@ -3460,6 +3527,7 @@ export const ProductListDocument = gql`
  *      code: // value for 'code'
  *      filter: // value for 'filter'
  *      schedule: // value for 'schedule'
+ *      enabledOn: // value for 'enabledOn'
  *   },
  * });
  */
@@ -3471,8 +3539,8 @@ export function useProductListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProductListQuery, ProductListQueryVariables>(ProductListDocument, options);
         }
-export function useProductListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductListQuery, ProductListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useProductListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductListQuery, ProductListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ProductListQuery, ProductListQueryVariables>(ProductListDocument, options);
         }
 export type ProductListQueryHookResult = ReturnType<typeof useProductListQuery>;
@@ -3501,6 +3569,7 @@ export const ProductDocument = gql`
       unit
       image
       status
+      enabledOn
     }
     code
     images
@@ -3552,8 +3621,8 @@ export function useProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ProductQuery, ProductQueryVariables>(ProductDocument, options);
         }
-export function useProductSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ProductQuery, ProductQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useProductSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProductQuery, ProductQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ProductQuery, ProductQueryVariables>(ProductDocument, options);
         }
 export type ProductQueryHookResult = ReturnType<typeof useProductQuery>;
@@ -3589,8 +3658,8 @@ export function useCategoryListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CategoryListQuery, CategoryListQueryVariables>(CategoryListDocument, options);
         }
-export function useCategoryListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CategoryListQuery, CategoryListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useCategoryListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CategoryListQuery, CategoryListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CategoryListQuery, CategoryListQueryVariables>(CategoryListDocument, options);
         }
 export type CategoryListQueryHookResult = ReturnType<typeof useCategoryListQuery>;
@@ -3631,8 +3700,8 @@ export function useCategoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CategoryQuery, CategoryQueryVariables>(CategoryDocument, options);
         }
-export function useCategorySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CategoryQuery, CategoryQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useCategorySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CategoryQuery, CategoryQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CategoryQuery, CategoryQueryVariables>(CategoryDocument, options);
         }
 export type CategoryQueryHookResult = ReturnType<typeof useCategoryQuery>;
@@ -3738,8 +3807,8 @@ export function useOrderListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderListQuery, OrderListQueryVariables>(OrderListDocument, options);
         }
-export function useOrderListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderListQuery, OrderListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOrderListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderListQuery, OrderListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderListQuery, OrderListQueryVariables>(OrderListDocument, options);
         }
 export type OrderListQueryHookResult = ReturnType<typeof useOrderListQuery>;
@@ -3836,8 +3905,8 @@ export function useOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Orde
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderQuery, OrderQueryVariables>(OrderDocument, options);
         }
-export function useOrderSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderQuery, OrderQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOrderSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderQuery, OrderQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderQuery, OrderQueryVariables>(OrderDocument, options);
         }
 export type OrderQueryHookResult = ReturnType<typeof useOrderQuery>;
@@ -3877,8 +3946,8 @@ export function useSettingListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
         }
-export function useSettingListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useSettingListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SettingListQuery, SettingListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<SettingListQuery, SettingListQueryVariables>(SettingListDocument, options);
         }
 export type SettingListQueryHookResult = ReturnType<typeof useSettingListQuery>;
@@ -3920,8 +3989,8 @@ export function useDeliveryListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DeliveryListQuery, DeliveryListQueryVariables>(DeliveryListDocument, options);
         }
-export function useDeliveryListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DeliveryListQuery, DeliveryListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useDeliveryListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DeliveryListQuery, DeliveryListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<DeliveryListQuery, DeliveryListQueryVariables>(DeliveryListDocument, options);
         }
 export type DeliveryListQueryHookResult = ReturnType<typeof useDeliveryListQuery>;
@@ -3968,8 +4037,8 @@ export function useTableSetListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<TableSetListQuery, TableSetListQueryVariables>(TableSetListDocument, options);
         }
-export function useTableSetListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableSetListQuery, TableSetListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useTableSetListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TableSetListQuery, TableSetListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<TableSetListQuery, TableSetListQueryVariables>(TableSetListDocument, options);
         }
 export type TableSetListQueryHookResult = ReturnType<typeof useTableSetListQuery>;
@@ -4010,8 +4079,8 @@ export function useDeliveryByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DeliveryByIdQuery, DeliveryByIdQueryVariables>(DeliveryByIdDocument, options);
         }
-export function useDeliveryByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DeliveryByIdQuery, DeliveryByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useDeliveryByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DeliveryByIdQuery, DeliveryByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<DeliveryByIdQuery, DeliveryByIdQueryVariables>(DeliveryByIdDocument, options);
         }
 export type DeliveryByIdQueryHookResult = ReturnType<typeof useDeliveryByIdQuery>;
@@ -4054,8 +4123,8 @@ export function useGetPositionListLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetPositionListQuery, GetPositionListQueryVariables>(GetPositionListDocument, options);
         }
-export function useGetPositionListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetPositionListQuery, GetPositionListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetPositionListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPositionListQuery, GetPositionListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetPositionListQuery, GetPositionListQueryVariables>(GetPositionListDocument, options);
         }
 export type GetPositionListQueryHookResult = ReturnType<typeof useGetPositionListQuery>;
@@ -4097,8 +4166,8 @@ export function usePositionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<P
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<PositionQuery, PositionQueryVariables>(PositionDocument, options);
         }
-export function usePositionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PositionQuery, PositionQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function usePositionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PositionQuery, PositionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<PositionQuery, PositionQueryVariables>(PositionDocument, options);
         }
 export type PositionQueryHookResult = ReturnType<typeof usePositionQuery>;
@@ -4141,8 +4210,8 @@ export function useBankInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<B
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<BankInfoQuery, BankInfoQueryVariables>(BankInfoDocument, options);
         }
-export function useBankInfoSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BankInfoQuery, BankInfoQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useBankInfoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<BankInfoQuery, BankInfoQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<BankInfoQuery, BankInfoQueryVariables>(BankInfoDocument, options);
         }
 export type BankInfoQueryHookResult = ReturnType<typeof useBankInfoQuery>;
@@ -4186,8 +4255,8 @@ export function useGetbankListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetbankListQuery, GetbankListQueryVariables>(GetbankListDocument, options);
         }
-export function useGetbankListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetbankListQuery, GetbankListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetbankListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetbankListQuery, GetbankListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetbankListQuery, GetbankListQueryVariables>(GetbankListDocument, options);
         }
 export type GetbankListQueryHookResult = ReturnType<typeof useGetbankListQuery>;
@@ -4249,8 +4318,8 @@ export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQ
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
         }
-export function useUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserQuery, UserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserQuery, UserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserQuery, UserQueryVariables>(UserDocument, options);
         }
 export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
@@ -4314,8 +4383,8 @@ export function useUserListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<U
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<UserListQuery, UserListQueryVariables>(UserListDocument, options);
         }
-export function useUserListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<UserListQuery, UserListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useUserListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserListQuery, UserListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<UserListQuery, UserListQueryVariables>(UserListDocument, options);
         }
 export type UserListQueryHookResult = ReturnType<typeof useUserListQuery>;
@@ -4354,8 +4423,8 @@ export function useRoleListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<R
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RoleListQuery, RoleListQueryVariables>(RoleListDocument, options);
         }
-export function useRoleListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RoleListQuery, RoleListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useRoleListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RoleListQuery, RoleListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<RoleListQuery, RoleListQueryVariables>(RoleListDocument, options);
         }
 export type RoleListQueryHookResult = ReturnType<typeof useRoleListQuery>;
@@ -4403,8 +4472,8 @@ export function useGetAttendanceStaffTodayLazyQuery(baseOptions?: Apollo.LazyQue
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetAttendanceStaffTodayQuery, GetAttendanceStaffTodayQueryVariables>(GetAttendanceStaffTodayDocument, options);
         }
-export function useGetAttendanceStaffTodaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAttendanceStaffTodayQuery, GetAttendanceStaffTodayQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetAttendanceStaffTodaySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAttendanceStaffTodayQuery, GetAttendanceStaffTodayQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetAttendanceStaffTodayQuery, GetAttendanceStaffTodayQueryVariables>(GetAttendanceStaffTodayDocument, options);
         }
 export type GetAttendanceStaffTodayQueryHookResult = ReturnType<typeof useGetAttendanceStaffTodayQuery>;
@@ -4470,8 +4539,8 @@ export function useGetAttendanceStaffLazyQuery(baseOptions?: Apollo.LazyQueryHoo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetAttendanceStaffQuery, GetAttendanceStaffQueryVariables>(GetAttendanceStaffDocument, options);
         }
-export function useGetAttendanceStaffSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAttendanceStaffQuery, GetAttendanceStaffQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetAttendanceStaffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAttendanceStaffQuery, GetAttendanceStaffQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetAttendanceStaffQuery, GetAttendanceStaffQueryVariables>(GetAttendanceStaffDocument, options);
         }
 export type GetAttendanceStaffQueryHookResult = ReturnType<typeof useGetAttendanceStaffQuery>;
@@ -4547,8 +4616,8 @@ export function useShiftListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ShiftListQuery, ShiftListQueryVariables>(ShiftListDocument, options);
         }
-export function useShiftListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ShiftListQuery, ShiftListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useShiftListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ShiftListQuery, ShiftListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ShiftListQuery, ShiftListQueryVariables>(ShiftListDocument, options);
         }
 export type ShiftListQueryHookResult = ReturnType<typeof useShiftListQuery>;
@@ -4616,8 +4685,8 @@ export function useShiftByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ShiftByIdQuery, ShiftByIdQueryVariables>(ShiftByIdDocument, options);
         }
-export function useShiftByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ShiftByIdQuery, ShiftByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useShiftByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ShiftByIdQuery, ShiftByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ShiftByIdQuery, ShiftByIdQueryVariables>(ShiftByIdDocument, options);
         }
 export type ShiftByIdQueryHookResult = ReturnType<typeof useShiftByIdQuery>;
@@ -4690,8 +4759,8 @@ export function useLeaveListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<LeaveListQuery, LeaveListQueryVariables>(LeaveListDocument, options);
         }
-export function useLeaveListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LeaveListQuery, LeaveListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useLeaveListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<LeaveListQuery, LeaveListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<LeaveListQuery, LeaveListQueryVariables>(LeaveListDocument, options);
         }
 export type LeaveListQueryHookResult = ReturnType<typeof useLeaveListQuery>;
@@ -4760,8 +4829,8 @@ export function useLeaveLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Leav
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<LeaveQuery, LeaveQueryVariables>(LeaveDocument, options);
         }
-export function useLeaveSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LeaveQuery, LeaveQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useLeaveSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<LeaveQuery, LeaveQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<LeaveQuery, LeaveQueryVariables>(LeaveDocument, options);
         }
 export type LeaveQueryHookResult = ReturnType<typeof useLeaveQuery>;
@@ -4826,8 +4895,8 @@ export function useAttendanceListAdminLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>(AttendanceListAdminDocument, options);
         }
-export function useAttendanceListAdminSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useAttendanceListAdminSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<AttendanceListAdminQuery, AttendanceListAdminQueryVariables>(AttendanceListAdminDocument, options);
         }
 export type AttendanceListAdminQueryHookResult = ReturnType<typeof useAttendanceListAdminQuery>;
@@ -4864,8 +4933,8 @@ export function useGetSummaryAttendanceStaffLazyQuery(baseOptions?: Apollo.LazyQ
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
         }
-export function useGetSummaryAttendanceStaffSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useGetSummaryAttendanceStaffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<GetSummaryAttendanceStaffQuery, GetSummaryAttendanceStaffQueryVariables>(GetSummaryAttendanceStaffDocument, options);
         }
 export type GetSummaryAttendanceStaffQueryHookResult = ReturnType<typeof useGetSummaryAttendanceStaffQuery>;
@@ -4943,8 +5012,8 @@ export function useOverTimeListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OverTimeListQuery, OverTimeListQueryVariables>(OverTimeListDocument, options);
         }
-export function useOverTimeListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OverTimeListQuery, OverTimeListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOverTimeListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OverTimeListQuery, OverTimeListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OverTimeListQuery, OverTimeListQueryVariables>(OverTimeListDocument, options);
         }
 export type OverTimeListQueryHookResult = ReturnType<typeof useOverTimeListQuery>;
@@ -5012,8 +5081,8 @@ export function useOverTimeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<O
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OverTimeQuery, OverTimeQueryVariables>(OverTimeDocument, options);
         }
-export function useOverTimeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OverTimeQuery, OverTimeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOverTimeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OverTimeQuery, OverTimeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OverTimeQuery, OverTimeQueryVariables>(OverTimeDocument, options);
         }
 export type OverTimeQueryHookResult = ReturnType<typeof useOverTimeQuery>;
@@ -5051,8 +5120,8 @@ export function useOrderBalanceSummaryLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>(OrderBalanceSummaryDocument, options);
         }
-export function useOrderBalanceSummarySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOrderBalanceSummarySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderBalanceSummaryQuery, OrderBalanceSummaryQueryVariables>(OrderBalanceSummaryDocument, options);
         }
 export type OrderBalanceSummaryQueryHookResult = ReturnType<typeof useOrderBalanceSummaryQuery>;
@@ -5108,8 +5177,8 @@ export function useTopProductSellLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<TopProductSellQuery, TopProductSellQueryVariables>(TopProductSellDocument, options);
         }
-export function useTopProductSellSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TopProductSellQuery, TopProductSellQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useTopProductSellSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TopProductSellQuery, TopProductSellQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<TopProductSellQuery, TopProductSellQueryVariables>(TopProductSellDocument, options);
         }
 export type TopProductSellQueryHookResult = ReturnType<typeof useTopProductSellQuery>;
@@ -5146,8 +5215,8 @@ export function useOrderItemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderItemQuery, OrderItemQueryVariables>(OrderItemDocument, options);
         }
-export function useOrderItemSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderItemQuery, OrderItemQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOrderItemSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderItemQuery, OrderItemQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderItemQuery, OrderItemQueryVariables>(OrderItemDocument, options);
         }
 export type OrderItemQueryHookResult = ReturnType<typeof useOrderItemQuery>;
@@ -5185,8 +5254,8 @@ export function useReportSaleByDayLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>(ReportSaleByDayDocument, options);
         }
-export function useReportSaleByDaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useReportSaleByDaySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ReportSaleByDayQuery, ReportSaleByDayQueryVariables>(ReportSaleByDayDocument, options);
         }
 export type ReportSaleByDayQueryHookResult = ReturnType<typeof useReportSaleByDayQuery>;
@@ -5224,8 +5293,8 @@ export function useReportStaffPayrollLazyQuery(baseOptions?: Apollo.LazyQueryHoo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>(ReportStaffPayrollDocument, options);
         }
-export function useReportStaffPayrollSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useReportStaffPayrollSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ReportStaffPayrollQuery, ReportStaffPayrollQueryVariables>(ReportStaffPayrollDocument, options);
         }
 export type ReportStaffPayrollQueryHookResult = ReturnType<typeof useReportStaffPayrollQuery>;
@@ -5266,8 +5335,8 @@ export function useHolidayListLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<HolidayListQuery, HolidayListQueryVariables>(HolidayListDocument, options);
         }
-export function useHolidayListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HolidayListQuery, HolidayListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useHolidayListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HolidayListQuery, HolidayListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<HolidayListQuery, HolidayListQueryVariables>(HolidayListDocument, options);
         }
 export type HolidayListQueryHookResult = ReturnType<typeof useHolidayListQuery>;
@@ -5309,8 +5378,8 @@ export function useHolidayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ho
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<HolidayQuery, HolidayQueryVariables>(HolidayDocument, options);
         }
-export function useHolidaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HolidayQuery, HolidayQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useHolidaySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HolidayQuery, HolidayQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<HolidayQuery, HolidayQueryVariables>(HolidayDocument, options);
         }
 export type HolidayQueryHookResult = ReturnType<typeof useHolidayQuery>;
@@ -5350,8 +5419,8 @@ export function useReportSaleProductLazyQuery(baseOptions?: Apollo.LazyQueryHook
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<ReportSaleProductQuery, ReportSaleProductQueryVariables>(ReportSaleProductDocument, options);
         }
-export function useReportSaleProductSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ReportSaleProductQuery, ReportSaleProductQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useReportSaleProductSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ReportSaleProductQuery, ReportSaleProductQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<ReportSaleProductQuery, ReportSaleProductQueryVariables>(ReportSaleProductDocument, options);
         }
 export type ReportSaleProductQueryHookResult = ReturnType<typeof useReportSaleProductQuery>;
@@ -5405,8 +5474,8 @@ export function useOrderScheduleListLazyQuery(baseOptions?: Apollo.LazyQueryHook
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderScheduleListQuery, OrderScheduleListQueryVariables>(OrderScheduleListDocument, options);
         }
-export function useOrderScheduleListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderScheduleListQuery, OrderScheduleListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOrderScheduleListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderScheduleListQuery, OrderScheduleListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderScheduleListQuery, OrderScheduleListQueryVariables>(OrderScheduleListDocument, options);
         }
 export type OrderScheduleListQueryHookResult = ReturnType<typeof useOrderScheduleListQuery>;
@@ -5461,8 +5530,8 @@ export function useOrderScheduleLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<OrderScheduleQuery, OrderScheduleQueryVariables>(OrderScheduleDocument, options);
         }
-export function useOrderScheduleSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OrderScheduleQuery, OrderScheduleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useOrderScheduleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<OrderScheduleQuery, OrderScheduleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<OrderScheduleQuery, OrderScheduleQueryVariables>(OrderScheduleDocument, options);
         }
 export type OrderScheduleQueryHookResult = ReturnType<typeof useOrderScheduleQuery>;
@@ -5498,8 +5567,8 @@ export function useCheckHaveOpenShiftTodayLazyQuery(baseOptions?: Apollo.LazyQue
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>(CheckHaveOpenShiftTodayDocument, options);
         }
-export function useCheckHaveOpenShiftTodaySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
+export function useCheckHaveOpenShiftTodaySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
           return Apollo.useSuspenseQuery<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>(CheckHaveOpenShiftTodayDocument, options);
         }
 export type CheckHaveOpenShiftTodayQueryHookResult = ReturnType<typeof useCheckHaveOpenShiftTodayQuery>;
