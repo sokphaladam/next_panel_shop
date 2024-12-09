@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine as builder
 
 ARG NEXT_PUBLIC_ENDPOINT
 ENV NEXT_PUBLIC_ENDPOINT=${NEXT_PUBLIC_ENDPOINT}
@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY pnpm-lock.yaml .
 COPY package.json .
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8.15.6
 
 COPY . .
 
