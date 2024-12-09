@@ -363,6 +363,7 @@ export function PolarisProductPickerAddCart({
         status: [Status_Product.Available, Status_Product.OutOfStock, Status_Product.TimeOut],
       },
       schedule: true,
+      enabledOn: ['ALL', 'WEB']
     },
   });
   const [addCart] = useAddOrderItemMutation({
