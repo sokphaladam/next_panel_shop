@@ -14,7 +14,7 @@ RUN npm install -g pnpm@8.15.6
 
 COPY . .
 
-RUN pnpm i
+# RUN pnpm i
 RUN pnpm -v
 
 # Building app
