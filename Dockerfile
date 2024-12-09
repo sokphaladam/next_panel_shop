@@ -1,7 +1,10 @@
-FROM node:18-alpine as builder
+FROM node:18-alpine AS base
 
 ARG NEXT_PUBLIC_ENDPOINT
 ENV NEXT_PUBLIC_ENDPOINT=${NEXT_PUBLIC_ENDPOINT}
+
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,6 +19,13 @@ COPY . .
 
 # RUN pnpm i
 RUN pnpm -v
+RUN pnpm i --frozen-lockfile
+
+FROM node:18-alpine AS builder
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
+WORKDIR /usr/src/app
 
 # Building app
 RUN pnpm run build
