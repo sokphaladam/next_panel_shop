@@ -7,7 +7,7 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # where available (npm@5+)
 COPY pnpm-lock.yaml .
@@ -25,11 +25,24 @@ FROM node:18-alpine AS builder
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Building app
 RUN pnpm run build
 # HEALTHCHECK CMD curl --fail http://localhost:80 || exit 1
 # EXPOSE 80
+
+FROM node:18-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
 
 CMD [ "pnpm", "run", "start" ]
