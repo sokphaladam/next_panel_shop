@@ -8,6 +8,7 @@
     "start": "next start -p 80",
     "lint": "next lint"
   },
+  "packageManager": "pnpm@8.15.6",
   "dependencies": {
     "@apollo/client": "^3.10.8",
     "@apollo/experimental-nextjs-app-support": "^0.11.2",
