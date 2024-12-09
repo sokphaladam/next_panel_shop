@@ -17,6 +17,8 @@ COPY . .
 RUN pnpm i
 RUN pnpm -v
 
+ENV NEXT_TELEMETRY_DISABLED=1
+
 # Building app
 RUN pnpm run build
 # HEALTHCHECK CMD curl --fail http://localhost:80 || exit 1
