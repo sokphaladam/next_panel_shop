@@ -22,6 +22,7 @@ RUN pnpm i --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
+RUN npm install -g pnpm@8.15.6
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Building app
@@ -31,7 +32,7 @@ RUN pnpm run build
 
 FROM base as runner
 WORKDIR /app
-
+RUN npm install -g pnpm@8.15.6
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
