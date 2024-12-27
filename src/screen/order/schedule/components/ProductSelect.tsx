@@ -11,6 +11,10 @@ interface Props {
 
 export function ProductSelect({ selectedOptions, setSelectedOptions, error }: Props) {
   const { data, loading } = useProductListQuery({
+    variables: {
+      offset: 0,
+      limit: 1000,
+    },
     onCompleted: (res) => {
       setOptions(
         res
