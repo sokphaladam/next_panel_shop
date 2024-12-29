@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
+"use client";
 
 import {
   CartItemInput,
@@ -10,7 +10,7 @@ import {
   Type_Product,
   useAddOrderItemMutation,
   useProductListQuery,
-} from '@/gql/graphql';
+} from "@/gql/graphql";
 import {
   Button,
   ButtonGroup,
@@ -22,15 +22,15 @@ import {
   Select,
   TextField,
   Thumbnail,
-} from '@shopify/polaris';
-import { ArrowLeftIcon, CartAbandonedFilledIcon, PackageOnHoldIcon } from '@shopify/polaris-icons';
-import { useCallback, useMemo, useState } from 'react';
-import { useCustomToast } from '../custom/CustomToast';
-import Image from 'next/image';
-import { config_app } from '@/lib/config_app';
-import ListArrangement from '@/lib/ListArrangement';
-import { CustomerOrderCategory } from './CustomOrderCategory';
-import { useWindowSize } from '@/hook/useWindowSize';
+} from "@shopify/polaris";
+import { ArrowLeftIcon, CartAbandonedFilledIcon, PackageOnHoldIcon } from "@shopify/polaris-icons";
+import { useCallback, useMemo, useState } from "react";
+import { useCustomToast } from "../custom/CustomToast";
+import Image from "next/image";
+import { config_app } from "@/lib/config_app";
+import ListArrangement from "@/lib/ListArrangement";
+import { CustomerOrderCategory } from "./CustomOrderCategory";
+import { useWindowSize } from "@/hook/useWindowSize";
 
 interface Props {}
 
@@ -80,7 +80,7 @@ function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSel
                               };
                             }) || [],
                           skuSelect: sku.id,
-                          remark: '',
+                          remark: "",
                         });
                       }}
                     />
@@ -103,9 +103,9 @@ function ProductItem({
   x: Product;
   onSelected: any;
   defaultSku?: Sku;
-  display?: 'CARD' | 'LIST';
+  display?: "CARD" | "LIST";
 }) {
-  if (display === 'CARD') {
+  if (display === "CARD") {
     return (
       <div
         key={x?.id}
@@ -113,8 +113,8 @@ function ProductItem({
           x.status === Status_Product.OutOfStock ||
           defaultSku?.status === Status_Product.OutOfStock ||
           defaultSku?.status === Status_Product.TimeOut
-            ? 'bg-gray-400'
-            : ''
+            ? "bg-gray-400"
+            : ""
         }`}
         onClick={() => {
           if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
@@ -125,7 +125,7 @@ function ProductItem({
         <div className="w-full h-[125px]">
           <Image
             alt=""
-            src={defaultSku?.image || x.images || ''}
+            src={defaultSku?.image || x.images || ""}
             width={100}
             height={40}
             loading="lazy"
@@ -169,8 +169,8 @@ function ProductItem({
         x.status === Status_Product.OutOfStock ||
         defaultSku?.status === Status_Product.OutOfStock ||
         defaultSku?.status === Status_Product.TimeOut
-          ? 'bg-gray-400'
-          : ''
+          ? "bg-gray-400"
+          : ""
       }`}
       onClick={() => {
         if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
@@ -181,7 +181,7 @@ function ProductItem({
       <div className="flex items-center gap-2">
         <Image
           alt=""
-          src={defaultSku?.image || x.images || ''}
+          src={defaultSku?.image || x.images || ""}
           width={40}
           height={40}
           loading="lazy"
@@ -228,17 +228,17 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
   );
   // const [sku, setSku] = useState<number>((props.product as any).selectSku);
 
-  const [remark, setRemark] = useState('');
+  const [remark, setRemark] = useState("");
   const addon = addons
     .filter((x) => x.qty > 0)
-    .reduce((a, b) => (a = a + Number(b.qty || '0') * (isNaN(Number(b.value || '0')) ? 0 : Number(b.value || '0'))), 0);
+    .reduce((a, b) => (a = a + Number(b.qty || "0") * (isNaN(Number(b.value || "0")) ? 0 : Number(b.value || "0"))), 0);
   // const selectedSku = props.sku ? props.product.sku?.find((f) => f?.id === props.sku) || {} : {};
 
   return (
     <div>
       {/* <Image alt="" src={props.product.images || ''} width={275} height={275} /> */}
       <Image
-        src={props.sku.image || props.product.images || ''}
+        src={props.sku.image || props.product.images || ""}
         alt=""
         className="w-full max-h-[275px] object-contain"
         width={300}
@@ -315,7 +315,7 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
                           </Button>
                         </ButtonGroup>
                       </div>
-                      {x?.isRequired ? 'Required' : 'Optional'}
+                      {x?.isRequired ? "Required" : "Optional"}
                     </div>
                   </div>
                 </div>
@@ -349,25 +349,27 @@ export function PolarisProductPickerAddCart({
 }: {
   order: Order;
   refetch: any;
-  type?: 'BUTTON' | 'LAYOUT';
+  type?: "BUTTON" | "LAYOUT";
 }) {
   const [open, setOpen] = useState(false);
   const { setToasts, toasts } = useCustomToast();
   const [selectProduct, setSelectProduct] = useState<any>(null);
   const [selectSku, setSelectSku] = useState<any>(null);
   const { data, loading } = useProductListQuery({
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: "cache-and-network",
     variables: {
       filter: {
         type: [Type_Product.Production],
         status: [Status_Product.Available, Status_Product.OutOfStock, Status_Product.TimeOut],
       },
       schedule: true,
-      enabledOn: ['ALL', 'WEB']
+      enabledOn: ["ALL", "WEB"],
+      offset: 0,
+      limit: 1000,
     },
   });
   const [addCart] = useAddOrderItemMutation({
-    refetchQueries: ['order'],
+    refetchQueries: ["order"],
   });
 
   const toggleOpen = useCallback(() => setOpen(!open), [open]);
@@ -387,11 +389,11 @@ export function PolarisProductPickerAddCart({
     const addonValue = selectProduct.addonSelect
       .filter((x: any) => x.qty > 0)
       .map((x: any) => `${x.name}(x${x.qty})`)
-      .join(',');
+      .join(",");
     const index = data.findIndex(
       (f: any) =>
         f.id === selectProduct.id &&
-        f.addon_value.join(',').trim() === addonValue.trim() &&
+        f.addon_value.join(",").trim() === addonValue.trim() &&
         f.remark.trim() === selectProduct.remark.trim(),
     );
     const skuIndex = selectProduct.sku?.findIndex((f: any) => Number(f?.id) === selectSku.id);
@@ -405,7 +407,7 @@ export function PolarisProductPickerAddCart({
       .filter((x: any) => x.qty > 0)
       .reduce(
         (a: any, b: any) =>
-          (a = a + Number(b.qty || '0') * (isNaN(Number(b.value || '0')) ? 0 : Number(b.value || '0'))),
+          (a = a + Number(b.qty || "0") * (isNaN(Number(b.value || "0")) ? 0 : Number(b.value || "0"))),
         0,
       );
 
@@ -430,7 +432,7 @@ export function PolarisProductPickerAddCart({
           ...toasts,
           {
             content: `Add ${selectProduct.title} to cart`,
-            status: 'info',
+            status: "info",
           },
         ]);
         refetch();
@@ -441,7 +443,7 @@ export function PolarisProductPickerAddCart({
     setSelectProduct(null);
   }, [addCart, open, order.id, order.items, refetch, selectProduct, selectSku, setToasts, toasts]);
 
-  if (type === 'LAYOUT') {
+  if (type === "LAYOUT") {
     return (
       <div>
         <TwoColumnList
@@ -472,7 +474,7 @@ export function PolarisProductPickerAddCart({
             //   </div>
             // }
             primaryAction={{
-              content: 'Add to cart',
+              content: "Add to cart",
               onAction: handleAddtoCart,
             }}
           >
@@ -509,7 +511,7 @@ export function PolarisProductPickerAddCart({
         </div>
       }
       primaryAction={{
-        content: 'Add to cart',
+        content: "Add to cart",
         onAction: handleAddtoCart,
       }}
     >
@@ -535,7 +537,7 @@ export function PolarisProductPickerAddCart({
                             };
                           }) || [],
                         skuSelect: sku.id,
-                        remark: '',
+                        remark: "",
                       });
                     }}
                   />
