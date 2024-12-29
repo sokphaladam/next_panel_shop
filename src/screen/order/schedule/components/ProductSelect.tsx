@@ -1,7 +1,7 @@
-'use client';
-import { useProductListQuery } from '@/gql/graphql';
-import { Autocomplete, LegacyStack, Tag, Thumbnail } from '@shopify/polaris';
-import React, { useCallback, useMemo, useState } from 'react';
+"use client";
+import { useProductListQuery } from "@/gql/graphql";
+import { Autocomplete, LegacyStack, Tag, Thumbnail } from "@shopify/polaris";
+import React, { useCallback, useMemo, useState } from "react";
 
 interface Props {
   selectedOptions: string[];
@@ -22,9 +22,9 @@ export function ProductSelect({ selectedOptions, setSelectedOptions, error }: Pr
               ?.map((x) => {
                 return x?.sku?.map((sku) => {
                   return {
-                    label: `${x.title || ''} (${sku?.name}) #${x.code}`,
-                    value: (sku?.id + '') as any,
-                    media: <Thumbnail source={sku?.image || x.images || ''} alt="" size="extraSmall" />,
+                    label: `${x.title || ""} (${sku?.name}) #${x.code}`,
+                    value: (sku?.id + "") as any,
+                    media: <Thumbnail source={sku?.image || x.images || ""} alt="" size="extraSmall" />,
                   };
                 });
               })
@@ -40,9 +40,9 @@ export function ProductSelect({ selectedOptions, setSelectedOptions, error }: Pr
             ?.map((x) => {
               return x?.sku?.map((sku) => {
                 return {
-                  label: `${x.title || ''} (${sku?.name}) #${x.code}`,
+                  label: `${x.title || ""} (${sku?.name}) #${x.code}`,
                   value: sku?.id || 0,
-                  media: <Thumbnail source={sku?.image || x.images || ''} alt="" size="extraSmall" />,
+                  media: <Thumbnail source={sku?.image || x.images || ""} alt="" size="extraSmall" />,
                 };
               });
             })
@@ -51,19 +51,19 @@ export function ProductSelect({ selectedOptions, setSelectedOptions, error }: Pr
     [data],
   );
   // const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState(deselectedOptions);
 
   const updateText = useCallback(
     (value: string) => {
       setInputValue(value);
 
-      if (value === '') {
+      if (value === "") {
         setOptions(deselectedOptions);
         return;
       }
 
-      const filterRegex = new RegExp(value, 'i');
+      const filterRegex = new RegExp(value, "i");
       const resultOptions = (deselectedOptions as any[]).filter((option) => option.label.match(filterRegex));
 
       setOptions(resultOptions);
@@ -84,8 +84,8 @@ export function ProductSelect({ selectedOptions, setSelectedOptions, error }: Pr
     selectedOptions.length > 0 ? (
       <LegacyStack spacing="extraTight" alignment="center">
         {selectedOptions.map((option) => {
-          let tagLabel = '';
-          tagLabel = deselectedOptions?.find((f) => Number(f?.value) === Number(option))?.label || '';
+          let tagLabel = "";
+          tagLabel = deselectedOptions?.find((f) => Number(f?.value) === Number(option))?.label || "";
           tagLabel = titleCase(tagLabel);
           return (
             <Tag key={`option${option}`} onRemove={removeTag(option)}>
@@ -125,9 +125,9 @@ export function ProductSelect({ selectedOptions, setSelectedOptions, error }: Pr
     return (
       string
         .toLowerCase()
-        .split(' ')
+        .split(" ")
         // .map((word) => word.replace(word[0], word[0].toUpperCase()))
-        .join('')
+        .join("")
     );
   }
 }

@@ -1,5 +1,5 @@
-'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+"use client";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Badge,
   Box,
@@ -12,14 +12,13 @@ import {
   Loading,
   Page,
   Text,
-  Thumbnail,
   Modal as Modals,
   TextField,
   Icon,
   Tabs,
   TabProps,
   Banner,
-} from '@shopify/polaris';
+} from "@shopify/polaris";
 import {
   StatusOrder,
   StatusOrderItem,
@@ -27,7 +26,7 @@ import {
   useMarkOrderItemStatusMutation,
   useOrderQuery,
   useOrderSubscriptSubscription,
-} from '@/gql/graphql';
+} from "@/gql/graphql";
 import {
   InfoIcon,
   CheckCircleIcon,
@@ -35,49 +34,46 @@ import {
   XCircleIcon,
   DeleteIcon,
   StatusActiveIcon,
-  MetaobjectReferenceIcon,
-  LabelPrinterIcon,
-} from '@shopify/polaris-icons';
-import { useCustomToast } from '@/components/custom/CustomToast';
-import { Modal } from '@/hook/modal';
-import { useSetting } from '@/service/useSettingProvider';
-import { PrintOrder } from '../components/PrintOrder';
-import { SignatureOrder } from '../components/SignatureOrder';
-import { DeliveryPickup } from '../components/DeliveryPickup';
-import { PrintOrderToKitchen } from '../components/PrintOrderToKitchen';
-import moment from 'moment';
-import { FormCheckout } from '../components/FormCheckout';
-import { PolarisProductPickerAddCart } from '@/components/polaris/PolarisProductPickerAddCart';
-import { ControllChangeQty } from './ControllChangeQty';
-import { ControllPerson } from './ControllPerson';
-import { useParams } from 'next/navigation';
-import Image from 'next/image';
-import { useUser } from '@/service/UserProvider';
-import { PrintForKitchen } from '../components/PrintForKitchen';
-import { DiscountOrder } from '../components/DiscountOrder';
-import { useToggle } from '@/service/ToggleProvider';
-import { useWindowSize } from '@/hook/useWindowSize';
-import { FormSetPaymentType } from '../components/FormSetPaymentType';
-import { SwapTable } from '../components/SwapTable';
-import { PrintV2 } from '../components/PrintV2';
+} from "@shopify/polaris-icons";
+import { useCustomToast } from "@/components/custom/CustomToast";
+import { Modal } from "@/hook/modal";
+import { useSetting } from "@/service/useSettingProvider";
+import { PrintOrder } from "../components/PrintOrder";
+import { SignatureOrder } from "../components/SignatureOrder";
+import { DeliveryPickup } from "../components/DeliveryPickup";
+import moment from "moment";
+import { FormCheckout } from "../components/FormCheckout";
+import { PolarisProductPickerAddCart } from "@/components/polaris/PolarisProductPickerAddCart";
+import { ControllChangeQty } from "./ControllChangeQty";
+import { ControllPerson } from "./ControllPerson";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import { useUser } from "@/service/UserProvider";
+import { PrintForKitchen } from "../components/PrintForKitchen";
+import { DiscountOrder } from "../components/DiscountOrder";
+import { useToggle } from "@/service/ToggleProvider";
+import { useWindowSize } from "@/hook/useWindowSize";
+import { FormSetPaymentType } from "../components/FormSetPaymentType";
+import { SwapTable } from "../components/SwapTable";
+import { PrintV2 } from "../components/PrintV2";
 
 const tabs: TabProps[] = [
   {
-    content: 'New Order',
-    id: '0',
+    content: "New Order",
+    id: "0",
   },
   {
-    content: 'Order History',
-    id: '1',
+    content: "Order History",
+    id: "1",
   },
 ];
 
 const toneStatus: any = {
-  [StatusOrder.Pending]: 'attention-strong',
-  [StatusOrder.Verify]: 'info-strong',
-  [StatusOrder.Delivery]: 'success',
-  [StatusOrder.Checkout]: 'success-strong',
-  [StatusOrder.Cancelled]: 'critical-strong',
+  [StatusOrder.Pending]: "attention-strong",
+  [StatusOrder.Verify]: "info-strong",
+  [StatusOrder.Delivery]: "success",
+  [StatusOrder.Checkout]: "success-strong",
+  [StatusOrder.Cancelled]: "critical-strong",
 };
 
 const toneIcon: any = {
@@ -100,7 +96,7 @@ export default function OrderDetailScreen() {
   const [active, setActive] = useState(false);
   const [paid, setPaid] = useState(false);
   const setting = useSetting();
-  const [reasonInput, setReasonInput] = useState('');
+  const [reasonInput, setReasonInput] = useState("");
   const toggelOpen = useCallback(() => setOpen(!open), [open]);
   const toggleActive = useCallback(() => setActive(!active), [active]);
   const togglePaid = useCallback(() => setPaid(!paid), [paid]);
@@ -112,7 +108,7 @@ export default function OrderDetailScreen() {
   });
   const [mark] = useMarkOrderItemStatusMutation();
   const [change] = useChangeOrderStatusMutation({
-    refetchQueries: ['order', 'orderList'],
+    refetchQueries: ["order", "orderList"],
   });
   useOrderSubscriptSubscription({
     onData: (res) => {
@@ -132,17 +128,17 @@ export default function OrderDetailScreen() {
   }, [setToggle, width]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const local = localStorage.getItem('invoice');
+    if (typeof window !== "undefined") {
+      const local = localStorage.getItem("invoice");
       if (local) {
         const inv = JSON.parse(local);
         if (moment(new Date(inv.date)).date() === moment(new Date()).date()) {
           setInvoice(inv);
         } else {
-          setInvoice({ date: moment(new Date()).format('YYYY-MM-DD'), count: 1 });
+          setInvoice({ date: moment(new Date()).format("YYYY-MM-DD"), count: 1 });
         }
       } else {
-        setInvoice({ date: moment(new Date()).format('YYYY-MM-DD'), count: 1 });
+        setInvoice({ date: moment(new Date()).format("YYYY-MM-DD"), count: 1 });
       }
     }
   }, []);
@@ -159,17 +155,17 @@ export default function OrderDetailScreen() {
         return;
       } else {
         Modal.dialog({
-          title: 'Confirmation',
+          title: "Confirmation",
           body: [
             <div key={1}>
               You are select order <b>#{data?.order?.id}</b> to <b>{status.toLowerCase()}</b>.
             </div>,
           ],
           buttons: [
-            { title: 'No' },
+            { title: "No" },
             {
-              title: 'Yes',
-              class: 'primary',
+              title: "Yes",
+              class: "primary",
               onPress: () => {
                 change({
                   variables: {
@@ -181,13 +177,13 @@ export default function OrderDetailScreen() {
                 })
                   .then((res) => {
                     if (res.data?.changeOrderStatus) {
-                      setToasts([...toasts, { content: 'Update status was success.', status: 'success' }]);
+                      setToasts([...toasts, { content: "Update status was success.", status: "success" }]);
                     } else {
-                      setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
+                      setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
                     }
                   })
                   .catch(() => {
-                    setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
+                    setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
                   });
               },
             },
@@ -198,7 +194,7 @@ export default function OrderDetailScreen() {
     [change, data?.order?.id, setToasts, toasts, toggelOpen, toggleActive, togglePaid],
   );
 
-  if (loading || typeof window === 'undefined') {
+  if (loading || typeof window === "undefined") {
     <Page title="Order Detail">
       <Frame>
         <Loading />
@@ -227,12 +223,12 @@ export default function OrderDetailScreen() {
           return (a = a + amount);
         }, 0);
 
-  const vatPer = setting.find((f) => f.option === 'TAX')?.value;
-  const lastUpdate = data?.order?.log?.find((f) => f?.text === 'Last Updated')?.date;
+  const vatPer = setting.find((f) => f.option === "TAX")?.value;
+  const lastUpdate = data?.order?.log?.find((f) => f?.text === "Last Updated")?.date;
   const orderItems =
-    data?.order?.items?.filter((f: any) => f.status === 'PENDING').reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
+    data?.order?.items?.filter((f: any) => f.status === "PENDING").reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
   const orderHistory =
-    data?.order?.items?.filter((f: any) => f.status !== 'PENDING').reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
+    data?.order?.items?.filter((f: any) => f.status !== "PENDING").reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
 
   return (
     <Page
@@ -247,7 +243,7 @@ export default function OrderDetailScreen() {
                 )}
               </div>
             ) as any)
-          : ''
+          : ""
       }
       fullWidth
     >
@@ -257,10 +253,10 @@ export default function OrderDetailScreen() {
         onClose={toggleActive}
         title={`Cancel Order #${data?.order?.id}`}
         primaryAction={{
-          content: 'Yes',
+          content: "Yes",
           onAction: () => {
             if (!reasonInput) {
-              setToasts([...toasts, { content: 'Please input the reason!', status: 'error' }]);
+              setToasts([...toasts, { content: "Please input the reason!", status: "error" }]);
               return;
             }
             change({
@@ -274,15 +270,15 @@ export default function OrderDetailScreen() {
             })
               .then((res) => {
                 if (res.data?.changeOrderStatus) {
-                  setToasts([...toasts, { content: 'Update status was success.', status: 'success' }]);
-                  setReasonInput('');
+                  setToasts([...toasts, { content: "Update status was success.", status: "success" }]);
+                  setReasonInput("");
                   toggleActive();
                 } else {
-                  setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
+                  setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
                 }
               })
               .catch(() => {
-                setToasts([...toasts, { content: 'Oop! somthing was wrong!', status: 'error' }]);
+                setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
               });
           },
         }}
@@ -312,15 +308,15 @@ export default function OrderDetailScreen() {
       )}
       <Layout>
         <Layout.Section variant="oneThird">
-          <Card padding={'0'}>
-            <Box padding={'0'}>
+          <Card padding={"0"}>
+            <Box padding={"0"}>
               <PolarisProductPickerAddCart type="LAYOUT" refetch={refetch} order={data?.order || {}} />
             </Box>
           </Card>
         </Layout.Section>
-        <Layout.Section variant={(width || 0) > 600 && (width || 0) < 770 ? 'oneThird' : 'oneHalf'}>
-          <Card padding={'0'}>
-            <Box padding={'300'}>
+        <Layout.Section variant={(width || 0) > 600 && (width || 0) < 770 ? "oneThird" : "oneHalf"}>
+          <Card padding={"0"}>
+            <Box padding={"300"}>
               <div className="flex flex-row justify-between items-baseline">
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row gap-4">
@@ -328,14 +324,14 @@ export default function OrderDetailScreen() {
                       firstCall={data?.order?.status === StatusOrder.Checkout}
                       order={data?.order}
                       subtotal={total}
-                      vat={vatPer + ''}
+                      vat={vatPer + ""}
                       total={total}
                     />
                     <PrintV2
                       firstCall={data?.order?.status === StatusOrder.Checkout}
                       order={data?.order}
                       subtotal={total}
-                      vat={vatPer + ''}
+                      vat={vatPer + ""}
                       total={total}
                     />
                     {/* <PrintOrder order={data?.order} subtotal={total} vat={vat + ''} total={totalAfterVat} kitchen /> */}
@@ -393,16 +389,16 @@ export default function OrderDetailScreen() {
                 <div className="flex flex-col items-end">
                   <SwapTable order={data?.order || {}} />
                   <b className="mb-2">
-                    <small>{data?.order?.uuid || ''}</small>
+                    <small>{data?.order?.uuid || ""}</small>
                   </b>
-                  <Badge tone={toneStatus[data?.order?.status || '']} size="small">
+                  <Badge tone={toneStatus[data?.order?.status || ""]} size="small">
                     {
                       (
                         <small className="flex flex-row justify-between items-center p-1">
                           <div className="mr-1">
-                            <Icon source={toneIcon[data?.order?.status || '']} />
+                            <Icon source={toneIcon[data?.order?.status || ""]} />
                           </div>
-                          {data?.order?.status === 'DELIVERY' ? 'Deliver' : data?.order?.status || ''}
+                          {data?.order?.status === "DELIVERY" ? "Deliver" : data?.order?.status || ""}
                         </small>
                       ) as any
                     }
@@ -411,7 +407,7 @@ export default function OrderDetailScreen() {
               </div>
             </Box>
             <Divider />
-            <Box padding={'300'}>
+            <Box padding={"300"}>
               <div className="flex flex-row justify-between items-start">
                 <div></div>
                 <DiscountOrder total={total} data={data?.order || {}} />
@@ -425,12 +421,12 @@ export default function OrderDetailScreen() {
               >
                 <IndexTable
                   headings={[
-                    { title: '#' },
-                    { title: 'Info' },
-                    { title: 'Price' },
-                    { title: 'Amount' },
-                    { title: '' },
-                    { title: '' },
+                    { title: "#" },
+                    { title: "Info" },
+                    { title: "Price" },
+                    { title: "Amount" },
+                    { title: "" },
+                    { title: "" },
                   ]}
                   itemCount={data?.order?.items?.length || 1}
                   selectable={false}
@@ -442,7 +438,7 @@ export default function OrderDetailScreen() {
                           tabs={tabs.map((x) => {
                             return {
                               ...x,
-                              content: `${x.content} ${x.id === '0' ? `(${orderItems})` : `(${orderHistory})`}`,
+                              content: `${x.content} ${x.id === "0" ? `(${orderItems})` : `(${orderHistory})`}`,
                             };
                           })}
                           selected={select}
@@ -462,17 +458,17 @@ export default function OrderDetailScreen() {
                       const priceAfterDis = Number(item?.price) - (Number(item?.price) * Number(item?.discount)) / 100;
                       return (
                         <React.Fragment key={index}>
-                          <IndexTable.Row position={index} id={item?.id + ''}>
+                          <IndexTable.Row position={index} id={item?.id + ""}>
                             <IndexTable.Cell>{index + 1}</IndexTable.Cell>
                             <IndexTable.Cell>
                               <div className="flex flex-row gap-2">
                                 <Image
                                   alt=""
-                                  src={item?.sku?.image || item?.product?.images || ''}
+                                  src={item?.sku?.image || item?.product?.images || ""}
                                   width={40}
                                   height={40}
                                   objectFit="contain"
-                                  style={{ width: 40, borderRadius: 5, maxHeight: 40, objectFit: 'cover' }}
+                                  style={{ width: 40, borderRadius: 5, maxHeight: 40, objectFit: "cover" }}
                                   loading="lazy"
                                 />
                                 {/* <Thumbnail alt="" source={item?.product?.images + ''} size="small" /> */}
@@ -525,15 +521,15 @@ export default function OrderDetailScreen() {
                                         }
                                         onClick={() => {
                                           Modal.dialog({
-                                            title: 'Confirmation',
+                                            title: "Confirmation",
                                             body: [
                                               <div key={1}>
-                                                {'Are you sure to remove this item: ' + item?.product?.title}
+                                                {"Are you sure to remove this item: " + item?.product?.title}
                                               </div>,
                                             ],
                                             buttons: [
                                               {
-                                                title: 'Yes',
+                                                title: "Yes",
                                                 onPress: () => {
                                                   mark({
                                                     variables: {
@@ -566,7 +562,7 @@ export default function OrderDetailScreen() {
                             )}
                           </IndexTable.Row>
                           {(item?.addons || item?.remark) && (
-                            <IndexTable.Row position={index} id={item?.id + ''}>
+                            <IndexTable.Row position={index} id={item?.id + ""}>
                               <IndexTable.Cell></IndexTable.Cell>
                               <IndexTable.Cell colSpan={5} className="bg-yellow-200">
                                 {item.addons && <div>Addon: {item.addons}</div>}
@@ -608,12 +604,12 @@ export default function OrderDetailScreen() {
           </Card>
         </Layout.Section>
         <Layout.Section variant="oneThird">
-          <Card padding={'0'}>
+          <Card padding={"0"}>
             <Box>
               <IndexTable
                 headings={[
                   { title: (<div className="ml-1">Description</div>) as any },
-                  { title: 'Amount', alignment: 'end' },
+                  { title: "Amount", alignment: "end" },
                 ]}
                 itemCount={1}
                 selectable={false}
@@ -673,7 +669,7 @@ export default function OrderDetailScreen() {
                     )}
                   </IndexTable.Cell>
                 </IndexTable.Row>
-                <IndexTable.Row id={'1'} position={1}>
+                <IndexTable.Row id={"1"} position={1}>
                   <IndexTable.Cell>
                     <div className="ml-1">
                       <Text as="strong" variant="bodySm">
@@ -694,8 +690,8 @@ export default function OrderDetailScreen() {
           </Card>
           <br />
           {data?.order && (
-            <Card padding={'0'}>
-              <Box padding={'400'}>
+            <Card padding={"0"}>
+              <Box padding={"400"}>
                 <div className="flex flex-row justify-between items-center">
                   <div>Payment: {data?.order?.bankType}</div>
                   <FormSetPaymentType order={data?.order || {}} />
@@ -704,8 +700,8 @@ export default function OrderDetailScreen() {
             </Card>
           )}
           <br />
-          <Card padding={'0'}>
-            <Box padding={'400'}>
+          <Card padding={"0"}>
+            <Box padding={"400"}>
               <div className="flex flex-row justify-between items-center">
                 {data?.order?.delivery && (
                   <div className="mt-3">
@@ -722,8 +718,8 @@ export default function OrderDetailScreen() {
             </Box>
           </Card>
           <br />
-          <Card padding={'0'}>
-            <Box padding={'400'}>
+          <Card padding={"0"}>
+            <Box padding={"400"}>
               <div className="flex flex-row justify-between items-center">
                 <div>People in order: {data?.order?.person || 0}</div>
                 <ControllPerson orderId={data?.order?.id || 0} />
@@ -731,16 +727,16 @@ export default function OrderDetailScreen() {
             </Box>
           </Card>
           <br />
-          <Card padding={'0'}>
+          <Card padding={"0"}>
             <Box>
               <IndexTable
-                headings={[{ title: '#' }, { title: 'Date', alignment: 'end' }]}
+                headings={[{ title: "#" }, { title: "Date", alignment: "end" }]}
                 itemCount={1}
                 selectable={false}
               >
                 {data?.order?.log?.map((x, i) => {
                   return (
-                    <IndexTable.Row key={i} position={i} id={x?.text + ''}>
+                    <IndexTable.Row key={i} position={i} id={x?.text + ""}>
                       <IndexTable.Cell>
                         <small>{x?.text}</small>
                       </IndexTable.Cell>
