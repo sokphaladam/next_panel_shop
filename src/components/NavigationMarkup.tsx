@@ -1,10 +1,16 @@
-'use client';
-import React from 'react';
-import { Navigation, NavigationItemProps } from '@shopify/polaris';
-import { usePathname, useRouter } from 'next/navigation';
-import { MenuItems } from '@/lib/MenuItems';
-import { useUser } from '@/service/UserProvider';
-import { HomeIcon, OrderIcon, ProductIcon, TargetIcon } from '@shopify/polaris-icons';
+"use client";
+import React from "react";
+import { Navigation, NavigationItemProps } from "@shopify/polaris";
+import { usePathname, useRouter } from "next/navigation";
+import { MenuItems } from "@/lib/MenuItems";
+import { useUser } from "@/service/UserProvider";
+import {
+  HomeIcon,
+  OrderIcon,
+  ProductIcon,
+  TargetIcon,
+} from "@shopify/polaris-icons";
+import { LayoutDashboard } from "lucide-react";
 
 interface Props {
   onClick?: () => void;
@@ -124,10 +130,17 @@ export function NavigationMarkup(props: Props) {
           }
 
           const item: NavigationItemProps = {
-            label: x.label + '',
-            icon: x.icon as any,
+            label: (
+              <div className="flex items-center gap-2">
+                {React.cloneElement(<x.icon />, {
+                  key: x.label,
+                  className: "h-2 w-2",
+                })}
+                <div>{x.label}</div>
+              </div>
+            ) as any,
             onClick: () => {
-              push(x.url || '');
+              push(x.url || "");
               props.onClick && props.onClick();
             },
             selected,
@@ -139,7 +152,7 @@ export function NavigationMarkup(props: Props) {
                     matches: pathname === y.url,
                     url: y.url,
                     onClick: () => {
-                      push(y.url || '');
+                      push(y.url || "");
                       props.onClick && props.onClick();
                     },
                   };
@@ -149,7 +162,14 @@ export function NavigationMarkup(props: Props) {
 
           return item;
         });
-        return <Navigation.Section separator={index > 0} key={index} title={item.title} items={items} />;
+        return (
+          <Navigation.Section
+            separator={index > 0}
+            key={index}
+            title={item.title}
+            items={items}
+          />
+        );
       })}
     </Navigation>
   );

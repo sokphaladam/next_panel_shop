@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @next/next/no-css-tags */
 'use client';
-import { Order, OrderItem } from '@/gql/graphql';
+import { Order, OrderItem, useMarkFirstPrintOrderMutation } from '@/gql/graphql';
 import { useUser } from '@/service/UserProvider';
 import { useSetting } from '@/service/useSettingProvider';
 import { useRef, useState } from 'react';
@@ -25,6 +25,9 @@ export function PrintV2(props: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [doc, setDoc] = useState('');
+  const [markPrint] = useMarkFirstPrintOrderMutation({
+      refetchQueries: ["order", "tableSetList"],
+    });
 
   const verify_date = props.order ? props.order?.log?.find((f) => f?.text === 'Verifed')?.by?.display : '';
   const created_date = props.order ? props.order?.log?.find((f) => f?.text === 'Created')?.date : '';
@@ -37,6 +40,13 @@ export function PrintV2(props: Props) {
 
   const onPrintClicked = () => {
     if (ref.current && iframeRef.current) {
+      if(!props.order?.firstPrint) {
+        markPrint({
+          variables: {
+            orderId: Number(props.order?.id),
+          },
+        });
+      }
       setDoc(
         `<div>` + ref.current.innerHTML + '</div><script>window.print(); /*' + Math.random().toString() + '*/</script>',
       );

@@ -246,6 +246,7 @@ export type Mutation = {
   generateTokenOrder?: Maybe<Scalars['String']['output']>;
   increaseOrderItem?: Maybe<Scalars['Boolean']['output']>;
   login?: Maybe<Scalars['String']['output']>;
+  markFirstPrintOrder?: Maybe<Scalars['Boolean']['output']>;
   markOrderItemStatus?: Maybe<Scalars['Boolean']['output']>;
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -405,6 +406,11 @@ export type MutationIncreaseOrderItemArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type MutationMarkFirstPrintOrderArgs = {
+  orderId: Scalars['Int']['input'];
 };
 
 
@@ -588,6 +594,7 @@ export type Order = {
   delivery?: Maybe<Delivery>;
   deliveryCode?: Maybe<Scalars['String']['output']>;
   discount?: Maybe<Scalars['Float']['output']>;
+  firstPrint?: Maybe<Scalars['Boolean']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   invoice?: Maybe<Scalars['Int']['output']>;
   items?: Maybe<Array<Maybe<OrderItem>>>;
@@ -1609,6 +1616,13 @@ export type SetItemShowOnMutationVariables = Exact<{
 
 export type SetItemShowOnMutation = { __typename?: 'Mutation', setItemShowOn?: boolean | null };
 
+export type MarkFirstPrintOrderMutationVariables = Exact<{
+  orderId: Scalars['Int']['input'];
+}>;
+
+
+export type MarkFirstPrintOrderMutation = { __typename?: 'Mutation', markFirstPrintOrder?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1666,7 +1680,7 @@ export type OrderQueryVariables = Exact<{
 }>;
 
 
-export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id?: number | null, address?: string | null, status?: StatusOrder | null, bankId?: number | null, customerPaid?: string | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, code?: string | null, discount?: number | null, vat?: string | null, person?: number | null, currency?: string | null, invoice?: number | null, bankType?: string | null, deliveryCode?: string | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', createdDate?: string | null, id?: number | null, qty?: number | null, price?: number | null, discount?: number | null, status?: StatusOrderItem | null, addons?: string | null, remark?: string | null, isPrint?: boolean | null, sku?: { __typename?: 'SKU', price?: number | null, discount?: number | null, id?: number | null, unit?: string | null, name?: string | null, image?: string | null } | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, code?: string | null, description?: string | null, id?: number | null } | null } | null> | null } | null };
+export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id?: number | null, address?: string | null, status?: StatusOrder | null, bankId?: number | null, customerPaid?: string | null, name?: string | null, paid?: string | null, set?: string | null, total?: string | null, uuid?: string | null, note?: string | null, code?: string | null, discount?: number | null, vat?: string | null, person?: number | null, currency?: string | null, invoice?: number | null, bankType?: string | null, firstPrint?: boolean | null, deliveryCode?: string | null, log?: Array<{ __typename?: 'OrderLog', date?: string | null, text?: string | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null, delivery?: { __typename?: 'Delivery', id?: number | null, name?: string | null, contact?: string | null } | null, items?: Array<{ __typename?: 'OrderItem', createdDate?: string | null, id?: number | null, qty?: number | null, price?: number | null, discount?: number | null, status?: StatusOrderItem | null, addons?: string | null, remark?: string | null, isPrint?: boolean | null, sku?: { __typename?: 'SKU', price?: number | null, discount?: number | null, id?: number | null, unit?: string | null, name?: string | null, image?: string | null } | null, product?: { __typename?: 'Product', title?: string | null, images?: string | null, code?: string | null, description?: string | null, id?: number | null } | null } | null> | null } | null };
 
 export type SettingListQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1687,7 +1701,7 @@ export type TableSetListQueryVariables = Exact<{
 }>;
 
 
-export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null } | null } | null> | null };
+export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null, firstPrint?: boolean | null } | null } | null> | null };
 
 export type DeliveryByIdQueryVariables = Exact<{
   deliveryByIdId: Scalars['Int']['input'];
@@ -3408,6 +3422,37 @@ export function useSetItemShowOnMutation(baseOptions?: Apollo.MutationHookOption
 export type SetItemShowOnMutationHookResult = ReturnType<typeof useSetItemShowOnMutation>;
 export type SetItemShowOnMutationResult = Apollo.MutationResult<SetItemShowOnMutation>;
 export type SetItemShowOnMutationOptions = Apollo.BaseMutationOptions<SetItemShowOnMutation, SetItemShowOnMutationVariables>;
+export const MarkFirstPrintOrderDocument = gql`
+    mutation markFirstPrintOrder($orderId: Int!) {
+  markFirstPrintOrder(orderId: $orderId)
+}
+    `;
+export type MarkFirstPrintOrderMutationFn = Apollo.MutationFunction<MarkFirstPrintOrderMutation, MarkFirstPrintOrderMutationVariables>;
+
+/**
+ * __useMarkFirstPrintOrderMutation__
+ *
+ * To run a mutation, you first call `useMarkFirstPrintOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMarkFirstPrintOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [markFirstPrintOrderMutation, { data, loading, error }] = useMarkFirstPrintOrderMutation({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useMarkFirstPrintOrderMutation(baseOptions?: Apollo.MutationHookOptions<MarkFirstPrintOrderMutation, MarkFirstPrintOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MarkFirstPrintOrderMutation, MarkFirstPrintOrderMutationVariables>(MarkFirstPrintOrderDocument, options);
+      }
+export type MarkFirstPrintOrderMutationHookResult = ReturnType<typeof useMarkFirstPrintOrderMutation>;
+export type MarkFirstPrintOrderMutationResult = Apollo.MutationResult<MarkFirstPrintOrderMutation>;
+export type MarkFirstPrintOrderMutationOptions = Apollo.BaseMutationOptions<MarkFirstPrintOrderMutation, MarkFirstPrintOrderMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -3836,6 +3881,7 @@ export const OrderDocument = gql`
     currency
     invoice
     bankType
+    firstPrint
     log {
       date
       text
@@ -4007,6 +4053,7 @@ export const TableSetListDocument = gql`
       uuid
       status
       code
+      firstPrint
     }
   }
 }
