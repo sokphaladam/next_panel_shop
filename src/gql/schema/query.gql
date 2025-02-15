@@ -227,6 +227,7 @@ query order($token: String, $orderId: Int) {
     currency
     invoice
     bankType
+    firstPrint
     log {
       date
       text
@@ -295,6 +296,7 @@ query tableSetList($limit: Int, $offset: Int) {
       uuid
       status
       code
+      firstPrint
     }
   }
 }
@@ -425,7 +427,12 @@ query getAttendanceStaffToday($date: String!) {
   }
 }
 
-query getAttendanceStaff($limit: Int, $offset: Int, $from: String, $to: String) {
+query getAttendanceStaff(
+  $limit: Int
+  $offset: Int
+  $from: String
+  $to: String
+) {
   getAttendanceStaff(limit: $limit, offset: $offset, from: $from, to: $to) {
     id
     user {
@@ -455,8 +462,20 @@ query getAttendanceStaff($limit: Int, $offset: Int, $from: String, $to: String) 
   }
 }
 
-query shiftList($limit: Int, $offset: Int, $users: [Int], $fromDate: String, $toDate: String) {
-  shiftList(limit: $limit, offset: $offset, users: $users, fromDate: $fromDate, toDate: $toDate) {
+query shiftList(
+  $limit: Int
+  $offset: Int
+  $users: [Int]
+  $fromDate: String
+  $toDate: String
+) {
+  shiftList(
+    limit: $limit
+    offset: $offset
+    users: $users
+    fromDate: $fromDate
+    toDate: $toDate
+  ) {
     id
     open
     openCurrency {
@@ -521,8 +540,20 @@ query shiftById($id: Int, $date: String, $userId: Int) {
   }
 }
 
-query leaveList($to: String, $from: String, $status: [LeaveStatus], $offset: Int, $limit: Int) {
-  leaveList(to: $to, from: $from, status: $status, offset: $offset, limit: $limit) {
+query leaveList(
+  $to: String
+  $from: String
+  $status: [LeaveStatus]
+  $offset: Int
+  $limit: Int
+) {
+  leaveList(
+    to: $to
+    from: $from
+    status: $status
+    offset: $offset
+    limit: $limit
+  ) {
     id
     startDate
     endDate
@@ -628,8 +659,20 @@ query getSummaryAttendanceStaff($userId: Int!) {
   getSummaryAttendanceStaff(userId: $userId)
 }
 
-query overTimeList($limit: Int, $offset: Int, $status: [OverTimeStatus], $from: String, $to: String) {
-  overTimeList(limit: $limit, offset: $offset, status: $status, from: $from, to: $to) {
+query overTimeList(
+  $limit: Int
+  $offset: Int
+  $status: [OverTimeStatus]
+  $from: String
+  $to: String
+) {
+  overTimeList(
+    limit: $limit
+    offset: $offset
+    status: $status
+    from: $from
+    to: $to
+  ) {
     id
     startat
     endAt
@@ -753,7 +796,12 @@ query holiday($holidayId: Int!) {
   }
 }
 
-query reportSaleProduct($from: String, $to: String, $filters: ReportSaleFilter, $groupBy: ReportSaleGroupBy) {
+query reportSaleProduct(
+  $from: String
+  $to: String
+  $filters: ReportSaleFilter
+  $groupBy: ReportSaleGroupBy
+) {
   reportSaleProduct(from: $from, to: $to, filters: $filters, groupBy: $groupBy)
 }
 

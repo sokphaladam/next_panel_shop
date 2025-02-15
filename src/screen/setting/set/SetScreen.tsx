@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   TableSet,
@@ -6,24 +6,36 @@ import {
   useGenerateTokenOrderMutation,
   useOrderSubscriptSubscription,
   useTableSetListQuery,
-} from '@/gql/graphql';
-import { Modal } from '@/hook/modal';
-import useLongPress from '@/hook/useLongPress';
-import { useUser } from '@/service/UserProvider';
-import { Badge, Banner, Box, Card, Frame, Grid, Layout, Loading, Page, Spinner, Text } from '@shopify/polaris';
-import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+} from "@/gql/graphql";
+import { Modal } from "@/hook/modal";
+import useLongPress from "@/hook/useLongPress";
+import { useUser } from "@/service/UserProvider";
+import {
+  Badge,
+  Banner,
+  Box,
+  Card,
+  Frame,
+  Grid,
+  Layout,
+  Loading,
+  Page,
+  Spinner,
+  Text,
+} from "@shopify/polaris";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 function TableItem({ x }: { x: TableSet }) {
   const { push } = useRouter();
   const [table, propsTable] = useGenerateTableSetMutation({
-    refetchQueries: ['tableSetList'],
+    refetchQueries: ["tableSetList"],
   });
   const [generate, propsUpdate] = useGenerateTokenOrderMutation({
-    refetchQueries: ['tableSetList'],
+    refetchQueries: ["tableSetList"],
   });
   const handleLogPress = () => {
-    console.log('long press');
+    console.log("long press");
 
     generate({
       variables: {
@@ -39,7 +51,7 @@ function TableItem({ x }: { x: TableSet }) {
 
   const handleClick = () => {
     if (propsUpdate.loading || x.order) {
-      push('/order/detail/' + x?.order?.id);
+      push("/order/detail/" + x?.order?.id);
       return;
     }
   };
@@ -52,24 +64,43 @@ function TableItem({ x }: { x: TableSet }) {
   const handleGenerate = useCallback(
     (value: string, x: any) => {
       if (propsUpdate.loading || x.order) {
-        push('/order/detail/' + x?.order.id);
+        push("/order/detail/" + x?.order.id);
         return;
       }
     },
-    [propsUpdate.loading, push],
+    [propsUpdate.loading, push]
   );
 
   // const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
+  let bg = "bg-fill";
+  if (x.order) bg = "bg-fill-success-active";
+  if (x.order?.firstPrint) bg = "bg-fill-warning-secondary";
+
   return (
-    <div className="cursor-pointer" onDoubleClick={handleLogPress} onClick={handleClick} suppressHydrationWarning>
-      <div id={`table_${x?.set}`} onClick={() => handleGenerate(x.set + '', x)}></div>
-      <Card background={x?.order ? 'bg-fill-success-active' : 'bg-fill'}>
+    <div
+      className="cursor-pointer"
+      onDoubleClick={handleLogPress}
+      onClick={handleClick}
+      suppressHydrationWarning
+    >
+      <div
+        id={`table_${x?.set}`}
+        onClick={() => handleGenerate(x.set + "", x)}
+      ></div>
+      <Card background={bg as any}>
         <Box>
-          <div className="flex flex-col justify-center items-center">
-            <Text as="h3" variant="bodyLg" fontWeight="bold" tone={x?.order ? 'text-inverse' : 'base'}>
-              {!!x.fake ? 'D' + x.set : x?.set}
+          <div className="flex flex-col items-center justify-center">
+            <Text
+              as="h3"
+              variant="bodyLg"
+              fontWeight="bold"
+              tone={x?.order && !x.order.firstPrint ? "text-inverse" : "base"}
+            >
+              {!!x.fake ? "D" + x.set : x?.set}
             </Text>
-            {(propsUpdate.loading || propsTable.loading) && <Spinner size="small" />}
+            {(propsUpdate.loading || propsTable.loading) && (
+              <Spinner size="small" />
+            )}
           </div>
         </Box>
       </Card>
@@ -86,30 +117,33 @@ function SetScreen() {
     },
   });
   const [table, propsTable] = useGenerateTableSetMutation({
-    refetchQueries: ['tableSetList'],
+    refetchQueries: ["tableSetList"],
   });
   const [generate, propsUpdate] = useGenerateTokenOrderMutation({
-    refetchQueries: ['tableSetList'],
+    refetchQueries: ["tableSetList"],
   });
   useOrderSubscriptSubscription({
     onData: (res) => {
-      if (res.data.data?.orderSubscript.status === 2 || !!res.data.data?.orderSubscript.uuid) {
+      if (
+        res.data.data?.orderSubscript.status === 2 ||
+        !!res.data.data?.orderSubscript.uuid
+      ) {
         refetch();
       }
     },
   });
 
   const handleGenerateTable = useCallback(() => {
-    const pr = window.prompt('How many table for generate?');
+    const pr = window.prompt("How many table for generate?");
 
     if (!!pr && !isNaN(Number(pr))) {
       Modal.dialog({
-        title: 'Confirmation',
+        title: "Confirmation",
         body: [<div key={1}>Are you sure want to generate {pr} tables?</div>],
         buttons: [
           {
-            title: 'Yes',
-            class: 'primary',
+            title: "Yes",
+            class: "primary",
             onPress: () => {
               table({
                 variables: {
@@ -148,12 +182,16 @@ function SetScreen() {
       title="Table"
       subtitle={
         (
-          <div className="flex flex-row gap-4 items-center" suppressHydrationWarning>
+          <div
+            className="flex flex-row items-center gap-4"
+            suppressHydrationWarning
+          >
             <Badge tone="success">
               {
                 (
-                  <div className="flex flex-row justify-between items-center p-1">
-                    Available = {data?.tableSetList?.filter((x) => !x?.order).length}
+                  <div className="flex flex-row items-center justify-between p-1">
+                    Available ={" "}
+                    {data?.tableSetList?.filter((x) => !x?.order).length}
                   </div>
                 ) as any
               }
@@ -161,8 +199,22 @@ function SetScreen() {
             <Badge tone="attention">
               {
                 (
-                  <div className="flex flex-row justify-between items-center p-1">
-                    In Order = {data?.tableSetList?.filter((x) => !!x?.order).length}
+                  <div className="flex flex-row items-center justify-between p-1">
+                    In Order ={" "}
+                    {data?.tableSetList?.filter((x) => !!x?.order).length}
+                  </div>
+                ) as any
+              }
+            </Badge>
+            <Badge tone="warning">
+              {
+                (
+                  <div className="flex flex-row items-center justify-between p-1">
+                    Print Order ={" "}
+                    {
+                      data?.tableSetList?.filter((x) => !!x?.order?.firstPrint)
+                        .length
+                    }
                   </div>
                 ) as any
               }
@@ -170,7 +222,11 @@ function SetScreen() {
           </div>
         ) as any
       }
-      primaryAction={{ content: 'GenerateTable', onAction: handleGenerateTable, destructive: true }}
+      primaryAction={{
+        content: "GenerateTable",
+        onAction: handleGenerateTable,
+        destructive: true,
+      }}
     >
       <Layout>
         <Layout.Section>

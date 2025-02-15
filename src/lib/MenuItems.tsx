@@ -1,26 +1,47 @@
-import { User } from '@/gql/graphql';
-import { useScriptLanguage } from '@/service/LanguageProvider';
+import { User } from "@/gql/graphql";
+import { useScriptLanguage } from "@/service/LanguageProvider";
 import {
-  AppsIcon,
-  ArchiveIcon,
-  CartFilledIcon,
-  DeliveryIcon,
-  MagicIcon,
-  SettingsIcon,
-  TabletIcon,
-  AttachmentIcon,
-  FileIcon,
-  PersonIcon,
-  PageClockIcon,
-  StarIcon,
-  CreditCardIcon,
-  MoneyFilledIcon,
-  PaymentFilledIcon,
-  PersonalizedTextIcon,
-  CalendarTimeIcon,
-  PageClockFilledIcon,
-} from '@shopify/polaris-icons';
-import { FunctionComponent, SVGProps } from 'react';
+  Banknote,
+  CalendarSync,
+  ChartBarStacked,
+  CreditCard,
+  FileClock,
+  FileOutput,
+  FileSpreadsheet,
+  FileUser,
+  HandCoins,
+  LayoutDashboard,
+  MonitorCog,
+  PackageSearch,
+  PersonStanding,
+  ShoppingCart,
+  Star,
+  Tablets,
+  Tent,
+  Truck,
+  UserRoundSearch,
+} from "lucide-react";
+// import {
+//   AppsIcon,
+//   ArchiveIcon,
+//   CartFilledIcon,
+//   DeliveryIcon,
+//   MagicIcon,
+//   SettingsIcon,
+//   TabletIcon,
+//   AttachmentIcon,
+//   FileIcon,
+//   PersonIcon,
+//   PageClockIcon,
+//   StarIcon,
+//   CreditCardIcon,
+//   MoneyFilledIcon,
+//   PaymentFilledIcon,
+//   PersonalizedTextIcon,
+//   CalendarTimeIcon,
+//   PageClockFilledIcon,
+// } from '@shopify/polaris-icons';
+import { FunctionComponent, SVGProps } from "react";
 
 interface PropsMenu {
   title: string;
@@ -29,7 +50,7 @@ interface PropsMenu {
 
 interface PropsMenuItem {
   label: string;
-  icon: FunctionComponent<SVGProps<SVGSVGElement>>;
+  icon: any;
   url: string;
   items?: any[];
 }
@@ -43,8 +64,8 @@ export function MenuItems(user: User | null) {
       items: [
         {
           label: lng.menu_dashboard,
-          icon: AppsIcon,
-          url: '/',
+          icon: LayoutDashboard,
+          url: "/",
         },
       ],
     },
@@ -53,13 +74,13 @@ export function MenuItems(user: User | null) {
       items: [
         {
           label: lng.menu_product,
-          icon: ArchiveIcon,
-          url: '/products',
+          icon: PackageSearch,
+          url: "/products",
         },
         {
           label: lng.menu_category,
-          icon: MagicIcon,
-          url: '/category',
+          icon: ChartBarStacked,
+          url: "/category",
         },
       ],
     },
@@ -68,18 +89,28 @@ export function MenuItems(user: User | null) {
       items: [
         {
           label: lng.menu_table,
-          icon: TabletIcon,
-          url: '/set',
+          icon: Tablets,
+          url: "/set",
+          items: [
+            {
+              label: lng.menu_table,
+              url: "/set",
+            },
+            // {
+            //   label: 'Merge Table',
+            //   url: "/merge_table",
+            // },
+          ],
         },
         {
           label: lng.menu_customer_order,
-          icon: CartFilledIcon,
-          url: '/order/list',
+          icon: ShoppingCart,
+          url: "/order/list",
         },
         {
           label: lng.menu_order_schedule,
-          icon: PageClockFilledIcon,
-          url: '/order/schedule',
+          icon: CalendarSync,
+          url: "/order/schedule",
         },
       ],
     },
@@ -88,50 +119,50 @@ export function MenuItems(user: User | null) {
       items: [
         {
           label: lng.menu_attendance,
-          icon: AttachmentIcon,
-          url: '/employee/attendance',
+          icon: UserRoundSearch,
+          url: "/employee/attendance",
           items: [
             {
               label: lng.menu_check_in_out,
-              url: '/employee/attendance',
+              url: "/employee/attendance",
             },
             {
               label: lng.menu_attendance_admin,
-              url: '/attendance',
+              url: "/attendance",
             },
           ],
         },
         {
           label: lng.menu_manage_staff,
-          icon: PersonalizedTextIcon,
-          url: '/staff',
+          icon: FileUser,
+          url: "/staff",
           items: [
             {
               label: lng.title_leave,
-              icon: FileIcon,
-              url: '/leave',
+              icon: FileOutput,
+              url: "/leave",
             },
             {
               label: lng.staff,
-              icon: PersonIcon,
-              url: '/staff',
+              icon: PersonStanding,
+              url: "/staff",
             },
             {
               label: lng.overtime,
-              icon: PageClockIcon,
-              url: '/ot',
+              icon: FileClock,
+              url: "/ot",
             },
           ],
         },
         {
           label: lng.menu_shift_handover,
-          icon: MoneyFilledIcon,
-          url: '/shift',
+          icon: HandCoins,
+          url: "/shift",
         },
         {
           label: lng.menu_public_holiday,
-          icon: CalendarTimeIcon,
-          url: '/holiday',
+          icon: Tent,
+          url: "/holiday",
         },
       ],
     },
@@ -140,30 +171,30 @@ export function MenuItems(user: User | null) {
       items: [
         {
           label: lng.menu_sale,
-          icon: FileIcon,
-          url: '/sale',
+          icon: FileSpreadsheet,
+          url: "/sale",
           items: [
             {
               label: lng.menu_report_sale,
-              url: '/sale',
-              icon: FileIcon,
+              url: "/sale",
+              icon: FileSpreadsheet,
             },
             {
               label: lng.menu_report_sale_by_day,
-              url: '/sale/byday',
-              icon: FileIcon,
+              url: "/sale/byday",
+              icon: FileSpreadsheet,
             },
             {
               label: lng.menu_report_product_select,
-              url: '/sale/byday/products',
-              icon: FileIcon,
+              url: "/sale/byday/products",
+              icon: FileSpreadsheet,
             },
           ],
         },
         {
           label: lng.menu_staff_payroll,
-          icon: PaymentFilledIcon,
-          url: '/staff/payroll',
+          icon: Banknote,
+          url: "/staff/payroll",
         },
       ],
     },
@@ -172,23 +203,23 @@ export function MenuItems(user: User | null) {
       items: [
         {
           label: lng.menu_option,
-          icon: SettingsIcon,
-          url: '/setting',
+          icon: MonitorCog,
+          url: "/setting",
         },
         {
           label: lng.menu_delivery,
-          icon: DeliveryIcon,
-          url: '/delivery',
+          icon: Truck,
+          url: "/delivery",
         },
         {
           label: lng.menu_position,
-          icon: StarIcon,
-          url: '/position',
+          icon: Star,
+          url: "/position",
         },
         {
           label: lng.menu_payment_info,
-          icon: CreditCardIcon,
-          url: '/payment',
+          icon: CreditCard,
+          url: "/payment",
         },
       ],
     },
@@ -211,13 +242,13 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_table,
-                icon: TabletIcon,
-                url: '/set',
+                icon: Tablets,
+                url: "/set",
               },
               {
                 label: lng.menu_customer_order,
-                icon: CartFilledIcon,
-                url: '/order/list',
+                icon: ShoppingCart,
+                url: "/order/list",
               },
             ],
           },
@@ -226,18 +257,18 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_attendance,
-                icon: AttachmentIcon,
-                url: '/employee/attendance',
+                icon: UserRoundSearch,
+                url: "/employee/attendance",
               },
               {
                 label: lng.title_leave,
-                icon: FileIcon,
-                url: '/leave',
+                icon: FileOutput,
+                url: "/leave",
               },
               {
                 label: lng.overtime,
-                icon: PageClockIcon,
-                url: '/ot',
+                icon: FileClock,
+                url: "/ot",
               },
             ],
           },
@@ -246,22 +277,8 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_delivery,
-                icon: DeliveryIcon,
-                url: '/delivery',
-              },
-            ],
-          },
-        ];
-        break;
-      case 4:
-        MenuItem = [
-          {
-            title: 'Kitchen',
-            items: [
-              {
-                label: 'Today Order',
-                icon: CartFilledIcon,
-                url: '/kitchen/order',
+                icon: Truck,
+                url: "/delivery",
               },
             ],
           },
@@ -274,18 +291,18 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_table,
-                icon: TabletIcon,
-                url: '/set',
+                icon: Tablets,
+                url: "/set",
               },
               {
                 label: lng.menu_customer_order,
-                icon: CartFilledIcon,
-                url: '/order/list',
+                icon: ShoppingCart,
+                url: "/order/list",
               },
               {
                 label: lng.menu_order_schedule,
-                icon: PageClockFilledIcon,
-                url: '/order/schedule',
+                icon: CalendarSync,
+                url: "/order/schedule",
               },
             ],
           },
@@ -294,50 +311,50 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_attendance,
-                icon: AttachmentIcon,
-                url: '/employee/attendance',
+                icon: UserRoundSearch,
+                url: "/employee/attendance",
                 items: [
                   {
                     label: lng.menu_check_in_out,
-                    url: '/employee/attendance',
+                    url: "/employee/attendance",
                   },
                   {
                     label: lng.menu_attendance_admin,
-                    url: '/attendance',
+                    url: "/attendance",
                   },
                 ],
               },
               {
                 label: lng.menu_manage_staff,
-                icon: PersonalizedTextIcon,
-                url: '/staff',
+                icon: FileUser,
+                url: "/staff",
                 items: [
                   {
                     label: lng.title_leave,
-                    icon: FileIcon,
-                    url: '/leave',
+                    icon: FileOutput,
+                    url: "/leave",
                   },
                   {
                     label: lng.staff,
-                    icon: PersonIcon,
-                    url: '/staff',
+                    icon: PersonStanding,
+                    url: "/staff",
                   },
                   {
                     label: lng.overtime,
-                    icon: PageClockIcon,
-                    url: '/ot',
+                    icon: FileClock,
+                    url: "/ot",
                   },
                 ],
               },
               {
                 label: lng.menu_shift_handover,
-                icon: MoneyFilledIcon,
-                url: '/shift',
+                icon: HandCoins,
+                url: "/shift",
               },
               {
                 label: lng.menu_public_holiday,
-                icon: CalendarTimeIcon,
-                url: '/holiday',
+                icon: Tent,
+                url: "/holiday",
               },
             ],
           },
@@ -346,30 +363,30 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_sale,
-                icon: FileIcon,
-                url: '/sale',
+                icon: FileSpreadsheet,
+                url: "/sale",
                 items: [
                   {
                     label: lng.menu_report_sale,
-                    url: '/sale',
-                    icon: FileIcon,
+                    url: "/sale",
+                    icon: FileSpreadsheet,
                   },
                   {
                     label: lng.menu_report_sale_by_day,
-                    url: '/sale/byday',
-                    icon: FileIcon,
+                    url: "/sale/byday",
+                    icon: FileSpreadsheet,
                   },
                   {
                     label: lng.menu_report_product_select,
-                    url: '/sale/byday/products',
-                    icon: FileIcon,
+                    url: "/sale/byday/products",
+                    icon: FileSpreadsheet,
                   },
                 ],
               },
               {
                 label: lng.menu_staff_payroll,
-                icon: PaymentFilledIcon,
-                url: '/staff/payroll',
+                icon: Banknote,
+                url: "/staff/payroll",
               },
             ],
           },
@@ -378,18 +395,18 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_delivery,
-                icon: DeliveryIcon,
-                url: '/delivery',
+                icon: Truck,
+                url: "/delivery",
               },
               {
                 label: lng.menu_position,
-                icon: StarIcon,
-                url: '/position',
+                icon: Star,
+                url: "/position",
               },
               {
                 label: lng.menu_payment_info,
-                icon: CreditCardIcon,
-                url: '/payment',
+                icon: CreditCard,
+                url: "/payment",
               },
             ],
           },
@@ -402,8 +419,8 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_product,
-                icon: ArchiveIcon,
-                url: '/products',
+                icon: PackageSearch,
+                url: "/products",
               },
             ],
           },
@@ -412,18 +429,18 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_table,
-                icon: TabletIcon,
-                url: '/set',
+                icon: Tablets,
+                url: "/set",
               },
               {
                 label: lng.menu_customer_order,
-                icon: CartFilledIcon,
-                url: '/order/list',
+                icon: ShoppingCart,
+                url: "/order/list",
               },
               {
                 label: lng.menu_order_schedule,
-                icon: PageClockFilledIcon,
-                url: '/order/schedule',
+                icon: CalendarSync,
+                url: "/order/schedule",
               },
             ],
           },
@@ -432,23 +449,23 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_attendance,
-                icon: AttachmentIcon,
-                url: '/employee/attendance',
+                icon: UserRoundSearch,
+                url: "/employee/attendance",
               },
               {
                 label: lng.menu_shift_handover,
-                icon: MoneyFilledIcon,
-                url: '/shift',
+                icon: HandCoins,
+                url: "/shift",
               },
               {
                 label: lng.title_leave,
-                icon: FileIcon,
-                url: '/leave',
+                icon: FileOutput,
+                url: "/leave",
               },
               {
                 label: lng.overtime,
-                icon: PageClockIcon,
-                url: '/ot',
+                icon: FileClock,
+                url: "/ot",
               },
             ],
           },
@@ -457,23 +474,23 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_sale,
-                icon: FileIcon,
-                url: '/sale',
+                icon: FileSpreadsheet,
+                url: "/sale",
                 items: [
                   {
                     label: lng.menu_report_sale,
-                    url: '/sale',
-                    icon: FileIcon,
+                    url: "/sale",
+                    icon: FileSpreadsheet,
                   },
                   {
                     label: lng.menu_report_sale_by_day,
-                    url: '/sale/byday',
-                    icon: FileIcon,
+                    url: "/sale/byday",
+                    icon: FileSpreadsheet,
                   },
                   {
                     label: lng.menu_report_product_select,
-                    url: '/sale/byday/products',
-                    icon: FileIcon,
+                    url: "/sale/byday/products",
+                    icon: FileSpreadsheet,
                   },
                 ],
               },
@@ -484,8 +501,8 @@ export function MenuItems(user: User | null) {
             items: [
               {
                 label: lng.menu_delivery,
-                icon: DeliveryIcon,
-                url: '/delivery',
+                icon: Truck,
+                url: "/delivery",
               },
             ],
           },
