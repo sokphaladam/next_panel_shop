@@ -20,6 +20,7 @@ import {
   Tent,
   Truck,
   UserRoundSearch,
+  Warehouse,
 } from "lucide-react";
 // import {
 //   AppsIcon,
@@ -81,6 +82,11 @@ export function MenuItems(user: User | null) {
           label: lng.menu_category,
           icon: ChartBarStacked,
           url: "/category",
+        },
+        {
+          label: "Stock",
+          icon: Warehouse,
+          url: "/inventory",
         },
       ],
     },
@@ -421,6 +427,11 @@ export function MenuItems(user: User | null) {
                 label: lng.menu_product,
                 icon: PackageSearch,
                 url: "/products",
+              },
+              {
+                label: "Stock",
+                icon: Warehouse,
+                url: "/inventory",
               },
             ],
           },
