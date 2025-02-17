@@ -239,6 +239,7 @@ export type Mutation = {
   createProduct?: Maybe<Scalars['Boolean']['output']>;
   createProductStock?: Maybe<Scalars['Boolean']['output']>;
   createShift?: Maybe<Scalars['Boolean']['output']>;
+  createTransactionStock?: Maybe<Scalars['Boolean']['output']>;
   createUser?: Maybe<Scalars['Boolean']['output']>;
   decreaseOrderItem?: Maybe<Scalars['Boolean']['output']>;
   deleteOrderSchedule?: Maybe<Scalars['Boolean']['output']>;
@@ -370,6 +371,11 @@ export type MutationCreateProductStockArgs = {
 
 export type MutationCreateShiftArgs = {
   data?: InputMaybe<ShiftInput>;
+};
+
+
+export type MutationCreateTransactionStockArgs = {
+  data?: InputMaybe<Array<InputMaybe<TransactionStockInput>>>;
 };
 
 
@@ -820,6 +826,7 @@ export type Query = {
   tableSet?: Maybe<TableSet>;
   tableSetList?: Maybe<Array<Maybe<TableSet>>>;
   topProductSell?: Maybe<Array<Maybe<ProductSell>>>;
+  transactionStockList?: Maybe<Array<Maybe<TransactionStock>>>;
   user?: Maybe<User>;
   userList?: Maybe<Array<Maybe<User>>>;
 };
@@ -1065,6 +1072,12 @@ export type QueryTopProductSellArgs = {
 };
 
 
+export type QueryTransactionStockListArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['Int']['input'];
 };
@@ -1205,6 +1218,26 @@ export type TableSet = {
   fake?: Maybe<Scalars['Boolean']['output']>;
   order?: Maybe<Order>;
   set?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TransactionStock = {
+  __typename?: 'TransactionStock';
+  by?: Maybe<User>;
+  date?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  product?: Maybe<Product>;
+  qty?: Maybe<Scalars['Int']['output']>;
+  sku?: Maybe<Sku>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+export type TransactionStockInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  productId: Scalars['Int']['input'];
+  qty?: InputMaybe<Scalars['Int']['input']>;
+  skuId: Scalars['Int']['input'];
+  type?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
@@ -1623,6 +1656,13 @@ export type MarkFirstPrintOrderMutationVariables = Exact<{
 
 export type MarkFirstPrintOrderMutation = { __typename?: 'Mutation', markFirstPrintOrder?: boolean | null };
 
+export type CreateTransactionStockMutationVariables = Exact<{
+  data?: InputMaybe<Array<InputMaybe<TransactionStockInput>> | InputMaybe<TransactionStockInput>>;
+}>;
+
+
+export type CreateTransactionStockMutation = { __typename?: 'Mutation', createTransactionStock?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1927,6 +1967,14 @@ export type CheckHaveOpenShiftTodayQueryVariables = Exact<{ [key: string]: never
 
 
 export type CheckHaveOpenShiftTodayQuery = { __typename?: 'Query', checkHaveOpenShiftToday?: boolean | null };
+
+export type TransactionStockListQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type TransactionStockListQuery = { __typename?: 'Query', transactionStockList?: Array<{ __typename?: 'TransactionStock', id?: string | null, type?: string | null, qty?: number | null, date?: string | null, product?: { __typename?: 'Product', id?: number | null, code?: string | null, images?: string | null, title?: string | null, description?: string | null } | null, sku?: { __typename?: 'SKU', id?: number | null, unit?: string | null, price?: number | null, discount?: number | null, name?: string | null, image?: string | null } | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -3453,6 +3501,37 @@ export function useMarkFirstPrintOrderMutation(baseOptions?: Apollo.MutationHook
 export type MarkFirstPrintOrderMutationHookResult = ReturnType<typeof useMarkFirstPrintOrderMutation>;
 export type MarkFirstPrintOrderMutationResult = Apollo.MutationResult<MarkFirstPrintOrderMutation>;
 export type MarkFirstPrintOrderMutationOptions = Apollo.BaseMutationOptions<MarkFirstPrintOrderMutation, MarkFirstPrintOrderMutationVariables>;
+export const CreateTransactionStockDocument = gql`
+    mutation createTransactionStock($data: [TransactionStockInput]) {
+  createTransactionStock(data: $data)
+}
+    `;
+export type CreateTransactionStockMutationFn = Apollo.MutationFunction<CreateTransactionStockMutation, CreateTransactionStockMutationVariables>;
+
+/**
+ * __useCreateTransactionStockMutation__
+ *
+ * To run a mutation, you first call `useCreateTransactionStockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTransactionStockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTransactionStockMutation, { data, loading, error }] = useCreateTransactionStockMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTransactionStockMutation(baseOptions?: Apollo.MutationHookOptions<CreateTransactionStockMutation, CreateTransactionStockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTransactionStockMutation, CreateTransactionStockMutationVariables>(CreateTransactionStockDocument, options);
+      }
+export type CreateTransactionStockMutationHookResult = ReturnType<typeof useCreateTransactionStockMutation>;
+export type CreateTransactionStockMutationResult = Apollo.MutationResult<CreateTransactionStockMutation>;
+export type CreateTransactionStockMutationOptions = Apollo.BaseMutationOptions<CreateTransactionStockMutation, CreateTransactionStockMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -5622,6 +5701,69 @@ export type CheckHaveOpenShiftTodayQueryHookResult = ReturnType<typeof useCheckH
 export type CheckHaveOpenShiftTodayLazyQueryHookResult = ReturnType<typeof useCheckHaveOpenShiftTodayLazyQuery>;
 export type CheckHaveOpenShiftTodaySuspenseQueryHookResult = ReturnType<typeof useCheckHaveOpenShiftTodaySuspenseQuery>;
 export type CheckHaveOpenShiftTodayQueryResult = Apollo.QueryResult<CheckHaveOpenShiftTodayQuery, CheckHaveOpenShiftTodayQueryVariables>;
+export const TransactionStockListDocument = gql`
+    query transactionStockList($offset: Int, $limit: Int) {
+  transactionStockList(offset: $offset, limit: $limit) {
+    id
+    product {
+      id
+      code
+      images
+      title
+      description
+    }
+    sku {
+      id
+      unit
+      price
+      discount
+      name
+      image
+    }
+    type
+    qty
+    by {
+      id
+      display
+    }
+    date
+  }
+}
+    `;
+
+/**
+ * __useTransactionStockListQuery__
+ *
+ * To run a query within a React component, call `useTransactionStockListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionStockListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionStockListQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useTransactionStockListQuery(baseOptions?: Apollo.QueryHookOptions<TransactionStockListQuery, TransactionStockListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionStockListQuery, TransactionStockListQueryVariables>(TransactionStockListDocument, options);
+      }
+export function useTransactionStockListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionStockListQuery, TransactionStockListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionStockListQuery, TransactionStockListQueryVariables>(TransactionStockListDocument, options);
+        }
+export function useTransactionStockListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TransactionStockListQuery, TransactionStockListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TransactionStockListQuery, TransactionStockListQueryVariables>(TransactionStockListDocument, options);
+        }
+export type TransactionStockListQueryHookResult = ReturnType<typeof useTransactionStockListQuery>;
+export type TransactionStockListLazyQueryHookResult = ReturnType<typeof useTransactionStockListLazyQuery>;
+export type TransactionStockListSuspenseQueryHookResult = ReturnType<typeof useTransactionStockListSuspenseQuery>;
+export type TransactionStockListQueryResult = Apollo.QueryResult<TransactionStockListQuery, TransactionStockListQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

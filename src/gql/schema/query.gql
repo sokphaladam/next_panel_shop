@@ -852,3 +852,31 @@ query orderSchedule($orderScheduleId: Int!) {
 query checkHaveOpenShiftToday {
   checkHaveOpenShiftToday
 }
+
+query transactionStockList($offset: Int, $limit: Int) {
+  transactionStockList(offset: $offset, limit: $limit) {
+    id
+    product {
+      id
+      code
+      images
+      title
+      description
+    }
+    sku {
+      id
+      unit
+      price
+      discount
+      name
+      image
+    }
+    type
+    qty
+    by {
+      id
+      display
+    }
+    date
+  }
+}

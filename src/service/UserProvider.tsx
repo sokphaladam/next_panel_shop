@@ -1,6 +1,10 @@
-'use client';
-import { User, useCheckHaveOpenShiftTodayQuery, useMeQuery } from '@/gql/graphql';
-import React, { PropsWithChildren, useContext, useEffect } from 'react';
+"use client";
+import {
+  User,
+  useCheckHaveOpenShiftTodayQuery,
+  useMeQuery,
+} from "@/gql/graphql";
+import React, { PropsWithChildren, useContext, useEffect } from "react";
 
 interface IUser extends User {
   isHaveShift: boolean;
@@ -18,7 +22,10 @@ export function UserProvider(props: PropsWithChildren<unknown>) {
 
   return (
     <UserContext.Provider
-      value={{ ...((data?.me as IUser) || null), isHaveShift: queryCheck.data?.checkHaveOpenShiftToday || false }}
+      value={{
+        ...((data?.me as IUser) || null),
+        isHaveShift: queryCheck.data?.checkHaveOpenShiftToday || false,
+      }}
     >
       {props.children}
     </UserContext.Provider>
