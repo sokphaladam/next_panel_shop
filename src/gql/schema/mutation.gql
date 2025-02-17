@@ -233,3 +233,7 @@ mutation setItemShowOn($productId: Int!, $skuId: Int, $status: String) {
 mutation markFirstPrintOrder($orderId: Int!) {
   markFirstPrintOrder(orderId: $orderId)
 }
+
+mutation createTransactionStock($data: [TransactionStockInput]) {
+  createTransactionStock(data: $data)
+}
