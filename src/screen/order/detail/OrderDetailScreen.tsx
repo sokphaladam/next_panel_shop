@@ -56,6 +56,7 @@ import { useWindowSize } from "@/hook/useWindowSize";
 import { FormSetPaymentType } from "../components/FormSetPaymentType";
 import { SwapTable } from "../components/SwapTable";
 import { PrintV2 } from "../components/PrintV2";
+import { ButtonReadyToServe } from "./button-ready-to-serve";
 
 const tabs: TabProps[] = [
   {
@@ -112,7 +113,10 @@ export default function OrderDetailScreen() {
   });
   useOrderSubscriptSubscription({
     onData: (res) => {
-      if (res.data.data?.orderSubscript.status === 2 || !!res.data.data?.orderSubscript.uuid) {
+      if (
+        res.data.data?.orderSubscript.status === 2 ||
+        !!res.data.data?.orderSubscript.uuid
+      ) {
         refetch();
       }
     },
@@ -135,7 +139,10 @@ export default function OrderDetailScreen() {
         if (moment(new Date(inv.date)).date() === moment(new Date()).date()) {
           setInvoice(inv);
         } else {
-          setInvoice({ date: moment(new Date()).format("YYYY-MM-DD"), count: 1 });
+          setInvoice({
+            date: moment(new Date()).format("YYYY-MM-DD"),
+            count: 1,
+          });
         }
       } else {
         setInvoice({ date: moment(new Date()).format("YYYY-MM-DD"), count: 1 });
@@ -158,7 +165,8 @@ export default function OrderDetailScreen() {
           title: "Confirmation",
           body: [
             <div key={1}>
-              You are select order <b>#{data?.order?.id}</b> to <b>{status.toLowerCase()}</b>.
+              You are select order <b>#{data?.order?.id}</b> to{" "}
+              <b>{status.toLowerCase()}</b>.
             </div>,
           ],
           buttons: [
@@ -177,13 +185,28 @@ export default function OrderDetailScreen() {
                 })
                   .then((res) => {
                     if (res.data?.changeOrderStatus) {
-                      setToasts([...toasts, { content: "Update status was success.", status: "success" }]);
+                      setToasts([
+                        ...toasts,
+                        {
+                          content: "Update status was success.",
+                          status: "success",
+                        },
+                      ]);
                     } else {
-                      setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
+                      setToasts([
+                        ...toasts,
+                        {
+                          content: "Oop! somthing was wrong!",
+                          status: "error",
+                        },
+                      ]);
                     }
                   })
                   .catch(() => {
-                    setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
+                    setToasts([
+                      ...toasts,
+                      { content: "Oop! somthing was wrong!", status: "error" },
+                    ]);
                   });
               },
             },
@@ -191,7 +214,15 @@ export default function OrderDetailScreen() {
         });
       }
     },
-    [change, data?.order?.id, setToasts, toasts, toggelOpen, toggleActive, togglePaid],
+    [
+      change,
+      data?.order?.id,
+      setToasts,
+      toasts,
+      toggelOpen,
+      toggleActive,
+      togglePaid,
+    ]
   );
 
   if (loading || typeof window === "undefined") {
@@ -224,22 +255,33 @@ export default function OrderDetailScreen() {
         }, 0);
 
   const vatPer = setting.find((f) => f.option === "TAX")?.value;
-  const lastUpdate = data?.order?.log?.find((f) => f?.text === "Last Updated")?.date;
+  const lastUpdate = data?.order?.log?.find(
+    (f) => f?.text === "Last Updated"
+  )?.date;
   const orderItems =
-    data?.order?.items?.filter((f: any) => f.status === "PENDING").reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
+    data?.order?.items
+      ?.filter((f: any) => f.status === "PENDING")
+      .reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
   const orderHistory =
-    data?.order?.items?.filter((f: any) => f.status !== "PENDING").reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
+    data?.order?.items
+      ?.filter((f: any) => f.status !== "PENDING")
+      .reduce((a, b) => (a = a + (b?.qty || 0)), 0) || 0;
 
   return (
     <Page
       title={`Order Detail #${params.id}`}
       subtitle={
-        data?.order?.status === StatusOrder.Checkout && Number(data?.order?.paid || 0)
+        data?.order?.status === StatusOrder.Checkout &&
+        Number(data?.order?.paid || 0)
           ? ((
               <div className="flex flex-row gap-2">
-                <Badge tone="success-strong">{(<small>PAID</small>) as any}</Badge>
+                <Badge tone="success-strong">
+                  {(<small>PAID</small>) as any}
+                </Badge>
                 {data.order.bankType && (
-                  <Badge tone="info-strong">{(<small>{data.order.bankType}</small>) as any}</Badge>
+                  <Badge tone="info-strong">
+                    {(<small>{data.order.bankType}</small>) as any}
+                  </Badge>
                 )}
               </div>
             ) as any)
@@ -256,7 +298,10 @@ export default function OrderDetailScreen() {
           content: "Yes",
           onAction: () => {
             if (!reasonInput) {
-              setToasts([...toasts, { content: "Please input the reason!", status: "error" }]);
+              setToasts([
+                ...toasts,
+                { content: "Please input the reason!", status: "error" },
+              ]);
               return;
             }
             change({
@@ -270,15 +315,27 @@ export default function OrderDetailScreen() {
             })
               .then((res) => {
                 if (res.data?.changeOrderStatus) {
-                  setToasts([...toasts, { content: "Update status was success.", status: "success" }]);
+                  setToasts([
+                    ...toasts,
+                    {
+                      content: "Update status was success.",
+                      status: "success",
+                    },
+                  ]);
                   setReasonInput("");
                   toggleActive();
                 } else {
-                  setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
+                  setToasts([
+                    ...toasts,
+                    { content: "Oop! somthing was wrong!", status: "error" },
+                  ]);
                 }
               })
               .catch(() => {
-                setToasts([...toasts, { content: "Oop! somthing was wrong!", status: "error" }]);
+                setToasts([
+                  ...toasts,
+                  { content: "Oop! somthing was wrong!", status: "error" },
+                ]);
               });
           },
         }}
@@ -303,21 +360,31 @@ export default function OrderDetailScreen() {
           setOpen={setPaid}
           invoice={invoice}
           setInvoice={setInvoice}
-          total={Number((total - (total * Number(data?.order?.discount)) / 100).toFixed(2))}
+          total={Number(
+            (total - (total * Number(data?.order?.discount)) / 100).toFixed(2)
+          )}
         />
       )}
       <Layout>
         <Layout.Section variant="oneThird">
           <Card padding={"0"}>
             <Box padding={"0"}>
-              <PolarisProductPickerAddCart type="LAYOUT" refetch={refetch} order={data?.order || {}} />
+              <PolarisProductPickerAddCart
+                type="LAYOUT"
+                refetch={refetch}
+                order={data?.order || {}}
+              />
             </Box>
           </Card>
         </Layout.Section>
-        <Layout.Section variant={(width || 0) > 600 && (width || 0) < 770 ? "oneThird" : "oneHalf"}>
+        <Layout.Section
+          variant={
+            (width || 0) > 600 && (width || 0) < 770 ? "oneThird" : "oneHalf"
+          }
+        >
           <Card padding={"0"}>
             <Box padding={"300"}>
-              <div className="flex flex-row justify-between items-baseline">
+              <div className="flex flex-row items-baseline justify-between">
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row gap-4">
                     <PrintOrder
@@ -349,7 +416,8 @@ export default function OrderDetailScreen() {
                         Pending
                       </Button>
                     )} */}
-                    {(data?.order?.status === StatusOrder.Pending || orderItems > 0) && (
+                    {(data?.order?.status === StatusOrder.Pending ||
+                      orderItems > 0) && (
                       <Button
                         onClick={() => handleUpdate(StatusOrder.Verify)}
                         size="micro"
@@ -360,9 +428,11 @@ export default function OrderDetailScreen() {
                         Send to kitchen
                       </Button>
                     )}
-                    {[StatusOrder.Delivery, StatusOrder.Checkout, StatusOrder.Verify].includes(
-                      data?.order?.status as any,
-                    ) &&
+                    {[
+                      StatusOrder.Delivery,
+                      StatusOrder.Checkout,
+                      StatusOrder.Verify,
+                    ].includes(data?.order?.status as any) &&
                       Number(data?.order?.paid || 0) <= 0 && (
                         <Button
                           size="micro"
@@ -391,14 +461,21 @@ export default function OrderDetailScreen() {
                   <b className="mb-2">
                     <small>{data?.order?.uuid || ""}</small>
                   </b>
-                  <Badge tone={toneStatus[data?.order?.status || ""]} size="small">
+                  <Badge
+                    tone={toneStatus[data?.order?.status || ""]}
+                    size="small"
+                  >
                     {
                       (
-                        <small className="flex flex-row justify-between items-center p-1">
+                        <small className="flex flex-row items-center justify-between p-1">
                           <div className="mr-1">
-                            <Icon source={toneIcon[data?.order?.status || ""]} />
+                            <Icon
+                              source={toneIcon[data?.order?.status || ""]}
+                            />
                           </div>
-                          {data?.order?.status === "DELIVERY" ? "Deliver" : data?.order?.status || ""}
+                          {data?.order?.status === "DELIVERY"
+                            ? "Deliver"
+                            : data?.order?.status || ""}
                         </small>
                       ) as any
                     }
@@ -408,7 +485,7 @@ export default function OrderDetailScreen() {
             </Box>
             <Divider />
             <Box padding={"300"}>
-              <div className="flex flex-row justify-between items-start">
+              <div className="flex flex-row items-start justify-between">
                 <div></div>
                 <DiscountOrder total={total} data={data?.order || {}} />
               </div>
@@ -416,7 +493,7 @@ export default function OrderDetailScreen() {
             <Divider />
             <Box>
               <div
-                className="overflow-x-auto scroll-smooth snap-y snap-mandatory"
+                className="snap-y snap-mandatory overflow-x-auto scroll-smooth"
                 style={{ height: (height || 0) / 1.9 }}
               >
                 <IndexTable
@@ -451,24 +528,51 @@ export default function OrderDetailScreen() {
                   {data?.order?.items
                     ?.filter((f: any) =>
                       select === 1
-                        ? !![StatusOrderItem.Completed, StatusOrderItem.Making].includes(f.status)
-                        : ![StatusOrderItem.Completed, StatusOrderItem.Making].includes(f.status),
+                        ? [
+                            StatusOrderItem.Completed,
+                            StatusOrderItem.Making,
+                          ].includes(f.status)
+                        : ![
+                            StatusOrderItem.Completed,
+                            StatusOrderItem.Making,
+                          ].includes(f.status)
                     )
                     .map((item, index) => {
-                      const priceAfterDis = Number(item?.price) - (Number(item?.price) * Number(item?.discount)) / 100;
+                      const priceAfterDis =
+                        Number(item?.price) -
+                        (Number(item?.price) * Number(item?.discount)) / 100;
                       return (
                         <React.Fragment key={index}>
-                          <IndexTable.Row position={index} id={item?.id + ""}>
-                            <IndexTable.Cell>{index + 1}</IndexTable.Cell>
+                          <IndexTable.Row
+                            position={index}
+                            id={item?.id + ""}
+                            tone={
+                              item?.status === StatusOrderItem.Completed
+                                ? "success"
+                                : undefined
+                            }
+                          >
+                            <IndexTable.Cell>
+                              {index + 1}
+                            </IndexTable.Cell>
                             <IndexTable.Cell>
                               <div className="flex flex-row gap-2">
                                 <Image
                                   alt=""
-                                  src={item?.sku?.image || item?.product?.images || ""}
+                                  src={
+                                    item?.sku?.image ||
+                                    item?.product?.images ||
+                                    ""
+                                  }
                                   width={40}
                                   height={40}
                                   objectFit="contain"
-                                  style={{ width: 40, borderRadius: 5, maxHeight: 40, objectFit: "cover" }}
+                                  style={{
+                                    width: 40,
+                                    borderRadius: 5,
+                                    maxHeight: 40,
+                                    objectFit: "cover",
+                                  }}
                                   loading="lazy"
                                 />
                                 {/* <Thumbnail alt="" source={item?.product?.images + ''} size="small" /> */}
@@ -479,13 +583,21 @@ export default function OrderDetailScreen() {
                                     {/* </small> */}
                                   </Text>
                                   <div className="flex flex-row">
-                                    <Text as="strong" variant="bodySm" tone="base">
+                                    <Text
+                                      as="strong"
+                                      variant="bodySm"
+                                      tone="base"
+                                    >
                                       {item?.status} x{item?.qty}
                                     </Text>
                                   </div>
                                   <div>
                                     <small className="text-pink-700">
-                                      From last updated ({moment(new Date(item?.createdDate as any)).fromNow(true)})
+                                      From last updated (
+                                      {moment(
+                                        new Date(item?.createdDate as any)
+                                      ).fromNow(true)}
+                                      )
                                     </small>
                                   </div>
                                 </div>
@@ -497,16 +609,24 @@ export default function OrderDetailScreen() {
                               </Text>
                             </IndexTable.Cell>
                             <IndexTable.Cell>
-                              <Text as="strong" variant="bodySm" fontWeight="bold" tone="success">
-                                ${(priceAfterDis * Number(item?.qty)).toFixed(2)}
+                              <Text
+                                as="strong"
+                                variant="bodySm"
+                                fontWeight="bold"
+                                tone="success"
+                              >
+                                $
+                                {(priceAfterDis * Number(item?.qty)).toFixed(2)}
                               </Text>
                             </IndexTable.Cell>
                             <IndexTable.Cell>
                               <ControllChangeQty item={item || {}} />
                             </IndexTable.Cell>
-                            {[StatusOrderItem.Pending, StatusOrderItem.Making, StatusOrderItem.Completed].includes(
-                              item?.status as any,
-                            ) && (
+                            {[
+                              StatusOrderItem.Pending,
+                              StatusOrderItem.Making,
+                              StatusOrderItem.Completed,
+                            ].includes(item?.status as any) && (
                               <IndexTable.Cell>
                                 <div className="flex flex-col items-center">
                                   <div className="flex flex-row items-center gap-1">
@@ -516,15 +636,19 @@ export default function OrderDetailScreen() {
                                         variant="primary"
                                         tone="critical"
                                         disabled={
-                                          ![1, 2, 6].includes(user?.role?.id || 0) &&
-                                          item?.status !== StatusOrderItem.Pending
+                                          ![1, 2, 6].includes(
+                                            user?.role?.id || 0
+                                          ) &&
+                                          item?.status !==
+                                            StatusOrderItem.Pending
                                         }
                                         onClick={() => {
                                           Modal.dialog({
                                             title: "Confirmation",
                                             body: [
                                               <div key={1}>
-                                                {"Are you sure to remove this item: " + item?.product?.title}
+                                                {"Are you sure to remove this item: " +
+                                                  item?.product?.title}
                                               </div>,
                                             ],
                                             buttons: [
@@ -533,8 +657,10 @@ export default function OrderDetailScreen() {
                                                 onPress: () => {
                                                   mark({
                                                     variables: {
-                                                      markOrderItemStatusId: Number(item?.id),
-                                                      status: StatusOrderItem.Deleted,
+                                                      markOrderItemStatusId:
+                                                        Number(item?.id),
+                                                      status:
+                                                        StatusOrderItem.Deleted,
                                                     },
                                                   });
                                                 },
@@ -547,12 +673,25 @@ export default function OrderDetailScreen() {
                                       </Button>
                                     </div>
                                     <div>
-                                      <PrintForKitchen item={item || {}} order={data.order || {}} />
+                                      <PrintForKitchen
+                                        item={item || {}}
+                                        order={data.order || {}}
+                                      />
                                     </div>
+                                    {item?.status !==
+                                      StatusOrderItem.Completed && (
+                                      <div>
+                                        <ButtonReadyToServe
+                                          id={item?.id ?? 0}
+                                        />
+                                      </div>
+                                    )}
                                   </div>
                                   {item?.isPrint ? (
                                     <div>
-                                      <small className="text-pink-700">Already to kitchen</small>
+                                      <small className="text-pink-700">
+                                        Already to kitchen
+                                      </small>
                                     </div>
                                   ) : (
                                     <></>
@@ -564,9 +703,14 @@ export default function OrderDetailScreen() {
                           {(item?.addons || item?.remark) && (
                             <IndexTable.Row position={index} id={item?.id + ""}>
                               <IndexTable.Cell></IndexTable.Cell>
-                              <IndexTable.Cell colSpan={5} className="bg-yellow-200">
+                              <IndexTable.Cell
+                                colSpan={5}
+                                className="bg-yellow-200"
+                              >
                                 {item.addons && <div>Addon: {item.addons}</div>}
-                                {item.remark && <div>Remark: {item.remark}</div>}
+                                {item.remark && (
+                                  <div>Remark: {item.remark}</div>
+                                )}
                               </IndexTable.Cell>
                             </IndexTable.Row>
                           )}
@@ -577,30 +721,6 @@ export default function OrderDetailScreen() {
               </div>
             </Box>
             <Divider />
-            {/* <Box padding={'300'}>
-              <div className="flex flex-row justify-between items-start">
-                <div>
-                  <div>
-                    {data?.order?.delivery && (
-                      <Text as="h4" variant="bodyMd" fontWeight="bold">
-                        Delivery Pickup
-                      </Text>
-                    )}
-                  </div>
-                  {data?.order?.delivery && (
-                    <div className="mt-3">
-                      <Text as="p" variant="bodySm" tone="base">
-                        {data?.order?.delivery?.name}
-                      </Text>
-                      <Text as="p" variant="bodySm" tone="base">
-                        #{data?.order?.deliveryCode}
-                      </Text>
-                    </div>
-                  )}
-                </div>
-                <DeliveryPickup order={data?.order || {}} />
-              </div>
-            </Box> */}
           </Card>
         </Layout.Section>
         <Layout.Section variant="oneThird">
@@ -662,8 +782,13 @@ export default function OrderDetailScreen() {
                     {data && (
                       <div className="mr-1">
                         <Text as="strong" variant="bodySm" alignment="end">
-                          ${((Number(total || 0) * Number(data.order?.discount)) / 100).toFixed(2)} (
-                          {data.order?.discount?.toFixed(2)}%)
+                          $
+                          {(
+                            (Number(total || 0) *
+                              Number(data.order?.discount)) /
+                            100
+                          ).toFixed(2)}{" "}
+                          ({data.order?.discount?.toFixed(2)}%)
                         </Text>
                       </div>
                     )}
@@ -679,8 +804,20 @@ export default function OrderDetailScreen() {
                   </IndexTable.Cell>
                   <IndexTable.Cell>
                     <div className="mr-1">
-                      <Text as="strong" variant="bodySm" alignment="end" tone="critical" fontWeight="bold">
-                        ${((total || 0) - (Number(total || 0) * Number(data?.order?.discount || 0)) / 100).toFixed(2)}
+                      <Text
+                        as="strong"
+                        variant="bodySm"
+                        alignment="end"
+                        tone="critical"
+                        fontWeight="bold"
+                      >
+                        $
+                        {(
+                          (total || 0) -
+                          (Number(total || 0) *
+                            Number(data?.order?.discount || 0)) /
+                            100
+                        ).toFixed(2)}
                       </Text>
                     </div>
                   </IndexTable.Cell>
@@ -692,7 +829,7 @@ export default function OrderDetailScreen() {
           {data?.order && (
             <Card padding={"0"}>
               <Box padding={"400"}>
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center justify-between">
                   <div>Payment: {data?.order?.bankType}</div>
                   <FormSetPaymentType order={data?.order || {}} />
                 </div>
@@ -702,7 +839,7 @@ export default function OrderDetailScreen() {
           <br />
           <Card padding={"0"}>
             <Box padding={"400"}>
-              <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-row items-center justify-between">
                 {data?.order?.delivery && (
                   <div className="mt-3">
                     <Text as="p" variant="bodySm" tone="base">
@@ -720,7 +857,7 @@ export default function OrderDetailScreen() {
           <br />
           <Card padding={"0"}>
             <Box padding={"400"}>
-              <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-row items-center justify-between">
                 <div>People in order: {data?.order?.person || 0}</div>
                 <ControllPerson orderId={data?.order?.id || 0} />
               </div>
