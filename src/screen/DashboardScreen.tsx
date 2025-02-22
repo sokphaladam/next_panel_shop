@@ -9,12 +9,11 @@ import {
   PolarisLayout,
   role_permission,
 } from "@/components/polaris/PolarisLayout";
+import { PageLayout } from "@/components/shadcn/page-layout";
 
 export function DashboardScreen() {
   return (
-    <PolarisLayout
-      title=""
-      titleHidden
+    <PageLayout
       permission={[
         role_permission.ADMIN,
         role_permission.SUPER_ADMIN,
@@ -25,10 +24,10 @@ export function DashboardScreen() {
       <br />
       <hr />
       <br />
-      <Layout>
+      <div className="grid grid-cols-2 gap-4">
         <TopSell />
-        <Layout.Section variant="oneHalf"></Layout.Section>
-      </Layout>
-    </PolarisLayout>
+        <div></div>
+      </div>
+    </PageLayout>
   );
 }

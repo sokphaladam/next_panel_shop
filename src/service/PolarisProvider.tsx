@@ -82,11 +82,11 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
         }
         showMobileNavigation={mobileNavigationActive && verify}
         onNavigationDismiss={toggleMobileNavigationActive}
-        navigation={
-          verify && open ? (
-            <NavigationMarkup onClick={toggleMobileNavigationActive} />
-          ) : null
-        }
+        // navigation={
+        //   verify && open ? (
+        //     <NavigationMarkup onClick={toggleMobileNavigationActive} />
+        //   ) : null
+        // }
       >
         <div className="flex flex-col justify-between">
           {config_app.public.assets.dev === "development" && (
@@ -94,7 +94,7 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
               Developer Mode
             </div>
           )}
-          <div className="w-full text-center">
+          <div className="w-full bg-white text-center">
             <div>
               Wifi: <b>Staff-GF</b>
             </div>
