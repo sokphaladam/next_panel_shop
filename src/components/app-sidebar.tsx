@@ -33,6 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useTheme } from "next-themes";
+import { NavUser } from "./nav-user";
 
 export function AppSidebar() {
   const user = useUser();
@@ -128,9 +129,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>{menuGroups}</SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem></SidebarMenuItem>
-        </SidebarMenu>
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

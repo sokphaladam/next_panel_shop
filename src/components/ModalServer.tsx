@@ -1,6 +1,15 @@
 "use client";
-import { Modal } from "@shopify/polaris";
 import React, { Component } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Button } from "./ui/button";
 
 interface IButton {
   title: string;
@@ -68,6 +77,54 @@ export class ModalComponent extends Component<{}, IState> {
     const secondary_button = this.state.buttons.filter(
       (f) => f.class !== "primary"
     );
+
+    return (
+      <Dialog open={this.state.visible || false} onOpenChange={this.onClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{this.state.title}</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+            {this.state.body &&
+              this.state.body.map((body, index) => {
+                return <div key={index}>{body as React.ReactNode}</div>;
+              })}
+          </DialogDescription>
+          <DialogFooter>
+            {/* <Button onClick={this.onClose} variant={"secondary"} size={"sm"}>
+              Close
+            </Button> */}
+            {secondary_button &&
+              secondary_button.length > 0 &&
+              secondary_button.map((x, i) => {
+                return (
+                  <Button
+                    variant={"secondary"}
+                    className={x.class}
+                    onClick={x.onPress ?? this.onClose}
+                    key={i}
+                  >
+                    {x.title}
+                  </Button>
+                );
+              })}
+            {primary_button && (
+              <Button
+                onClick={() => {
+                  primary_button.onPress && primary_button.onPress();
+                  this.onClose();
+                }}
+                variant={"default"}
+                className={primary_button.class}
+              >
+                {primary_button.title}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+    /*
     return (
       <Modal
         open={this.state.visible || false}
@@ -103,21 +160,8 @@ export class ModalComponent extends Component<{}, IState> {
               </Modal.Section>
             );
           })}
-        {/* <Modal.Section flush={this.state.flush}>
-          <div style={{ display: "flex", justifyContent: "right" }}>
-            {this.state.buttons.map((btn, i) => (
-              <button
-                key={i}
-                className={`btn btn-${btn.class} btn-sm m-1`}
-                onClick={() => this.onPress(btn.onPress)}
-                style={{ display: btn.invisible ? "none" : "" }}
-              >
-                {btn.title}
-              </button>
-            ))}
-          </div>
-        </Modal.Section> */}
       </Modal>
     );
+    */
   }
 }

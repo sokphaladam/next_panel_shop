@@ -52,14 +52,14 @@ export function AppProvider({ children }: React.PropsWithChildren<any>) {
           <UserProvider>
             <SettingProvider>
               <ToggleProvider>
-                <PolarisProvider>
-                  <SidebarProvider>
-                    <AppSidebar />
+                <SidebarProvider>
+                  <AppSidebar />
+                  <PolarisProvider>
                     <div className="w-full px-5">
                       <CustomToastMultiple>{children}</CustomToastMultiple>
                     </div>
-                  </SidebarProvider>
-                </PolarisProvider>
+                  </PolarisProvider>
+                </SidebarProvider>
                 {/* <SidebarProvider>
                   <AppSidebar />
                   <SidebarInset>

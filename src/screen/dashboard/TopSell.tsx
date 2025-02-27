@@ -39,7 +39,7 @@ export function TopSell() {
 
   return (
     <div>
-      <div className="mb-4 flex flex-row items-center justify-between">
+      <div className="mb-4 flex flex-row flex-wrap items-center justify-between">
         <div>
           <h5 className="text-lg font-bold">Top Sell</h5>
         </div>

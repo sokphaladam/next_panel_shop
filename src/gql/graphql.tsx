@@ -1741,7 +1741,7 @@ export type TableSetListQueryVariables = Exact<{
 }>;
 
 
-export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null, firstPrint?: boolean | null } | null } | null> | null };
+export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null, firstPrint?: boolean | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, status?: StatusOrderItem | null, isPrint?: boolean | null, product?: { __typename?: 'Product', id?: number | null, title?: string | null } | null, sku?: { __typename?: 'SKU', id?: number | null, name?: string | null } | null } | null> | null } | null } | null> | null };
 
 export type DeliveryByIdQueryVariables = Exact<{
   deliveryByIdId: Scalars['Int']['input'];
@@ -4133,6 +4133,19 @@ export const TableSetListDocument = gql`
       status
       code
       firstPrint
+      items {
+        id
+        status
+        product {
+          id
+          title
+        }
+        sku {
+          id
+          name
+        }
+        isPrint
+      }
     }
   }
 }

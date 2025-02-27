@@ -1,11 +1,8 @@
 /* eslint-disable @next/next/no-css-tags */
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { AppProvider } from "@/service/AppProvider";
 import { LoadFont } from "@/components/LoadFont";
 import { ThemeProvider } from "@/components/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Mood",
@@ -30,7 +27,7 @@ export default function RootLayout({
         />
         <LoadFont />
       </head>
-      <body className={`${inter.className}`}>
+      <body>
         <ThemeProvider
           attribute={"class"}
           defaultTheme="light"

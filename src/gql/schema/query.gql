@@ -297,6 +297,19 @@ query tableSetList($limit: Int, $offset: Int) {
       status
       code
       firstPrint
+      items {
+        id
+        status
+        product {
+          id
+          title
+        }
+        sku {
+          id
+          name
+        }
+        isPrint
+      }
     }
   }
 }

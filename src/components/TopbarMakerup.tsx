@@ -1,6 +1,12 @@
-'use client';
-import React, { useCallback, useState } from 'react';
-import { Icon, IconableAction, Text, TextField, TopBar } from '@shopify/polaris';
+"use client";
+import React, { useCallback, useState } from "react";
+import {
+  Icon,
+  IconableAction,
+  Text,
+  TextField,
+  TopBar,
+} from "@shopify/polaris";
 import {
   CheckSmallIcon,
   ExitIcon,
@@ -8,15 +14,15 @@ import {
   ContractFilledIcon,
   MenuIcon,
   BarcodeIcon,
-} from '@shopify/polaris-icons';
-import { deleteCookie } from 'cookies-next';
-import { useRouter, usePathname } from 'next/navigation';
-import { useUser } from '@/service/UserProvider';
-import { useLanguage } from '@/service/LanguageProvider';
-import { FormShift } from './polaris/form/FormShift';
-import { useToggle } from '@/service/ToggleProvider';
-import { useWindowSize } from '@/hook/useWindowSize';
-import { FormSearchOrderItem } from './polaris/form/FormSearchOrderItem';
+} from "@shopify/polaris-icons";
+import { deleteCookie } from "cookies-next";
+import { useRouter, usePathname } from "next/navigation";
+import { useUser } from "@/service/UserProvider";
+import { useLanguage } from "@/service/LanguageProvider";
+import { FormShift } from "./polaris/form/FormShift";
+import { useToggle } from "@/service/ToggleProvider";
+import { useWindowSize } from "@/hook/useWindowSize";
+import { FormSearchOrderItem } from "./polaris/form/FormSearchOrderItem";
 
 interface Props {
   mobileNavigationActive: any;
@@ -26,8 +32,8 @@ interface Props {
 export function TopbarMarkup(props: Props) {
   const user = useUser();
   const { setOpen, open } = useToggle();
-  const [shift, setShift] = useState(false);
   const { width } = useWindowSize();
+  const [shift, setShift] = useState(false);
   const [isShift, setIsShift] = useState(false);
   const { push, refresh } = useRouter();
   const pathname = usePathname();
@@ -36,21 +42,30 @@ export function TopbarMarkup(props: Props) {
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = useState(false);
   const [isSecondaryMenuOpenQr, setIsSecondaryMenuOpenQr] = useState(false);
 
-  const toggleUserMenuActive = useCallback(() => setUserMenuActive((userMenuActive) => !userMenuActive), []);
+  const toggleUserMenuActive = useCallback(
+    () => setUserMenuActive((userMenuActive) => !userMenuActive),
+    []
+  );
 
   const toggleMobileNavigationActive = useCallback(
-    () => props.setMobileNavigationActive((mobileNavigationActive: any) => !mobileNavigationActive),
-    [props],
+    () =>
+      props.setMobileNavigationActive(
+        (mobileNavigationActive: any) => !mobileNavigationActive
+      ),
+    [props]
   );
 
   const toggleIsSecondaryMenuOpen = useCallback(
     () => setIsSecondaryMenuOpen((isSecondaryMenuOpen) => !isSecondaryMenuOpen),
-    [],
+    []
   );
 
   const toggleIsSecondaryMenuOpenQr = useCallback(
-    () => setIsSecondaryMenuOpenQr((isSecondaryMenuOpenQr) => !isSecondaryMenuOpenQr),
-    [],
+    () =>
+      setIsSecondaryMenuOpenQr(
+        (isSecondaryMenuOpenQr) => !isSecondaryMenuOpenQr
+      ),
+    []
   );
 
   const userMenuActions: { items: IconableAction[] }[] = [
@@ -58,7 +73,7 @@ export function TopbarMarkup(props: Props) {
       items: [
         [1, 2, 6].includes(user?.role?.id || 0)
           ? {
-              content: !!isShift ? 'Close Shift' : 'Open Shift',
+              content: !!isShift ? "Close Shift" : "Open Shift",
               icon: !!shift ? ContractFilledIcon : ButtonPressIcon,
               onAction: () => {
                 setShift(!shift);
@@ -66,11 +81,11 @@ export function TopbarMarkup(props: Props) {
             }
           : {},
         {
-          content: 'Logout',
+          content: "Logout",
           icon: ExitIcon,
           onAction: async () => {
-            await deleteCookie('tk_token');
-            await push('/');
+            await deleteCookie("tk_token");
+            await push("/");
             if (process.browser) {
               setTimeout(() => {
                 window.location.reload();
@@ -85,21 +100,24 @@ export function TopbarMarkup(props: Props) {
   const userMenuMarkup = (
     <TopBar.UserMenu
       actions={userMenuActions}
-      name={user?.display || ''}
-      detail={user?.role?.name + ''}
-      initials={(user?.display || '')
-        .split(' ')
+      name={user?.display || ""}
+      detail={user?.role?.name + ""}
+      initials={(user?.display || "")
+        .split(" ")
         .map((x) => x.charAt(0).toUpperCase())
-        .join('')}
+        .join("")}
       open={userMenuActive}
       onToggle={toggleUserMenuActive}
-      avatar={user?.profile || ''}
+      avatar={user?.profile || ""}
     />
   );
 
   const secondaryMenuMarkup = (
     <div className="flex flex-row items-center">
-      <FormSearchOrderItem open={isSecondaryMenuOpenQr} setOpen={setIsSecondaryMenuOpenQr} />
+      <FormSearchOrderItem
+        open={isSecondaryMenuOpenQr}
+        setOpen={setIsSecondaryMenuOpenQr}
+      />
       <TopBar.Menu
         activatorContent={
           <span>
@@ -124,14 +142,14 @@ export function TopbarMarkup(props: Props) {
           {
             items: [
               {
-                content: 'English',
-                suffix: lng === 'en' ? <Icon source={CheckSmallIcon} /> : '',
-                onAction: () => setLng('en'),
+                content: "English",
+                suffix: lng === "en" ? <Icon source={CheckSmallIcon} /> : "",
+                onAction: () => setLng("en"),
               },
               {
-                content: 'Khmer',
-                suffix: lng === 'km' ? <Icon source={CheckSmallIcon} /> : '',
-                onAction: () => setLng('km'),
+                content: "Khmer",
+                suffix: lng === "km" ? <Icon source={CheckSmallIcon} /> : "",
+                onAction: () => setLng("km"),
               },
             ],
           },
@@ -151,7 +169,7 @@ export function TopbarMarkup(props: Props) {
         logoSuffix={
           (width || 0) < 1000 && (width || 0) > 770 ? (
             <div
-              className="text-white cursor-pointer"
+              className="cursor-pointer text-white"
               onClick={() => {
                 setOpen(!open);
               }}
