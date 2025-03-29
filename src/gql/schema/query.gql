@@ -303,12 +303,17 @@ query tableSetList($limit: Int, $offset: Int) {
         product {
           id
           title
+          images
         }
         sku {
           id
           name
+          image
         }
         isPrint
+        qty
+        price
+        discount
       }
     }
   }

@@ -102,10 +102,10 @@ export function MenuItems(user: User | null) {
               label: lng.menu_table,
               url: "/set",
             },
-            // {
-            //   label: 'Merge Table',
-            //   url: "/merge_table",
-            // },
+            {
+              label: "Merge Table",
+              url: "/merge_table",
+            },
           ],
         },
         {
@@ -442,6 +442,16 @@ export function MenuItems(user: User | null) {
                 label: lng.menu_table,
                 icon: Tablets,
                 url: "/set",
+                items: [
+                  {
+                    label: lng.menu_table,
+                    url: "/set",
+                  },
+                  {
+                    label: "Merge Table",
+                    url: "/merge_table",
+                  },
+                ],
               },
               {
                 label: lng.menu_customer_order,

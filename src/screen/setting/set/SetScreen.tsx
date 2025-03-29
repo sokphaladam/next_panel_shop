@@ -68,8 +68,6 @@ function TableItem({ x }: { x: TableSet }) {
   if (x.order) bg = "bg-emerald-700 text-white";
   if (x.order?.firstPrint) bg = "bg-orange-300";
 
-  console.log(x.order && x);
-
   const totalOrder = x.order?.items?.length;
   const totalCompleted = x.order?.items?.filter(
     (f) => f?.status === StatusOrderItem.Completed

@@ -237,3 +237,7 @@ mutation markFirstPrintOrder($orderId: Int!) {
 mutation createTransactionStock($data: [TransactionStockInput]) {
   createTransactionStock(data: $data)
 }
+
+mutation mergeOrder($fromOrderId: [Int!], $toOrderId: Int) {
+  mergeOrder(fromOrderId: $fromOrderId, toOrderId: $toOrderId)
+}
