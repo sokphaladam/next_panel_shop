@@ -21,6 +21,8 @@ import { Modal } from "@/hook/modal";
 import { useSetting } from "./useSettingProvider";
 import { useToggle } from "./ToggleProvider";
 import { useTheme } from "next-themes";
+import { Dialog, DialogHeader } from "@/components/ui/dialog";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const logo = {
   width: 35,
@@ -72,40 +74,43 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
       <TokenVerification onCompleted={setVerify} />
       <Frame
         logo={verify ? logo : undefined}
-        topBar={
-          verify ? (
-            <TopbarMarkup
-              mobileNavigationActive={mobileNavigationActive}
-              setMobileNavigationActive={setMobileNavigationActive}
-            />
-          ) : null
-        }
+        // topBar={
+        //   verify ? (
+        //     <TopbarMarkup
+        //       mobileNavigationActive={mobileNavigationActive}
+        //       setMobileNavigationActive={setMobileNavigationActive}
+        //     />
+        //   ) : null
+        // }
         showMobileNavigation={mobileNavigationActive && verify}
         onNavigationDismiss={toggleMobileNavigationActive}
-        navigation={
-          verify && open ? (
-            <NavigationMarkup onClick={toggleMobileNavigationActive} />
-          ) : null
-        }
+        // navigation={
+        //   verify && open ? (
+        //     <NavigationMarkup onClick={toggleMobileNavigationActive} />
+        //   ) : null
+        // }
       >
         <div className="flex flex-col justify-between">
-          {config_app.public.assets.dev === "development" && (
+          {/* {config_app.public.assets.dev === "development" && (
             <div className="sticky bottom-0 w-full bg-sky-800 p-1 text-center text-xs text-white">
               Developer Mode
             </div>
-          )}
-          <div className="w-full text-center">
+          )} */}
+          <div className="flex w-full flex-row items-center justify-between bg-white p-1">
             <div>
-              Wifi: <b>Staff-GF</b>
+              <SidebarTrigger />
             </div>
-            <div>
-              Password: <b>{pwdwifi}</b>
+            <div className="text-right">
+              <div>
+                Wifi: <b>Staff-GF</b>
+              </div>
+              <div>
+                Password: <b>{pwdwifi}</b>
+              </div>
             </div>
           </div>
-          <div>
-            <ModalComponent ref={(t) => Modal.setModal(t)} />
-            {children}
-          </div>
+          <ModalComponent ref={(t) => Modal.setModal(t)} />
+          <div>{children}</div>
         </div>
       </Frame>
     </AppProvider>

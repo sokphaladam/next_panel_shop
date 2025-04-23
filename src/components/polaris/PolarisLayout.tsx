@@ -1,5 +1,4 @@
 "use client";
-import { Role } from "@/gql/graphql";
 import { useUser } from "@/service/UserProvider";
 import { Banner, Layout, Page, PageProps } from "@shopify/polaris";
 import React from "react";
