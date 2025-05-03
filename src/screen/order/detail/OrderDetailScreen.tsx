@@ -679,7 +679,7 @@ export default function OrderDetailScreen() {
                                       <Button
                                         onClick={() => {
                                           const ws = new WebSocketClient(
-                                            `ws://192.168.137.1:8080`
+                                            `wss://192.168.137.1:8080`
                                           );
                                           const code =
                                             item?.product?.code?.substring(
