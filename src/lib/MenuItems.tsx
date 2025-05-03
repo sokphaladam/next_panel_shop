@@ -22,27 +22,6 @@ import {
   UserRoundSearch,
   Warehouse,
 } from "lucide-react";
-// import {
-//   AppsIcon,
-//   ArchiveIcon,
-//   CartFilledIcon,
-//   DeliveryIcon,
-//   MagicIcon,
-//   SettingsIcon,
-//   TabletIcon,
-//   AttachmentIcon,
-//   FileIcon,
-//   PersonIcon,
-//   PageClockIcon,
-//   StarIcon,
-//   CreditCardIcon,
-//   MoneyFilledIcon,
-//   PaymentFilledIcon,
-//   PersonalizedTextIcon,
-//   CalendarTimeIcon,
-//   PageClockFilledIcon,
-// } from '@shopify/polaris-icons';
-import { FunctionComponent, SVGProps } from "react";
 
 interface PropsMenu {
   title: string;
@@ -101,6 +80,10 @@ export function MenuItems(user: User | null) {
             {
               label: lng.menu_table,
               url: "/set",
+            },
+            {
+              label: "Link Table",
+              url: "/link_table",
             },
             {
               label: "Merge Table",

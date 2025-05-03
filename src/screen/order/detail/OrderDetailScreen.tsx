@@ -57,6 +57,7 @@ import { FormSetPaymentType } from "../components/FormSetPaymentType";
 import { SwapTable } from "../components/SwapTable";
 import { PrintV2 } from "../components/PrintV2";
 import { ButtonReadyToServe } from "./button-ready-to-serve";
+import { WebSocketClient } from "@/lib/websocket";
 
 const tabs: TabProps[] = [
   {
@@ -552,9 +553,7 @@ export default function OrderDetailScreen() {
                                 : undefined
                             }
                           >
-                            <IndexTable.Cell>
-                              {index + 1}
-                            </IndexTable.Cell>
+                            <IndexTable.Cell>{index + 1}</IndexTable.Cell>
                             <IndexTable.Cell>
                               <div className="flex flex-row gap-2">
                                 <Image
@@ -673,10 +672,47 @@ export default function OrderDetailScreen() {
                                       </Button>
                                     </div>
                                     <div>
-                                      <PrintForKitchen
+                                      {/* <PrintForKitchen
                                         item={item || {}}
                                         order={data.order || {}}
-                                      />
+                                      /> */}
+                                      <Button
+                                        onClick={() => {
+                                          const ws = new WebSocketClient(
+                                            `ws://192.168.137.1:8080`
+                                          );
+                                          const code =
+                                            item?.product?.code?.substring(
+                                              0,
+                                              2
+                                            );
+                                          console.log(code);
+                                          let printer = "Print to Chasier";
+                                          if (code === "BL") {
+                                            printer = "Print to BL";
+                                          }
+                                          if (code === "GR") {
+                                            printer = "Print to GR";
+                                          }
+                                          if (code === "FR") {
+                                            printer = "Print to FR";
+                                          }
+                                          ws.onSend({
+                                            table: data.order?.set,
+                                            title: `${item?.product?.title} (${item?.sku?.name}) X${item?.qty}`,
+                                            date: item?.createdDate,
+                                            delivery: data.order?.delivery
+                                              ? `${data.order?.delivery?.name} (${data.order?.deliveryCode})`
+                                              : null,
+                                            addon: item?.addons,
+                                            remark: item?.remark,
+                                            by: "",
+                                            printerName: printer,
+                                          });
+                                        }}
+                                      >
+                                        Print
+                                      </Button>
                                     </div>
                                     {item?.status !==
                                       StatusOrderItem.Completed && (
