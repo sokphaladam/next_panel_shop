@@ -58,6 +58,7 @@ import { SwapTable } from "../components/SwapTable";
 import { PrintV2 } from "../components/PrintV2";
 import { ButtonReadyToServe } from "./button-ready-to-serve";
 import { WebSocketClient } from "@/lib/websocket";
+import { getDeviceInfo } from "@/lib/device";
 
 const tabs: TabProps[] = [
   {
@@ -151,6 +152,37 @@ export default function OrderDetailScreen() {
     }
   }, []);
 
+  const sendMessage = useCallback(
+    (item: any) => {
+      let printer = "Print to Chasier";
+      printer = "BIXOLON SRP-F310II(#1)";
+
+      const content = {
+        table: data?.order?.set,
+        title: `${item?.product?.title} (${item?.sku?.name}) X${item?.qty}`,
+        date: item?.createdDate,
+        delivery: data?.order?.delivery
+          ? `${data.order?.delivery?.name} (${data.order?.deliveryCode})`
+          : null,
+        addon: item?.addons,
+        remark: item?.remark,
+        by: user?.display,
+        printerName: printer,
+        device: getDeviceInfo(),
+      };
+
+      fetch("/api/message", {
+        method: "POST",
+        body: JSON.stringify(content),
+      })
+        .then((res) => res.json())
+        .then((res) => console.log(res))
+        .catch()
+        .finally();
+    },
+    [user, data]
+  );
+
   const handleUpdate = useCallback(
     (status: StatusOrder) => {
       toggelOpen();
@@ -176,6 +208,11 @@ export default function OrderDetailScreen() {
               title: "Yes",
               class: "primary",
               onPress: () => {
+                if (status === StatusOrder.Verify) {
+                  for (const x of data?.order?.items || []) {
+                    if (x) sendMessage(x);
+                  }
+                }
                 change({
                   variables: {
                     data: {
@@ -217,12 +254,13 @@ export default function OrderDetailScreen() {
     },
     [
       change,
-      data?.order?.id,
+      data,
       setToasts,
       toasts,
       toggelOpen,
       toggleActive,
       togglePaid,
+      sendMessage,
     ]
   );
 
@@ -677,7 +715,13 @@ export default function OrderDetailScreen() {
                                         order={data.order || {}}
                                       /> */}
                                       <Button
-                                        onClick={() => {
+                                        onClick={async () => {
+                                          sendMessage(item);
+                                          // await client.set(
+                                          //   "print-receipt",
+                                          //   JSON.stringify(content)
+                                          // );
+                                          /*
                                           const ws = new WebSocketClient(
                                             `wss://192.168.137.1:8080`
                                           );
@@ -709,6 +753,7 @@ export default function OrderDetailScreen() {
                                             by: "",
                                             printerName: printer,
                                           });
+                                          */
                                         }}
                                       >
                                         Print
