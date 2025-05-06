@@ -155,7 +155,7 @@ export default function OrderDetailScreen() {
   const sendMessage = useCallback(
     (item: any) => {
       let printer = "Print to Chasier";
-      printer = "BIXOLON SRP-F310II(#1)";
+      printer = "XP-80";
 
       const content = {
         table: data?.order?.set,
