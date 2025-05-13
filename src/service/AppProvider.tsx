@@ -1,7 +1,7 @@
 "use client";
 import { CustomToastMultiple } from "@/components/custom/CustomToast";
 import { PolarisProvider } from "./PolarisProvider";
-import { UserProvider } from "./UserProvider";
+import { UserProvider, useUser } from "./UserProvider";
 import { ApolloWrapper } from "./ApolloProvider";
 import { LanguageProvider } from "./LanguageProvider";
 import { NetworkProvider } from "./NetworkProvider";
@@ -44,6 +44,19 @@ function AppPage({ children }: React.PropsWithChildren<any>) {
   );
 }
 
+function AppWrapper({ children }: React.PropsWithChildren<any>) {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <PolarisProvider>
+        <div className="w-full px-5">
+          <CustomToastMultiple>{children}</CustomToastMultiple>
+        </div>
+      </PolarisProvider>
+    </SidebarProvider>
+  );
+}
+
 export function AppProvider({ children }: React.PropsWithChildren<any>) {
   return (
     <NetworkProvider>
@@ -52,14 +65,7 @@ export function AppProvider({ children }: React.PropsWithChildren<any>) {
           <UserProvider>
             <SettingProvider>
               <ToggleProvider>
-                <SidebarProvider>
-                  <AppSidebar />
-                  <PolarisProvider>
-                    <div className="w-full px-5">
-                      <CustomToastMultiple>{children}</CustomToastMultiple>
-                    </div>
-                  </PolarisProvider>
-                </SidebarProvider>
+                <AppWrapper>{children}</AppWrapper>
                 {/* <SidebarProvider>
                   <AppSidebar />
                   <SidebarInset>

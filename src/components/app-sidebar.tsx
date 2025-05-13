@@ -107,6 +107,10 @@ export function AppSidebar() {
   //   }
   // }, [setTheme, theme]);
 
+  if (!user?.id) {
+    return <></>;
+  }
+
   return (
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader>
