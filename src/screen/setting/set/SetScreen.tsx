@@ -1,6 +1,10 @@
 "use client";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
+  StatusOrderItem,
   TableSet,
   useGenerateTableSetMutation,
   useGenerateTokenOrderMutation,
@@ -8,21 +12,9 @@ import {
   useTableSetListQuery,
 } from "@/gql/graphql";
 import { Modal } from "@/hook/modal";
-import useLongPress from "@/hook/useLongPress";
+import { cn } from "@/lib/utils";
 import { useUser } from "@/service/UserProvider";
-import {
-  Badge,
-  Banner,
-  Box,
-  Card,
-  Frame,
-  Grid,
-  Layout,
-  Loading,
-  Page,
-  Spinner,
-  Text,
-} from "@shopify/polaris";
+import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
@@ -72,9 +64,14 @@ function TableItem({ x }: { x: TableSet }) {
   );
 
   // const logPressEvent = useLongPress(handleLogPress, handleClick, defaultOptions);
-  let bg = "bg-fill";
-  if (x.order) bg = "bg-fill-success-active";
-  if (x.order?.firstPrint) bg = "bg-fill-warning-secondary";
+  let bg = "";
+  if (x.order) bg = "bg-emerald-700 text-white";
+  if (x.order?.firstPrint) bg = "bg-orange-300";
+
+  const totalOrder = x.order?.items?.length;
+  const totalCompleted = x.order?.items?.filter(
+    (f) => f?.status === StatusOrderItem.Completed
+  ).length;
 
   return (
     <div
@@ -87,22 +84,33 @@ function TableItem({ x }: { x: TableSet }) {
         id={`table_${x?.set}`}
         onClick={() => handleGenerate(x.set + "", x)}
       ></div>
-      <Card background={bg as any}>
-        <Box>
-          <div className="flex flex-col items-center justify-center">
-            <Text
-              as="h3"
-              variant="bodyLg"
-              fontWeight="bold"
-              tone={x?.order && !x.order.firstPrint ? "text-inverse" : "base"}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex h-[5rem] w-full flex-col items-center justify-center gap-2">
+            <div
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-full border p-1 text-center shadow-md",
+                bg
+              )}
             >
-              {!!x.fake ? "D" + x.set : x?.set}
-            </Text>
-            {(propsUpdate.loading || propsTable.loading) && (
-              <Spinner size="small" />
+              {!!x.fake ? "D" + x.set : x.set}
+            </div>
+            {x.order && (
+              <Badge
+                className={cn(
+                  totalCompleted === totalOrder
+                    ? totalCompleted === 0
+                      ? ""
+                      : "bg-emerald-800"
+                    : "bg-orange-300",
+                  "rounded-full text-xs font-light opacity-80"
+                )}
+              >
+                {totalCompleted} / {totalOrder}
+              </Badge>
             )}
           </div>
-        </Box>
+        </CardContent>
       </Card>
     </div>
   );
@@ -159,24 +167,60 @@ function SetScreen() {
 
   if (!user?.isHaveShift && ![1, 2].includes(user?.role?.id || 0)) {
     return (
-      <Page>
-        <Banner title="Permission Shift" tone="critical">
-          <p>តម្រូវការ openshift របស់អ្នកមុនពេលដំណើរការ!</p>
-          <br />
-          <p>your need open shift before proccess!</p>
-        </Banner>
-      </Page>
+      <div className="flex flex-1 p-4">
+        <Alert variant={"destructive"}>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Permission Shift</AlertTitle>
+          <AlertDescription>
+            តម្រូវការ openshift របស់អ្នកមុនពេលដំណើរការ! (your need open shift
+            before proccess!)
+          </AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
   if (loading || propsTable.loading) {
-    <Frame>
-      <Page title="Table">
-        <Loading />
-      </Page>
-    </Frame>;
+    <div>
+      <div>...</div>
+    </div>;
   }
 
+  return (
+    <div className="w-full p-6">
+      <div className="flex flex-row items-center gap-4">
+        <Badge className="bg-emerald-500">
+          <div className="flex flex-row items-center justify-between p-1">
+            Available = {data?.tableSetList?.filter((x) => !x?.order).length}
+          </div>
+        </Badge>
+        <Badge className="bg-yellow-500">
+          <div className="flex flex-row items-center justify-between p-1">
+            In Order = {data?.tableSetList?.filter((x) => !!x?.order).length}
+          </div>
+        </Badge>
+        <Badge className="bg-orange-300">
+          <div className="flex flex-row items-center justify-between p-1">
+            Print Order ={" "}
+            {data?.tableSetList?.filter((x) => !!x?.order?.firstPrint).length}
+          </div>
+        </Badge>
+      </div>
+      <br />
+      <div className="max-xs:grid-cols-1 grid grid-cols-12 gap-4 max-lg:grid-cols-12 max-md:grid-cols-6 max-sm:grid-cols-3">
+        {data &&
+          data?.tableSetList?.map((x) => {
+            return (
+              <div key={x?.set}>
+                <TableItem key={x?.set} x={x || {}} />
+              </div>
+            );
+          })}
+      </div>
+    </div>
+  );
+
+  /*
   return (
     <Page
       title="Table"
@@ -244,6 +288,7 @@ function SetScreen() {
       </Layout>
     </Page>
   );
+  */
 }
 
 export default SetScreen;

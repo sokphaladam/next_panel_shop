@@ -33,6 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useTheme } from "next-themes";
+import { NavUser } from "./nav-user";
 
 export function AppSidebar() {
   const user = useUser();
@@ -47,9 +48,11 @@ export function AppSidebar() {
             <Collapsible className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild className="text-xs">
                     <Link href="#">
-                      <item.icon />
+                      {React.cloneElement(<item.icon />, {
+                        className: "h-3 w-3",
+                      })}
                       <span>{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -59,7 +62,7 @@ export function AppSidebar() {
                     {item.items.map((x: any) => {
                       return (
                         <SidebarMenuSubItem key={x.label}>
-                          <SidebarMenuSubButton asChild>
+                          <SidebarMenuSubButton asChild className="text-xs">
                             <Link href={x.url}>
                               <span>{x.label}</span>
                             </Link>
@@ -76,7 +79,7 @@ export function AppSidebar() {
       }
       return (
         <SidebarMenuItem key={item.label}>
-          <SidebarMenuButton asChild>
+          <SidebarMenuButton asChild className="text-xs">
             <Link href={item.url}>
               <item.icon />
               <span>{item.label}</span>
@@ -90,7 +93,7 @@ export function AppSidebar() {
   const menuGroups = menus.map((menu, idx) => {
     return (
       <SidebarGroup key={idx}>
-        <SidebarGroupLabel>{menu.title}</SidebarGroupLabel>
+        <SidebarGroupLabel className="text-xs">{menu.title}</SidebarGroupLabel>
         <SidebarGroupContent>{menuItems(menu.items)}</SidebarGroupContent>
       </SidebarGroup>
     );
@@ -103,6 +106,10 @@ export function AppSidebar() {
   //     setTheme("dark");
   //   }
   // }, [setTheme, theme]);
+
+  if (!user?.id) {
+    return <></>;
+  }
 
   return (
     <Sidebar collapsible="icon" variant="sidebar">
@@ -126,9 +133,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>{menuGroups}</SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem></SidebarMenuItem>
-        </SidebarMenu>
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

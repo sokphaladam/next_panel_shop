@@ -249,6 +249,7 @@ export type Mutation = {
   login?: Maybe<Scalars['String']['output']>;
   markFirstPrintOrder?: Maybe<Scalars['Boolean']['output']>;
   markOrderItemStatus?: Maybe<Scalars['Boolean']['output']>;
+  mergeOrder?: Maybe<Scalars['Boolean']['output']>;
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
   setItemShowOn?: Maybe<Scalars['Boolean']['output']>;
@@ -423,6 +424,12 @@ export type MutationMarkFirstPrintOrderArgs = {
 export type MutationMarkOrderItemStatusArgs = {
   id: Scalars['Int']['input'];
   status?: InputMaybe<StatusOrderItem>;
+};
+
+
+export type MutationMergeOrderArgs = {
+  fromOrderId?: InputMaybe<Array<Scalars['Int']['input']>>;
+  toOrderId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -1663,6 +1670,14 @@ export type CreateTransactionStockMutationVariables = Exact<{
 
 export type CreateTransactionStockMutation = { __typename?: 'Mutation', createTransactionStock?: boolean | null };
 
+export type MergeOrderMutationVariables = Exact<{
+  fromOrderId?: InputMaybe<Array<Scalars['Int']['input']> | Scalars['Int']['input']>;
+  toOrderId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type MergeOrderMutation = { __typename?: 'Mutation', mergeOrder?: boolean | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1741,7 +1756,7 @@ export type TableSetListQueryVariables = Exact<{
 }>;
 
 
-export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null, firstPrint?: boolean | null } | null } | null> | null };
+export type TableSetListQuery = { __typename?: 'Query', tableSetList?: Array<{ __typename?: 'TableSet', set?: number | null, fake?: boolean | null, order?: { __typename?: 'Order', id?: number | null, uuid?: string | null, status?: StatusOrder | null, code?: string | null, firstPrint?: boolean | null, items?: Array<{ __typename?: 'OrderItem', id?: number | null, status?: StatusOrderItem | null, isPrint?: boolean | null, qty?: number | null, price?: number | null, discount?: number | null, product?: { __typename?: 'Product', id?: number | null, title?: string | null, images?: string | null } | null, sku?: { __typename?: 'SKU', id?: number | null, name?: string | null, image?: string | null } | null } | null> | null } | null } | null> | null };
 
 export type DeliveryByIdQueryVariables = Exact<{
   deliveryByIdId: Scalars['Int']['input'];
@@ -3532,6 +3547,38 @@ export function useCreateTransactionStockMutation(baseOptions?: Apollo.MutationH
 export type CreateTransactionStockMutationHookResult = ReturnType<typeof useCreateTransactionStockMutation>;
 export type CreateTransactionStockMutationResult = Apollo.MutationResult<CreateTransactionStockMutation>;
 export type CreateTransactionStockMutationOptions = Apollo.BaseMutationOptions<CreateTransactionStockMutation, CreateTransactionStockMutationVariables>;
+export const MergeOrderDocument = gql`
+    mutation mergeOrder($fromOrderId: [Int!], $toOrderId: Int) {
+  mergeOrder(fromOrderId: $fromOrderId, toOrderId: $toOrderId)
+}
+    `;
+export type MergeOrderMutationFn = Apollo.MutationFunction<MergeOrderMutation, MergeOrderMutationVariables>;
+
+/**
+ * __useMergeOrderMutation__
+ *
+ * To run a mutation, you first call `useMergeOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergeOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergeOrderMutation, { data, loading, error }] = useMergeOrderMutation({
+ *   variables: {
+ *      fromOrderId: // value for 'fromOrderId'
+ *      toOrderId: // value for 'toOrderId'
+ *   },
+ * });
+ */
+export function useMergeOrderMutation(baseOptions?: Apollo.MutationHookOptions<MergeOrderMutation, MergeOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MergeOrderMutation, MergeOrderMutationVariables>(MergeOrderDocument, options);
+      }
+export type MergeOrderMutationHookResult = ReturnType<typeof useMergeOrderMutation>;
+export type MergeOrderMutationResult = Apollo.MutationResult<MergeOrderMutation>;
+export type MergeOrderMutationOptions = Apollo.BaseMutationOptions<MergeOrderMutation, MergeOrderMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
@@ -4133,6 +4180,24 @@ export const TableSetListDocument = gql`
       status
       code
       firstPrint
+      items {
+        id
+        status
+        product {
+          id
+          title
+          images
+        }
+        sku {
+          id
+          name
+          image
+        }
+        isPrint
+        qty
+        price
+        discount
+      }
     }
   }
 }

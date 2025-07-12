@@ -57,6 +57,8 @@ import { FormSetPaymentType } from "../components/FormSetPaymentType";
 import { SwapTable } from "../components/SwapTable";
 import { PrintV2 } from "../components/PrintV2";
 import { ButtonReadyToServe } from "./button-ready-to-serve";
+import { WebSocketClient } from "@/lib/websocket";
+import { getDeviceInfo } from "@/lib/device";
 
 const tabs: TabProps[] = [
   {
@@ -98,6 +100,7 @@ export default function OrderDetailScreen() {
   const [paid, setPaid] = useState(false);
   const setting = useSetting();
   const [reasonInput, setReasonInput] = useState("");
+  const [EnableOutOfStock, setEnableOutOfStock] = useState(false);
   const toggelOpen = useCallback(() => setOpen(!open), [open]);
   const toggleActive = useCallback(() => setActive(!active), [active]);
   const togglePaid = useCallback(() => setPaid(!paid), [paid]);
@@ -150,6 +153,37 @@ export default function OrderDetailScreen() {
     }
   }, []);
 
+  const sendMessage = useCallback(
+    (item: any) => {
+      let printer = "Print to Chasier";
+      printer = "XP-80";
+
+      const content = {
+        table: data?.order?.set,
+        title: `${item?.product?.title} (${item?.sku?.name}) X${item?.qty}`,
+        date: item?.createdDate,
+        delivery: data?.order?.delivery
+          ? `${data.order?.delivery?.name} (${data.order?.deliveryCode})`
+          : null,
+        addon: item?.addons,
+        remark: item?.remark,
+        by: user?.display,
+        printerName: printer,
+        device: getDeviceInfo(),
+      };
+
+      fetch("/api/message", {
+        method: "POST",
+        body: JSON.stringify(content),
+      })
+        .then((res) => res.json())
+        .then((res) => console.log(res))
+        .catch()
+        .finally();
+    },
+    [user, data]
+  );
+
   const handleUpdate = useCallback(
     (status: StatusOrder) => {
       toggelOpen();
@@ -175,6 +209,11 @@ export default function OrderDetailScreen() {
               title: "Yes",
               class: "primary",
               onPress: () => {
+                if (status === StatusOrder.Verify) {
+                  for (const x of data?.order?.items || []) {
+                    if (x) sendMessage(x);
+                  }
+                }
                 change({
                   variables: {
                     data: {
@@ -216,12 +255,13 @@ export default function OrderDetailScreen() {
     },
     [
       change,
-      data?.order?.id,
+      data,
       setToasts,
       toasts,
       toggelOpen,
       toggleActive,
       togglePaid,
+      sendMessage,
     ]
   );
 
@@ -271,21 +311,32 @@ export default function OrderDetailScreen() {
     <Page
       title={`Order Detail #${params.id}`}
       subtitle={
-        data?.order?.status === StatusOrder.Checkout &&
-        Number(data?.order?.paid || 0)
-          ? ((
-              <div className="flex flex-row gap-2">
-                <Badge tone="success-strong">
-                  {(<small>PAID</small>) as any}
-                </Badge>
-                {data.order.bankType && (
-                  <Badge tone="info-strong">
-                    {(<small>{data.order.bankType}</small>) as any}
-                  </Badge>
-                )}
-              </div>
-            ) as any)
-          : ""
+        (
+          <div className="flex flex-row gap-2">
+            {data?.order?.status === StatusOrder.Checkout &&
+            Number(data?.order?.paid || 0)
+              ? ((
+                  <div className="flex flex-row gap-2">
+                    <Badge tone="success-strong">
+                      {(<small>PAID</small>) as any}
+                    </Badge>
+                    {data.order.bankType && (
+                      <Badge tone="info-strong">
+                        {(<small>{data.order.bankType}</small>) as any}
+                      </Badge>
+                    )}
+                  </div>
+                ) as any)
+              : ""}
+            <Button
+              tone={EnableOutOfStock ? "success" : "critical"}
+              variant="primary"
+              onClick={() => setEnableOutOfStock(!EnableOutOfStock)}
+            >
+              {!EnableOutOfStock ? "Disable" : "Enable"}
+            </Button>
+          </div>
+        ) as any
       }
       fullWidth
     >
@@ -373,6 +424,7 @@ export default function OrderDetailScreen() {
                 type="LAYOUT"
                 refetch={refetch}
                 order={data?.order || {}}
+                enabledOutOfStock={EnableOutOfStock}
               />
             </Box>
           </Card>
@@ -552,9 +604,7 @@ export default function OrderDetailScreen() {
                                 : undefined
                             }
                           >
-                            <IndexTable.Cell>
-                              {index + 1}
-                            </IndexTable.Cell>
+                            <IndexTable.Cell>{index + 1}</IndexTable.Cell>
                             <IndexTable.Cell>
                               <div className="flex flex-row gap-2">
                                 <Image
@@ -673,10 +723,13 @@ export default function OrderDetailScreen() {
                                       </Button>
                                     </div>
                                     <div>
-                                      <PrintForKitchen
-                                        item={item || {}}
-                                        order={data.order || {}}
-                                      />
+                                      <Button
+                                        onClick={async () => {
+                                          sendMessage(item);
+                                        }}
+                                      >
+                                        Print
+                                      </Button>
                                     </div>
                                     {item?.status !==
                                       StatusOrderItem.Completed && (

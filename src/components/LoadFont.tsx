@@ -1,19 +1,16 @@
 "use client";
-import { Hanuman, Poppins, Nova_Square } from "next/font/google";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-});
-
-const hanuman = Hanuman({
-  subsets: ["khmer"],
-  weight: ["400", "700"],
-});
+import { Nova_Square, Nokora } from "next/font/google";
 
 const nova_square = Nova_Square({
   weight: ["400"],
   subsets: ["latin"],
+});
+
+const nokara = Nokora({
+  weight: ["100", "300", "400", "700", "900"],
+  display: "swap",
+  style: "normal",
+  subsets: ["khmer", "latin"],
 });
 
 export function LoadFont() {
@@ -21,7 +18,9 @@ export function LoadFont() {
     <>
       <style jsx global>{`
         body {
-          font-family: ${poppins.style.fontFamily}, ${hanuman.style.fontFamily} !important;
+          font-family: ${nokara.style.fontFamily} !important;
+          font-style: ${nokara.style.fontStyle} !important;
+          font-weight: ${nokara.style.fontWeight} !important;
         }
 
         .card-number {

@@ -23,7 +23,11 @@ import {
   TextField,
   Thumbnail,
 } from "@shopify/polaris";
-import { ArrowLeftIcon, CartAbandonedFilledIcon, PackageOnHoldIcon } from "@shopify/polaris-icons";
+import {
+  ArrowLeftIcon,
+  CartAbandonedFilledIcon,
+  PackageOnHoldIcon,
+} from "@shopify/polaris-icons";
 import { useCallback, useMemo, useState } from "react";
 import { useCustomToast } from "../custom/CustomToast";
 import Image from "next/image";
@@ -34,7 +38,13 @@ import { useWindowSize } from "@/hook/useWindowSize";
 
 interface Props {}
 
-function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSelectProduct: any }) {
+function TwoColumnList(props: {
+  data: any[];
+  sku: any;
+  setSelectSku: any;
+  setSelectProduct: any;
+  showOutOfStock?: boolean;
+}) {
   const [category, setCategory] = useState(null);
   const { height } = useWindowSize();
   const groups = props.data?.reduce((a: any, b: any) => {
@@ -49,9 +59,16 @@ function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSel
   }, {});
 
   return (
-    <div className="overflow-x-auto scroll-smooth snap-y snap-mandatory" style={{ height: (height || 0) / 1.3 }}>
+    <div
+      className="snap-y snap-mandatory overflow-x-auto scroll-smooth"
+      style={{ height: (height || 0) / 1.3 }}
+    >
       <div className="sticky top-0 z-[999]">
-        <CustomerOrderCategory productGroup={groups} selected={category} onSelected={setCategory} />
+        <CustomerOrderCategory
+          productGroup={groups}
+          selected={category}
+          onSelected={setCategory}
+        />
       </div>
       <div className="grid grid-cols-2 gap-4 p-3">
         {groups &&
@@ -59,34 +76,48 @@ function TwoColumnList(props: { data: any[]; sku: any; setSelectSku: any; setSel
             ? Object.keys(groups)
             : Object.keys(groups).filter((f) => f === (category as any).name)
           ).map((g) => {
-            return groups[g].map((x: Product) => {
-              return x.sku?.map((sku) => {
-                return (
-                  <div key={sku?.id}>
-                    <ProductItem
-                      display="CARD"
-                      x={x || {}}
-                      key={x?.id}
-                      defaultSku={sku || {}}
-                      onSelected={(v: any, sku: any) => {
-                        props.setSelectSku(sku);
-                        props.setSelectProduct({
-                          ...v,
-                          addonSelect:
-                            v.addons?.map((ad: any) => {
-                              return {
-                                ...ad,
-                                qty: 0,
-                              };
-                            }) || [],
-                          skuSelect: sku.id,
-                          remark: "",
-                        });
-                      }}
-                    />
-                  </div>
-                );
-              });
+            return (
+              props.showOutOfStock
+                ? groups[g]
+                : groups[g].filter(
+                    (f: Product) => f.status !== Status_Product.OutOfStock
+                  )
+            ).map((x: Product) => {
+              return (
+                props.showOutOfStock
+                  ? (x.sku ?? [])
+                  : (x.sku ?? []).filter(
+                      (f) => f?.status !== Status_Product.OutOfStock
+                    )
+              )
+                .filter((f) => f?.name?.toUpperCase() !== "WINE CHARGE")
+                .map((sku) => {
+                  return (
+                    <div key={sku?.id}>
+                      <ProductItem
+                        display="CARD"
+                        x={x || {}}
+                        key={x?.id}
+                        defaultSku={sku || {}}
+                        onSelected={(v: any, sku: any) => {
+                          props.setSelectSku(sku);
+                          props.setSelectProduct({
+                            ...v,
+                            addonSelect:
+                              v.addons?.map((ad: any) => {
+                                return {
+                                  ...ad,
+                                  qty: 0,
+                                };
+                              }) || [],
+                            skuSelect: sku.id,
+                            remark: "",
+                          });
+                        }}
+                      />
+                    </div>
+                  );
+                });
             });
           })}
       </div>
@@ -109,7 +140,7 @@ function ProductItem({
     return (
       <div
         key={x?.id}
-        className={`pb-2 overflow-hidden cursor-pointer border-collapse rounded-md border-gray-300 border-[0.5px] ${
+        className={`border-collapse cursor-pointer overflow-hidden rounded-md border-[0.5px] border-gray-300 pb-2 ${
           x.status === Status_Product.OutOfStock ||
           defaultSku?.status === Status_Product.OutOfStock ||
           defaultSku?.status === Status_Product.TimeOut
@@ -117,19 +148,22 @@ function ProductItem({
             : ""
         }`}
         onClick={() => {
-          if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
+          if (
+            x.status === Status_Product.Available &&
+            defaultSku?.status === Status_Product.Available
+          ) {
             onSelected(x, defaultSku);
           }
         }}
       >
-        <div className="w-full h-[125px]">
+        <div className="h-[125px] w-full">
           <Image
             alt=""
             src={defaultSku?.image || x.images || ""}
             width={100}
             height={40}
             loading="lazy"
-            className="w-full h-[125px] object-cover"
+            className="h-[125px] w-full object-cover"
             // style={{ borderRadius: 5 }}
           />
         </div>
@@ -140,9 +174,12 @@ function ProductItem({
             </h5>
           </div>
           <div>
-            <h5 className="text-green-800 font-bold">${Number(defaultSku?.price).toFixed(2)}</h5>
+            <h5 className="font-bold text-green-800">
+              ${Number(defaultSku?.price).toFixed(2)}
+            </h5>
           </div>
-          {(x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock) && (
+          {(x.status === Status_Product.OutOfStock ||
+            defaultSku?.status === Status_Product.OutOfStock) && (
             <div className="flex flex-row items-center gap-1">
               <div>
                 <Icon source={CartAbandonedFilledIcon} tone="critical" />
@@ -165,7 +202,7 @@ function ProductItem({
   return (
     <div
       key={x?.id}
-      className={`pb-2 cursor-pointer px-2 border-collapse border-gray-300 border-b-[0.5px] flex flex-row justify-between items-center ${
+      className={`flex border-collapse cursor-pointer flex-row items-center justify-between border-b-[0.5px] border-gray-300 px-2 pb-2 ${
         x.status === Status_Product.OutOfStock ||
         defaultSku?.status === Status_Product.OutOfStock ||
         defaultSku?.status === Status_Product.TimeOut
@@ -173,7 +210,10 @@ function ProductItem({
           : ""
       }`}
       onClick={() => {
-        if (x.status === Status_Product.Available && defaultSku?.status === Status_Product.Available) {
+        if (
+          x.status === Status_Product.Available &&
+          defaultSku?.status === Status_Product.Available
+        ) {
           onSelected(x, defaultSku);
         }
       }}
@@ -192,8 +232,9 @@ function ProductItem({
           <h5>
             {x?.title} ({defaultSku?.name})
           </h5>
-          {(x.status === Status_Product.OutOfStock || defaultSku?.status === Status_Product.OutOfStock) && (
-            <div className="flex flex-row items-center gap-1 mt-2">
+          {(x.status === Status_Product.OutOfStock ||
+            defaultSku?.status === Status_Product.OutOfStock) && (
+            <div className="mt-2 flex flex-row items-center gap-1">
               <div>
                 <Icon source={CartAbandonedFilledIcon} tone="critical" />
               </div>
@@ -210,28 +251,40 @@ function ProductItem({
           )}
         </div>
         <div>
-          <h5 className="text-green-800 font-bold">${defaultSku?.price}</h5>
+          <h5 className="font-bold text-green-800">${defaultSku?.price}</h5>
         </div>
       </div>
     </div>
   );
 }
 
-function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku; setSku: any }) {
+function ProductItemSelect(props: {
+  product: Product;
+  setProduct: any;
+  sku: Sku;
+  setSku: any;
+}) {
   const [addons, setAddons] = useState<any[]>(
     props.product.addons?.map((ad) => {
       return {
         ...ad,
         qty: 0,
       };
-    }) || [],
+    }) || []
   );
   // const [sku, setSku] = useState<number>((props.product as any).selectSku);
 
   const [remark, setRemark] = useState("");
   const addon = addons
     .filter((x) => x.qty > 0)
-    .reduce((a, b) => (a = a + Number(b.qty || "0") * (isNaN(Number(b.value || "0")) ? 0 : Number(b.value || "0"))), 0);
+    .reduce(
+      (a, b) =>
+        (a =
+          a +
+          Number(b.qty || "0") *
+            (isNaN(Number(b.value || "0")) ? 0 : Number(b.value || "0"))),
+      0
+    );
   // const selectedSku = props.sku ? props.product.sku?.find((f) => f?.id === props.sku) || {} : {};
 
   return (
@@ -240,7 +293,7 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
       <Image
         src={props.sku.image || props.product.images || ""}
         alt=""
-        className="w-full max-h-[275px] object-contain"
+        className="max-h-[275px] w-full object-contain"
         width={300}
         height={275}
         loading="lazy"
@@ -249,11 +302,13 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
         <div className="text-lg font-bold">{props.product.title}</div>
         <div>{props.product.description}</div>
         <br />
-        <div className="text-red-500 font-bold">${Number(props.sku.price) + addon}</div>
+        <div className="font-bold text-red-500">
+          ${Number(props.sku.price) + addon}
+        </div>
         <br />
         <Divider />
         <br />
-        <div className="border-solid border-[0.5px] rounded-md mb-2 p-2 border-red-400">
+        <div className="mb-2 rounded-md border-[0.5px] border-solid border-red-400 p-2">
           {props.product.sku?.map((x, i) => {
             return (
               <RadioButton
@@ -268,7 +323,10 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
                 label={x?.name}
                 key={i}
                 helpText={(<div>${x?.price}</div>) as any}
-                disabled={x?.status === Status_Product.OutOfStock || x?.status === Status_Product.TimeOut}
+                disabled={
+                  x?.status === Status_Product.OutOfStock ||
+                  x?.status === Status_Product.TimeOut
+                }
               />
             );
           })}
@@ -277,18 +335,24 @@ function ProductItemSelect(props: { product: Product; setProduct: any; sku: Sku;
           <div>
             {addons?.map((x: any, i) => {
               return (
-                <div key={i} className="border-solid border-[0.5px] rounded-md mb-2 p-2">
-                  <div className="flex flex-row justify-between items-center">
+                <div
+                  key={i}
+                  className="mb-2 rounded-md border-[0.5px] border-solid p-2"
+                >
+                  <div className="flex flex-row items-center justify-between">
                     <div>
                       {x?.name} (${x?.value})
                     </div>
-                    <div className="text-right flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 text-right">
                       <div>
                         <ButtonGroup variant="segmented">
                           <Button
                             onClick={() => {
-                              const dummy = [...(props.product as any).addonSelect];
-                              dummy[i].qty = dummy[i].qty > 0 ? dummy[i].qty - 1 : 0;
+                              const dummy = [
+                                ...(props.product as any).addonSelect,
+                              ];
+                              dummy[i].qty =
+                                dummy[i].qty > 0 ? dummy[i].qty - 1 : 0;
                               setAddons(dummy);
                               props.setProduct({
                                 ...props.product,
@@ -346,10 +410,12 @@ export function PolarisProductPickerAddCart({
   order,
   refetch,
   type,
+  enabledOutOfStock,
 }: {
   order: Order;
   refetch: any;
   type?: "BUTTON" | "LAYOUT";
+  enabledOutOfStock?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const { setToasts, toasts } = useCustomToast();
@@ -360,7 +426,11 @@ export function PolarisProductPickerAddCart({
     variables: {
       filter: {
         type: [Type_Product.Production],
-        status: [Status_Product.Available, Status_Product.OutOfStock, Status_Product.TimeOut],
+        status: [
+          Status_Product.Available,
+          Status_Product.OutOfStock,
+          Status_Product.TimeOut,
+        ],
       },
       schedule: true,
       enabledOn: ["ALL", "WEB"],
@@ -394,29 +464,42 @@ export function PolarisProductPickerAddCart({
       (f: any) =>
         f.id === selectProduct.id &&
         f.addon_value.join(",").trim() === addonValue.trim() &&
-        f.remark.trim() === selectProduct.remark.trim(),
+        f.remark.trim() === selectProduct.remark.trim()
     );
-    const skuIndex = selectProduct.sku?.findIndex((f: any) => Number(f?.id) === selectSku.id);
+    const skuIndex = selectProduct.sku?.findIndex(
+      (f: any) => Number(f?.id) === selectSku.id
+    );
 
     if (index >= 0) {
       data[index].qty = data[index].qty + 1;
     }
 
-    const skuQuery = data.items?.find((f: any) => f.sku_id === selectSku.id && !f.isPrint);
+    const skuQuery = data.items?.find(
+      (f: any) => f.sku_id === selectSku.id && !f.isPrint
+    );
     const addonPrice = selectProduct.addonSelect
       .filter((x: any) => x.qty > 0)
       .reduce(
         (a: any, b: any) =>
-          (a = a + Number(b.qty || "0") * (isNaN(Number(b.value || "0")) ? 0 : Number(b.value || "0"))),
-        0,
+          (a =
+            a +
+            Number(b.qty || "0") *
+              (isNaN(Number(b.value || "0")) ? 0 : Number(b.value || "0"))),
+        0
       );
 
     const input: CartItemInput = {
       skuId: selectSku.id,
       productId: selectProduct.id,
       addons: addonValue,
-      discount: skuIndex !== undefined ? Number((selectProduct.sku || [])[skuIndex]?.discount) : 0,
-      price: skuIndex !== undefined ? Number((selectProduct.sku || [])[skuIndex]?.price) + addonPrice : 0,
+      discount:
+        skuIndex !== undefined
+          ? Number((selectProduct.sku || [])[skuIndex]?.discount)
+          : 0,
+      price:
+        skuIndex !== undefined
+          ? Number((selectProduct.sku || [])[skuIndex]?.price) + addonPrice
+          : 0,
       qty: index >= 0 && !!skuQuery ? data[index].qty + 1 : 1,
       remark: selectProduct.remark,
     };
@@ -441,7 +524,17 @@ export function PolarisProductPickerAddCart({
 
     setOpen(!open);
     setSelectProduct(null);
-  }, [addCart, open, order.id, order.items, refetch, selectProduct, selectSku, setToasts, toasts]);
+  }, [
+    addCart,
+    open,
+    order.id,
+    order.items,
+    refetch,
+    selectProduct,
+    selectSku,
+    setToasts,
+    toasts,
+  ]);
 
   if (type === "LAYOUT") {
     return (
@@ -454,6 +547,7 @@ export function PolarisProductPickerAddCart({
           data={data?.productList || []}
           sku={selectSku}
           setSelectSku={setSelectSku}
+          showOutOfStock={enabledOutOfStock}
         />
         {selectProduct && (
           <Modal
@@ -465,14 +559,6 @@ export function PolarisProductPickerAddCart({
               setSelectProduct(null);
               setSelectSku(null);
             }}
-            // activator={activator}
-            // footer={
-            //   <div>
-            //     <Button icon={ArrowLeftIcon} onClick={() => setSelectProduct(null)}>
-            //       Back
-            //     </Button>
-            //   </div>
-            // }
             primaryAction={{
               content: "Add to cart",
               onAction: handleAddtoCart,
