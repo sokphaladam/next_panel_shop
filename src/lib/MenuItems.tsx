@@ -85,10 +85,10 @@ export function MenuItems(user: User | null) {
               label: "Link Table",
               url: "/link_table",
             },
-            {
-              label: "Merge Table",
-              url: "/merge_table",
-            },
+            // {
+            //   label: "Merge Table",
+            //   url: "/merge_table",
+            // },
           ],
         },
         {
