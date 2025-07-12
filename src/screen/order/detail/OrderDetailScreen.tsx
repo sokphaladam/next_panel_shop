@@ -100,6 +100,7 @@ export default function OrderDetailScreen() {
   const [paid, setPaid] = useState(false);
   const setting = useSetting();
   const [reasonInput, setReasonInput] = useState("");
+  const [EnableOutOfStock, setEnableOutOfStock] = useState(false);
   const toggelOpen = useCallback(() => setOpen(!open), [open]);
   const toggleActive = useCallback(() => setActive(!active), [active]);
   const togglePaid = useCallback(() => setPaid(!paid), [paid]);
@@ -310,21 +311,32 @@ export default function OrderDetailScreen() {
     <Page
       title={`Order Detail #${params.id}`}
       subtitle={
-        data?.order?.status === StatusOrder.Checkout &&
-        Number(data?.order?.paid || 0)
-          ? ((
-              <div className="flex flex-row gap-2">
-                <Badge tone="success-strong">
-                  {(<small>PAID</small>) as any}
-                </Badge>
-                {data.order.bankType && (
-                  <Badge tone="info-strong">
-                    {(<small>{data.order.bankType}</small>) as any}
-                  </Badge>
-                )}
-              </div>
-            ) as any)
-          : ""
+        (
+          <div className="flex flex-row gap-2">
+            {data?.order?.status === StatusOrder.Checkout &&
+            Number(data?.order?.paid || 0)
+              ? ((
+                  <div className="flex flex-row gap-2">
+                    <Badge tone="success-strong">
+                      {(<small>PAID</small>) as any}
+                    </Badge>
+                    {data.order.bankType && (
+                      <Badge tone="info-strong">
+                        {(<small>{data.order.bankType}</small>) as any}
+                      </Badge>
+                    )}
+                  </div>
+                ) as any)
+              : ""}
+            <Button
+              tone={EnableOutOfStock ? "success" : "critical"}
+              variant="primary"
+              onClick={() => setEnableOutOfStock(!EnableOutOfStock)}
+            >
+              {!EnableOutOfStock ? "Disable" : "Enable"}
+            </Button>
+          </div>
+        ) as any
       }
       fullWidth
     >
@@ -412,6 +424,7 @@ export default function OrderDetailScreen() {
                 type="LAYOUT"
                 refetch={refetch}
                 order={data?.order || {}}
+                enabledOutOfStock={EnableOutOfStock}
               />
             </Box>
           </Card>
@@ -710,50 +723,9 @@ export default function OrderDetailScreen() {
                                       </Button>
                                     </div>
                                     <div>
-                                      {/* <PrintForKitchen
-                                        item={item || {}}
-                                        order={data.order || {}}
-                                      /> */}
                                       <Button
                                         onClick={async () => {
                                           sendMessage(item);
-                                          // await client.set(
-                                          //   "print-receipt",
-                                          //   JSON.stringify(content)
-                                          // );
-                                          /*
-                                          const ws = new WebSocketClient(
-                                            `wss://192.168.137.1:8080`
-                                          );
-                                          const code =
-                                            item?.product?.code?.substring(
-                                              0,
-                                              2
-                                            );
-                                          console.log(code);
-                                          let printer = "Print to Chasier";
-                                          if (code === "BL") {
-                                            printer = "Print to BL";
-                                          }
-                                          if (code === "GR") {
-                                            printer = "Print to GR";
-                                          }
-                                          if (code === "FR") {
-                                            printer = "Print to FR";
-                                          }
-                                          ws.onSend({
-                                            table: data.order?.set,
-                                            title: `${item?.product?.title} (${item?.sku?.name}) X${item?.qty}`,
-                                            date: item?.createdDate,
-                                            delivery: data.order?.delivery
-                                              ? `${data.order?.delivery?.name} (${data.order?.deliveryCode})`
-                                              : null,
-                                            addon: item?.addons,
-                                            remark: item?.remark,
-                                            by: "",
-                                            printerName: printer,
-                                          });
-                                          */
                                         }}
                                       >
                                         Print
