@@ -1,5 +1,6 @@
 "use client";
 import { useUserListQuery } from "@/gql/graphql";
+import { useClientPagination } from "@/hook/usePagination";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -24,16 +25,27 @@ import { UserListItem } from "./components/UserListItem";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { AdvancedPagination } from "@/components/ui/advanced-pagination";
+import { SimplePagination } from "@/components/ui/simple-pagination";
 
-export function UserListScreen() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(25);
+export function UserListScreenWithHook() {
+  const {
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+    handleItemsPerPageChange,
+    getPaginatedData,
+    getPaginationInfo,
+  } = useClientPagination();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "active" | "inactive"
   >("all");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [positionFilter, setPositionFilter] = useState<string>("all");
+  const [paginationStyle, setPaginationStyle] = useState<
+    "advanced" | "simple" | "compact"
+  >("advanced");
 
   const { data, loading } = useUserListQuery({
     variables: {
@@ -86,21 +98,9 @@ export function UserListScreen() {
     });
   }, [data?.userList, searchTerm, statusFilter, roleFilter, positionFilter]);
 
-  // Calculate active filters count
-  const activeFiltersCount = useMemo(() => {
-    let count = 0;
-    if (searchTerm) count++;
-    if (statusFilter !== "all") count++;
-    if (roleFilter !== "all") count++;
-    if (positionFilter !== "all") count++;
-    return count;
-  }, [searchTerm, statusFilter, roleFilter, positionFilter]);
-
-  // Pagination logic
-  const totalUsers = filteredUsers.length;
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(currentPage * itemsPerPage, totalUsers);
-  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+  // Get paginated data and pagination info
+  const paginatedUsers = getPaginatedData(filteredUsers);
+  const paginationInfo = getPaginationInfo(filteredUsers.length);
 
   const activeUsers =
     data?.userList?.filter((user) => user?.isActive).length || 0;
@@ -109,13 +109,7 @@ export function UserListScreen() {
   // Reset to first page when filters change
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, statusFilter, roleFilter, positionFilter]);
-
-  // Reset to first page when items per page changes
-  const handleItemsPerPageChange = (newItemsPerPage: number) => {
-    setItemsPerPage(newItemsPerPage);
-    setCurrentPage(1);
-  };
+  }, [searchTerm, statusFilter, roleFilter, positionFilter, setCurrentPage]);
 
   if (loading) {
     return (
@@ -148,9 +142,9 @@ export function UserListScreen() {
             <Users className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">Staff Members</h1>
+            <h1 className="text-2xl font-bold">Staff Members (with Hook)</h1>
             <p className="text-sm text-muted-foreground">
-              Manage your team members
+              Enhanced pagination using useClientPagination hook
             </p>
           </div>
         </div>
@@ -221,10 +215,9 @@ export function UserListScreen() {
         </Card>
       </div>
 
-      {/* Search and Filter */}
-      <div className="space-y-4">
-        {/* Search Bar */}
-        <div className="relative max-w-md">
+      {/* Search, Filter, and Pagination Style Selector */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
           <Input
             placeholder="Search staff members..."
@@ -233,148 +226,74 @@ export function UserListScreen() {
             className="pl-10"
           />
         </div>
-
-        {/* Filter Row */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium text-muted-foreground">
-              Filters:
-            </span>
-            {activeFiltersCount > 0 && (
-              <Badge variant="secondary" className="text-xs">
-                {activeFiltersCount} active
-              </Badge>
-            )}
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex gap-1">
-            <Button
-              variant={statusFilter === "all" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("all")}
-            >
-              All Status
-            </Button>
-            <Button
-              variant={statusFilter === "active" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("active")}
-            >
-              Active
-            </Button>
-            <Button
-              variant={statusFilter === "inactive" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setStatusFilter("inactive")}
-            >
-              Inactive
-            </Button>
-          </div>
-
-          {/* Role Filter */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                {roleFilter === "all" ? "All Roles" : roleFilter}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem
-                onClick={() => setRoleFilter("all")}
-                className={roleFilter === "all" ? "bg-accent" : ""}
-              >
-                All Roles
-              </DropdownMenuItem>
-              {uniqueRoles.map((role) => (
-                <DropdownMenuItem
-                  key={role}
-                  onClick={() => setRoleFilter(role)}
-                  className={roleFilter === role ? "bg-accent" : ""}
-                >
-                  {role}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Position Filter */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                {positionFilter === "all" ? "All Positions" : positionFilter}
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem
-                onClick={() => setPositionFilter("all")}
-                className={positionFilter === "all" ? "bg-accent" : ""}
-              >
-                All Positions
-              </DropdownMenuItem>
-              {uniquePositions.map((position) => (
-                <DropdownMenuItem
-                  key={position}
-                  onClick={() => setPositionFilter(position)}
-                  className={positionFilter === position ? "bg-accent" : ""}
-                >
-                  {position}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Clear All Filters */}
-          {(searchTerm ||
-            statusFilter !== "all" ||
-            roleFilter !== "all" ||
-            positionFilter !== "all") && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setSearchTerm("");
-                setStatusFilter("all");
-                setRoleFilter("all");
-                setPositionFilter("all");
-              }}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Clear All
-            </Button>
-          )}
+        <div className="flex gap-2">
+          <Button
+            variant={statusFilter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("all")}
+          >
+            All
+          </Button>
+          <Button
+            variant={statusFilter === "active" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("active")}
+          >
+            Active
+          </Button>
+          <Button
+            variant={statusFilter === "inactive" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setStatusFilter("inactive")}
+          >
+            Inactive
+          </Button>
         </div>
       </div>
+
+      {/* Pagination Style Selector */}
+      <Card className="p-4">
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-medium">Pagination Style:</span>
+          <div className="flex gap-2">
+            <Button
+              variant={paginationStyle === "advanced" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPaginationStyle("advanced")}
+            >
+              Advanced
+            </Button>
+            <Button
+              variant={paginationStyle === "simple" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPaginationStyle("simple")}
+            >
+              Simple
+            </Button>
+            <Button
+              variant={paginationStyle === "compact" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPaginationStyle("compact")}
+            >
+              Compact
+            </Button>
+          </div>
+        </div>
+      </Card>
 
       {/* Staff List Table */}
       <Card>
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle>Staff List</CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Badge variant="secondary" className="text-sm">
                 {filteredUsers.length}{" "}
                 {filteredUsers.length === 1 ? "result" : "results"}
               </Badge>
-              {(searchTerm ||
-                statusFilter !== "all" ||
-                roleFilter !== "all" ||
-                positionFilter !== "all") && (
-                <Badge variant="outline" className="text-sm">
-                  Filtered
-                </Badge>
-              )}
+              <Badge variant="outline" className="text-sm">
+                Page {currentPage} of {paginationInfo.totalPages}
+              </Badge>
             </div>
           </div>
         </CardHeader>
@@ -419,28 +338,20 @@ export function UserListScreen() {
                       <div className="flex flex-col items-center gap-2">
                         <Users className="h-8 w-8 text-muted-foreground" />
                         <p className="text-muted-foreground">
-                          {searchTerm ||
-                          statusFilter !== "all" ||
-                          roleFilter !== "all" ||
-                          positionFilter !== "all"
+                          {searchTerm || statusFilter !== "all"
                             ? "No users match your search criteria"
                             : "No users found"}
                         </p>
-                        {(searchTerm ||
-                          statusFilter !== "all" ||
-                          roleFilter !== "all" ||
-                          positionFilter !== "all") && (
+                        {(searchTerm || statusFilter !== "all") && (
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
                               setSearchTerm("");
                               setStatusFilter("all");
-                              setRoleFilter("all");
-                              setPositionFilter("all");
                             }}
                           >
-                            Clear all filters
+                            Clear filters
                           </Button>
                         )}
                       </div>
@@ -451,19 +362,42 @@ export function UserListScreen() {
             </Table>
           </div>
 
-          {/* Advanced Pagination */}
+          {/* Dynamic Pagination Component */}
           {filteredUsers.length > 0 && (
-            <AdvancedPagination
-              currentPage={currentPage}
-              totalItems={totalUsers}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setCurrentPage}
-              onItemsPerPageChange={handleItemsPerPageChange}
-              showJumpToPage={true}
-              showItemsPerPageSelector={true}
-              pageSizeOptions={[10, 25, 50, 100]}
-              className="border-t"
-            />
+            <div className="border-t p-4">
+              {paginationStyle === "advanced" && (
+                <AdvancedPagination
+                  currentPage={currentPage}
+                  totalItems={filteredUsers.length}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={setCurrentPage}
+                  onItemsPerPageChange={handleItemsPerPageChange}
+                  showJumpToPage={true}
+                  showItemsPerPageSelector={true}
+                  pageSizeOptions={[10, 25, 50, 100]}
+                />
+              )}
+              {paginationStyle === "simple" && (
+                <SimplePagination
+                  currentPage={currentPage}
+                  totalItems={filteredUsers.length}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={setCurrentPage}
+                  showItemCount={true}
+                  compact={false}
+                />
+              )}
+              {paginationStyle === "compact" && (
+                <SimplePagination
+                  currentPage={currentPage}
+                  totalItems={filteredUsers.length}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={setCurrentPage}
+                  showItemCount={true}
+                  compact={true}
+                />
+              )}
+            </div>
           )}
         </CardContent>
       </Card>

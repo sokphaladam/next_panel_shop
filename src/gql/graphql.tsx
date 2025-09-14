@@ -1806,6 +1806,8 @@ export type UserListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   roles?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>> | InputMaybe<Scalars['Int']['input']>>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  position?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
 }>;
 
 
@@ -1990,6 +1992,16 @@ export type TransactionStockListQueryVariables = Exact<{
 
 
 export type TransactionStockListQuery = { __typename?: 'Query', transactionStockList?: Array<{ __typename?: 'TransactionStock', id?: string | null, type?: string | null, qty?: number | null, date?: string | null, product?: { __typename?: 'Product', id?: number | null, code?: string | null, images?: string | null, title?: string | null, description?: string | null } | null, sku?: { __typename?: 'SKU', id?: number | null, unit?: string | null, price?: number | null, discount?: number | null, name?: string | null, image?: string | null } | null, by?: { __typename?: 'User', id: number, display?: string | null } | null } | null> | null };
+
+export type ActivityStaffQueryVariables = Exact<{
+  to?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+  userId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type ActivityStaffQuery = { __typename?: 'Query', activityStaff?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -4518,8 +4530,14 @@ export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
 export type UserSuspenseQueryHookResult = ReturnType<typeof useUserSuspenseQuery>;
 export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UserListDocument = gql`
-    query userList($offset: Int, $limit: Int, $roles: [Int]) {
-  userList(offset: $offset, limit: $limit, roles: $roles) {
+    query userList($offset: Int, $limit: Int, $roles: [Int], $search: String, $position: [String]) {
+  userList(
+    offset: $offset
+    limit: $limit
+    roles: $roles
+    search: $search
+    position: $position
+  ) {
     id
     display
     gender
@@ -4563,6 +4581,8 @@ export const UserListDocument = gql`
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *      roles: // value for 'roles'
+ *      search: // value for 'search'
+ *      position: // value for 'position'
  *   },
  * });
  */
@@ -5829,6 +5849,47 @@ export type TransactionStockListQueryHookResult = ReturnType<typeof useTransacti
 export type TransactionStockListLazyQueryHookResult = ReturnType<typeof useTransactionStockListLazyQuery>;
 export type TransactionStockListSuspenseQueryHookResult = ReturnType<typeof useTransactionStockListSuspenseQuery>;
 export type TransactionStockListQueryResult = Apollo.QueryResult<TransactionStockListQuery, TransactionStockListQueryVariables>;
+export const ActivityStaffDocument = gql`
+    query activityStaff($to: String, $from: String, $type: [String], $userId: Int) {
+  activityStaff(to: $to, from: $from, type: $type, userId: $userId)
+}
+    `;
+
+/**
+ * __useActivityStaffQuery__
+ *
+ * To run a query within a React component, call `useActivityStaffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActivityStaffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActivityStaffQuery({
+ *   variables: {
+ *      to: // value for 'to'
+ *      from: // value for 'from'
+ *      type: // value for 'type'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useActivityStaffQuery(baseOptions?: Apollo.QueryHookOptions<ActivityStaffQuery, ActivityStaffQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActivityStaffQuery, ActivityStaffQueryVariables>(ActivityStaffDocument, options);
+      }
+export function useActivityStaffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityStaffQuery, ActivityStaffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActivityStaffQuery, ActivityStaffQueryVariables>(ActivityStaffDocument, options);
+        }
+export function useActivityStaffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ActivityStaffQuery, ActivityStaffQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ActivityStaffQuery, ActivityStaffQueryVariables>(ActivityStaffDocument, options);
+        }
+export type ActivityStaffQueryHookResult = ReturnType<typeof useActivityStaffQuery>;
+export type ActivityStaffLazyQueryHookResult = ReturnType<typeof useActivityStaffLazyQuery>;
+export type ActivityStaffSuspenseQueryHookResult = ReturnType<typeof useActivityStaffSuspenseQuery>;
+export type ActivityStaffQueryResult = Apollo.QueryResult<ActivityStaffQuery, ActivityStaffQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

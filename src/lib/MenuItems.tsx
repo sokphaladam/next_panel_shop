@@ -1,6 +1,7 @@
 import { User } from "@/gql/graphql";
 import { useScriptLanguage } from "@/service/LanguageProvider";
 import {
+  Activity,
   Banknote,
   CalendarSync,
   ChartBarStacked,
@@ -184,6 +185,11 @@ export function MenuItems(user: User | null) {
           label: lng.menu_staff_payroll,
           icon: Banknote,
           url: "/staff/payroll",
+        },
+        {
+          label: "Activity Log",
+          icon: Activity,
+          url: "/staff/log",
         },
       ],
     },

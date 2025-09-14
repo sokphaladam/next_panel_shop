@@ -394,8 +394,20 @@ query user($userId: Int!) {
   }
 }
 
-query userList($offset: Int, $limit: Int, $roles: [Int]) {
-  userList(offset: $offset, limit: $limit, roles: $roles) {
+query userList(
+  $offset: Int
+  $limit: Int
+  $roles: [Int]
+  $search: String
+  $position: [String]
+) {
+  userList(
+    offset: $offset
+    limit: $limit
+    roles: $roles
+    search: $search
+    position: $position
+  ) {
     id
     display
     gender
@@ -897,4 +909,8 @@ query transactionStockList($offset: Int, $limit: Int) {
     }
     date
   }
+}
+
+query activityStaff($to: String, $from: String, $type: [String], $userId: Int) {
+  activityStaff(to: $to, from: $from, type: $type, userId: $userId)
 }
