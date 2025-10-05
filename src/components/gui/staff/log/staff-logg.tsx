@@ -160,7 +160,7 @@ export function StaffLog() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
-            Staff Activity Log
+            Staff Activity Logs
           </CardTitle>
         </CardHeader>
         <CardContent>
