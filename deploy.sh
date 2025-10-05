@@ -1,4 +1,5 @@
 #!/bin/bash
+. $HOME/.nvm/nvm.sh
 cd /var/www/next_panel_shop
 git fetch origin deploy-local
 if [ $(git rev-parse HEAD) != $(git rev-parse origin/deploy-local) ]; then
