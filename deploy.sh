@@ -9,3 +9,4 @@ if [ $(git rev-parse HEAD) != $(git rev-parse origin/deploy-local) ]; then
 else
   echo "✅ No changes, skipping build."
 fi
+echo "Deployment finished at $(date)"
