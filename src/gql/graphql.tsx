@@ -253,6 +253,7 @@ export type Mutation = {
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
   setItemShowOn?: Maybe<Scalars['Boolean']['output']>;
+  setPrintOrderItemToKitchen?: Maybe<Scalars['Boolean']['output']>;
   setTypePaymentOrder?: Maybe<Scalars['Boolean']['output']>;
   signatureOrder?: Maybe<Scalars['Boolean']['output']>;
   swapOrderTable?: Maybe<Scalars['Boolean']['output']>;
@@ -450,6 +451,11 @@ export type MutationSetItemShowOnArgs = {
   productId: Scalars['Int']['input'];
   skuId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationSetPrintOrderItemToKitchenArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -1677,6 +1683,13 @@ export type MergeOrderMutationVariables = Exact<{
 
 
 export type MergeOrderMutation = { __typename?: 'Mutation', mergeOrder?: boolean | null };
+
+export type SetPrintOrderItemToKitchenMutationVariables = Exact<{
+  setPrintOrderItemToKitchenId: Scalars['Int']['input'];
+}>;
+
+
+export type SetPrintOrderItemToKitchenMutation = { __typename?: 'Mutation', setPrintOrderItemToKitchen?: boolean | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3591,6 +3604,37 @@ export function useMergeOrderMutation(baseOptions?: Apollo.MutationHookOptions<M
 export type MergeOrderMutationHookResult = ReturnType<typeof useMergeOrderMutation>;
 export type MergeOrderMutationResult = Apollo.MutationResult<MergeOrderMutation>;
 export type MergeOrderMutationOptions = Apollo.BaseMutationOptions<MergeOrderMutation, MergeOrderMutationVariables>;
+export const SetPrintOrderItemToKitchenDocument = gql`
+    mutation setPrintOrderItemToKitchen($setPrintOrderItemToKitchenId: Int!) {
+  setPrintOrderItemToKitchen(id: $setPrintOrderItemToKitchenId)
+}
+    `;
+export type SetPrintOrderItemToKitchenMutationFn = Apollo.MutationFunction<SetPrintOrderItemToKitchenMutation, SetPrintOrderItemToKitchenMutationVariables>;
+
+/**
+ * __useSetPrintOrderItemToKitchenMutation__
+ *
+ * To run a mutation, you first call `useSetPrintOrderItemToKitchenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetPrintOrderItemToKitchenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setPrintOrderItemToKitchenMutation, { data, loading, error }] = useSetPrintOrderItemToKitchenMutation({
+ *   variables: {
+ *      setPrintOrderItemToKitchenId: // value for 'setPrintOrderItemToKitchenId'
+ *   },
+ * });
+ */
+export function useSetPrintOrderItemToKitchenMutation(baseOptions?: Apollo.MutationHookOptions<SetPrintOrderItemToKitchenMutation, SetPrintOrderItemToKitchenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetPrintOrderItemToKitchenMutation, SetPrintOrderItemToKitchenMutationVariables>(SetPrintOrderItemToKitchenDocument, options);
+      }
+export type SetPrintOrderItemToKitchenMutationHookResult = ReturnType<typeof useSetPrintOrderItemToKitchenMutation>;
+export type SetPrintOrderItemToKitchenMutationResult = Apollo.MutationResult<SetPrintOrderItemToKitchenMutation>;
+export type SetPrintOrderItemToKitchenMutationOptions = Apollo.BaseMutationOptions<SetPrintOrderItemToKitchenMutation, SetPrintOrderItemToKitchenMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {

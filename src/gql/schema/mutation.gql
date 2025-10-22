@@ -241,3 +241,7 @@ mutation createTransactionStock($data: [TransactionStockInput]) {
 mutation mergeOrder($fromOrderId: [Int!], $toOrderId: Int) {
   mergeOrder(fromOrderId: $fromOrderId, toOrderId: $toOrderId)
 }
+
+mutation setPrintOrderItemToKitchen($setPrintOrderItemToKitchenId: Int!) {
+  setPrintOrderItemToKitchen(id: $setPrintOrderItemToKitchenId)
+}

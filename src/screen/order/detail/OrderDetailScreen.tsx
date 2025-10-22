@@ -26,6 +26,7 @@ import {
   useMarkOrderItemStatusMutation,
   useOrderQuery,
   useOrderSubscriptSubscription,
+  useSetPrintOrderItemToKitchenMutation,
 } from "@/gql/graphql";
 import {
   InfoIcon,
@@ -110,7 +111,12 @@ export default function OrderDetailScreen() {
       orderId: Number(params.id),
     },
   });
-  const [mark] = useMarkOrderItemStatusMutation();
+  const [mark] = useMarkOrderItemStatusMutation({
+    refetchQueries: ["order", "orderList"],
+  });
+  const [setPrint] = useSetPrintOrderItemToKitchenMutation({
+    refetchQueries: ["order", "orderList"],
+  });
   const [change] = useChangeOrderStatusMutation({
     refetchQueries: ["order", "orderList"],
   });
@@ -182,6 +188,17 @@ export default function OrderDetailScreen() {
         .finally();
     },
     [user, data]
+  );
+
+  const rePrintToKitchen = useCallback(
+    (id: number) => {
+      setPrint({
+        variables: {
+          setPrintOrderItemToKitchenId: Number(id),
+        },
+      });
+    },
+    [setPrint]
   );
 
   const handleUpdate = useCallback(
@@ -453,21 +470,10 @@ export default function OrderDetailScreen() {
                       vat={vatPer + ""}
                       total={total}
                     />
-                    {/* <PrintOrder order={data?.order} subtotal={total} vat={vat + ''} total={totalAfterVat} kitchen /> */}
-                    {/* <PrintOrderToKitchen order={data?.order} /> */}
+
                     <SignatureOrder order={data?.order || {}} size="micro" />
                   </div>
                   <div className="flex flex-row gap-4">
-                    {/* {data?.order?.status === StatusOrder.Verify && (
-                      <Button
-                        onClick={() => handleUpdate(StatusOrder.Pending)}
-                        size="micro"
-                        tone="success"
-                        variant="primary"
-                      >
-                        Pending
-                      </Button>
-                    )} */}
                     {(data?.order?.status === StatusOrder.Pending ||
                       orderItems > 0) && (
                       <Button
@@ -725,10 +731,10 @@ export default function OrderDetailScreen() {
                                     <div>
                                       <Button
                                         onClick={async () => {
-                                          sendMessage(item);
+                                          rePrintToKitchen(item?.id || 0);
                                         }}
                                       >
-                                        Print
+                                        {item?.isPrint ? "Re-print" : "Print"}
                                       </Button>
                                     </div>
                                     {item?.status !==
