@@ -5,14 +5,14 @@ import {
   OrderItem,
   useMarkFirstPrintOrderMutation,
 } from "@/gql/graphql";
-import { Button, Modal, Text } from "@shopify/polaris";
-import moment from "moment";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import "./style.css";
-import { useSetting } from "@/service/useSettingProvider";
-import { useReactToPrint } from "react-to-print";
 import { config_app } from "@/lib/config_app";
 import { useUser } from "@/service/UserProvider";
+import { useSetting } from "@/service/useSettingProvider";
+import { Button, Modal } from "@shopify/polaris";
+import moment from "moment";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import "./style.css";
 
 interface Props {
   order?: Order | null;
@@ -65,27 +65,11 @@ export function PrintOrder(props: Props) {
     removeAfterPrint: true,
   });
 
-  const handlePrintx2 = useReactToPrint({
-    documentTitle: "Print This Document",
-    onBeforePrint: () => console.log("before printing..."),
-    onAfterPrint: () => {
-      markPrint({
-        variables: {
-          orderId: Number(props.order?.id),
-        },
-      });
-    },
-    removeAfterPrint: true,
-  });
-
   const activator = (
     <Button size="micro" onClick={toggleOpen}>
       {props.kitchen ? "Print to Kitchen" : "Print Recipt"}
     </Button>
   );
-
-  // console.log('customer paid ======>', props.order?.customerPaid);
-  // console.log('total after discount ======>', totalAfterDiscount);
 
   return (
     <Modal
@@ -146,7 +130,6 @@ export function DispalyInvoice(props: Props) {
     ? props.order?.log?.find((f) => f?.text === "Verifed")?.by?.display
     : "";
   const exchangeRate = setting.find((f) => f.option === "EXCHANGE_RATE")?.value;
-  const vat = setting.find((f) => f.option === "TAX")?.value;
   const discount =
     (Number(props.total || 0) * Number(props.order?.discount)) / 100;
   const signature = props.order
@@ -333,7 +316,7 @@ export function DispalyInvoice(props: Props) {
                       </>
                     )}
                     <div className="h-8">TOTAL</div>
-                    <div className="h-8">VAT (Included)</div>
+                    {/* <div className="h-8">VAT (Included)</div> */}
                     <div className="h-8">Recevied</div>
                     <div className="h-8">Return to Customer</div>
                     {signature && <div className="h-8">Signature</div>}
@@ -398,7 +381,6 @@ export function DispalyInvoice(props: Props) {
                 </td>
                 <td className="border-none text-right">
                   <div className="flex flex-col justify-between">
-                    {/* <div className="h-8">${Number(props.subtotal).toFixed(2)}</div> */}
                     {discount > 0 && (
                       <>
                         <div className="h-8">
@@ -410,7 +392,6 @@ export function DispalyInvoice(props: Props) {
                       </>
                     )}
                     <div className="h-8">${totalAfterDiscount.toFixed(2)}</div>
-                    <div className="h-8">$({vat}%)</div>
                     <div className="h-8">
                       ${Number(props.order?.customerPaid).toFixed(2)}
                     </div>

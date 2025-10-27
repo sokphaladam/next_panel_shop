@@ -1,24 +1,6 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  Badge,
-  Box,
-  Button,
-  Card,
-  Divider,
-  Frame,
-  IndexTable,
-  Layout,
-  Loading,
-  Page,
-  Text,
-  Modal as Modals,
-  TextField,
-  Icon,
-  Tabs,
-  TabProps,
-  Banner,
-} from "@shopify/polaris";
+import { useCustomToast } from "@/components/custom/CustomToast";
+import { PolarisProductPickerAddCart } from "@/components/polaris/PolarisProductPickerAddCart";
 import {
   StatusOrder,
   StatusOrderItem,
@@ -28,38 +10,53 @@ import {
   useOrderSubscriptSubscription,
   useSetPrintOrderItemToKitchenMutation,
 } from "@/gql/graphql";
+import { Modal } from "@/hook/modal";
+import { useWindowSize } from "@/hook/useWindowSize";
+import { getDeviceInfo } from "@/lib/device";
+import { useToggle } from "@/service/ToggleProvider";
+import { useUser } from "@/service/UserProvider";
+import { useSetting } from "@/service/useSettingProvider";
 import {
-  InfoIcon,
+  Badge,
+  Banner,
+  Box,
+  Button,
+  Card,
+  Divider,
+  Frame,
+  Icon,
+  IndexTable,
+  Layout,
+  Loading,
+  Modal as Modals,
+  Page,
+  TabProps,
+  Tabs,
+  Text,
+  TextField,
+} from "@shopify/polaris";
+import {
   CheckCircleIcon,
   ClipboardCheckFilledIcon,
-  XCircleIcon,
   DeleteIcon,
+  InfoIcon,
   StatusActiveIcon,
+  XCircleIcon,
 } from "@shopify/polaris-icons";
-import { useCustomToast } from "@/components/custom/CustomToast";
-import { Modal } from "@/hook/modal";
-import { useSetting } from "@/service/useSettingProvider";
+import moment from "moment";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
+import { DeliveryPickup } from "../components/DeliveryPickup";
+import { DiscountOrder } from "../components/DiscountOrder";
+import { FormCheckout } from "../components/FormCheckout";
+import { FormSetPaymentType } from "../components/FormSetPaymentType";
 import { PrintOrder } from "../components/PrintOrder";
 import { SignatureOrder } from "../components/SignatureOrder";
-import { DeliveryPickup } from "../components/DeliveryPickup";
-import moment from "moment";
-import { FormCheckout } from "../components/FormCheckout";
-import { PolarisProductPickerAddCart } from "@/components/polaris/PolarisProductPickerAddCart";
+import { SwapTable } from "../components/SwapTable";
+import { ButtonReadyToServe } from "./button-ready-to-serve";
 import { ControllChangeQty } from "./ControllChangeQty";
 import { ControllPerson } from "./ControllPerson";
-import { useParams } from "next/navigation";
-import Image from "next/image";
-import { useUser } from "@/service/UserProvider";
-import { PrintForKitchen } from "../components/PrintForKitchen";
-import { DiscountOrder } from "../components/DiscountOrder";
-import { useToggle } from "@/service/ToggleProvider";
-import { useWindowSize } from "@/hook/useWindowSize";
-import { FormSetPaymentType } from "../components/FormSetPaymentType";
-import { SwapTable } from "../components/SwapTable";
-import { PrintV2 } from "../components/PrintV2";
-import { ButtonReadyToServe } from "./button-ready-to-serve";
-import { WebSocketClient } from "@/lib/websocket";
-import { getDeviceInfo } from "@/lib/device";
 
 const tabs: TabProps[] = [
   {
@@ -312,9 +309,6 @@ export default function OrderDetailScreen() {
         }, 0);
 
   const vatPer = setting.find((f) => f.option === "TAX")?.value;
-  const lastUpdate = data?.order?.log?.find(
-    (f) => f?.text === "Last Updated"
-  )?.date;
   const orderItems =
     data?.order?.items
       ?.filter((f: any) => f.status === "PENDING")
@@ -457,13 +451,6 @@ export default function OrderDetailScreen() {
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row gap-4">
                     <PrintOrder
-                      firstCall={data?.order?.status === StatusOrder.Checkout}
-                      order={data?.order}
-                      subtotal={total}
-                      vat={vatPer + ""}
-                      total={total}
-                    />
-                    <PrintV2
                       firstCall={data?.order?.status === StatusOrder.Checkout}
                       order={data?.order}
                       subtotal={total}
