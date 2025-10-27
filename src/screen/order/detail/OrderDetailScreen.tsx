@@ -802,24 +802,6 @@ export default function OrderDetailScreen() {
                   <IndexTable.Cell>
                     <div className="ml-1">
                       <Text as="strong" variant="bodySm">
-                        Vat.
-                      </Text>
-                    </div>
-                  </IndexTable.Cell>
-                  <IndexTable.Cell>
-                    {data && (
-                      <div className="mr-1">
-                        <Text as="strong" variant="bodySm" alignment="end">
-                          ({vatPer || 0}%)
-                        </Text>
-                      </div>
-                    )}
-                  </IndexTable.Cell>
-                </IndexTable.Row>
-                <IndexTable.Row id="1" position={1}>
-                  <IndexTable.Cell>
-                    <div className="ml-1">
-                      <Text as="strong" variant="bodySm">
                         Discount
                       </Text>
                     </div>

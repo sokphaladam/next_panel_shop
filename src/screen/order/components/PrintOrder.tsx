@@ -352,7 +352,6 @@ export function DispalyInvoice(props: Props) {
                         Math.round(Number(exchangeRate) * totalAfterDiscount)
                       )}
                     </div>
-                    <div className="h-8"></div>
                     <div className="h-8">
                       {formatKHR(
                         Math.round(
@@ -381,6 +380,7 @@ export function DispalyInvoice(props: Props) {
                 </td>
                 <td className="border-none text-right">
                   <div className="flex flex-col justify-between">
+                    {/* <div className="h-8">${Number(props.subtotal).toFixed(2)}</div> */}
                     {discount > 0 && (
                       <>
                         <div className="h-8">
@@ -392,6 +392,7 @@ export function DispalyInvoice(props: Props) {
                       </>
                     )}
                     <div className="h-8">${totalAfterDiscount.toFixed(2)}</div>
+                    {/* <div className="h-8">$({vat}%)</div> */}
                     <div className="h-8">
                       ${Number(props.order?.customerPaid).toFixed(2)}
                     </div>
