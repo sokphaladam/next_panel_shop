@@ -9,7 +9,9 @@ import {
   Frame,
   FooterHelp,
 } from "@shopify/polaris";
+//@ts-ignore
 import "@shopify/polaris/build/esm/styles.css";
+//@ts-ignore
 import "@/app/globals.css";
 import { config_app } from "@/lib/config_app";
 import { TopbarMarkup } from "@/components/TopbarMakerup";
@@ -102,7 +104,7 @@ export function PolarisProvider({ children }: React.PropsWithChildren<any>) {
             </div>
             <div className="text-right">
               <div>
-                Wifi: <b>Staff-GF</b>
+                Wifi: <b>MooD-WiFi</b>
               </div>
               <div>
                 Password: <b>{pwdwifi}</b>

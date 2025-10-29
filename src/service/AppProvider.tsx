@@ -30,7 +30,7 @@ function AppPage({ children }: React.PropsWithChildren<any>) {
       )}
       <div className="w-full text-center">
         <div>
-          Wifi: <b>Staff-GF</b>
+          Wifi: <b>MooD-WiFi</b>
         </div>
         <div>
           Password: <b>{pwdwifi}</b>
