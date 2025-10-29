@@ -12,6 +12,7 @@ import { Button, Modal } from "@shopify/polaris";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
+//@ts-ignore
 import "./style.css";
 
 interface Props {
@@ -254,7 +255,14 @@ export function DispalyInvoice(props: Props) {
       <div>
         <table id="print_table" className="mt-3">
           <thead>
-            <tr className="border-x border-y-0 border-solid border-black">
+            <tr
+              className="border-x border-y-0 border-solid border-black"
+              style={{
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "black",
+              }}
+            >
               <th>Item</th>
               <th className="text-right">Qty</th>
               <th className="text-left">Price</th>
@@ -268,7 +276,17 @@ export function DispalyInvoice(props: Props) {
               const amount =
                 Number(x?.qty) * (Number(x?.price) - Number(disPrice));
               return (
-                <tr key={i} className="border-x border-solid border-black">
+                <tr
+                  key={i}
+                  className="border-x border-solid border-black"
+                  style={{
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: "black",
+                    borderTopWidth: "0px",
+                    borderBottomWidth: i === groups.length - 1 ? "1px" : "0px",
+                  }}
+                >
                   <td className="flex flex-row !border-y-0 text-start">
                     <div className="w-[10px]">{i + 1}</div>
                     <div className="w-[5px]">.</div>

@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { config_app } from "@/lib/config_app";
-import { ModalComponent } from "@/components/ModalServer";
-import { Modal } from "@/hook/modal";
+//@ts-ignore
 import "@/app/globals.css";
+import { usePathname, useRouter } from "next/navigation";
 
 function AppPage({ children }: React.PropsWithChildren<any>) {
   const setting = useSetting();
@@ -45,9 +45,10 @@ function AppPage({ children }: React.PropsWithChildren<any>) {
 }
 
 function AppWrapper({ children }: React.PropsWithChildren<any>) {
+  const pathname = usePathname();
   return (
     <SidebarProvider>
-      <AppSidebar />
+      {!["/pos"].includes(pathname) && <AppSidebar />}
       <PolarisProvider>
         <div className="w-full px-5">
           <CustomToastMultiple>{children}</CustomToastMultiple>
@@ -66,15 +67,6 @@ export function AppProvider({ children }: React.PropsWithChildren<any>) {
             <SettingProvider>
               <ToggleProvider>
                 <AppWrapper>{children}</AppWrapper>
-                {/* <SidebarProvider>
-                  <AppSidebar />
-                  <SidebarInset>
-                    <SidebarTrigger />
-                    <CustomToastMultiple>
-                      <AppPage>{children}</AppPage>
-                    </CustomToastMultiple>
-                  </SidebarInset>
-                </SidebarProvider> */}
               </ToggleProvider>
             </SettingProvider>
           </UserProvider>

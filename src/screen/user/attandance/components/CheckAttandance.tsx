@@ -51,7 +51,7 @@ export function CheckAttandance() {
                   setToasts([
                     ...toasts,
                     {
-                      content: `Check out at ${moment(d).format("YYYY-MM-DD HH:mm:ss")}`,
+                      content: `Check in at ${moment(d).format("YYYY-MM-DD HH:mm:ss")}`,
                       status: "success",
                     },
                   ]);
