@@ -715,17 +715,24 @@ export default function OrderDetailScreen() {
                                         {(<Icon source={DeleteIcon} />) as any}
                                       </Button>
                                     </div>
-                                    <div>
-                                      <Button
-                                        onClick={async () => {
-                                          rePrintToKitchen(item?.id || 0);
-                                        }}
-                                      >
-                                        {item?.isPrint ? "Re-print" : "Print"}
-                                      </Button>
-                                    </div>
-                                    {item?.status !==
-                                      StatusOrderItem.Completed && (
+                                    {item?.status !== StatusOrderItem.Pending &&
+                                      [6, 2].includes(user?.role?.id || 0) && (
+                                        <div>
+                                          <Button
+                                            onClick={async () => {
+                                              rePrintToKitchen(item?.id || 0);
+                                            }}
+                                          >
+                                            {item?.isPrint
+                                              ? "Re-print"
+                                              : "Print"}
+                                          </Button>
+                                        </div>
+                                      )}
+                                    {![
+                                      StatusOrderItem.Completed,
+                                      StatusOrderItem.Pending,
+                                    ].includes(item?.status!) && (
                                       <div>
                                         <ButtonReadyToServe
                                           id={item?.id ?? 0}
