@@ -147,7 +147,9 @@ export function DispalyInvoice(props: Props) {
       return (
         f.sku?.id === x?.sku?.id &&
         f.addons?.trim() === x?.addons?.trim() &&
-        f.remark?.trim() === x?.remark?.trim()
+        f.remark?.trim() === x?.remark?.trim() &&
+        f.price === x?.price &&
+        f.discount === x?.discount
       );
     });
     if (find >= 0) {
