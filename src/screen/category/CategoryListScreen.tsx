@@ -1,10 +1,22 @@
-'use client';
-import { PolarisLayout } from '@/components/polaris/PolarisLayout';
-import { FormCategory } from '@/components/polaris/form/FormCategory';
-import { useCategoryListQuery } from '@/gql/graphql';
-import { ActionList, Box, Card, Icon, Layout, Popover, Spinner } from '@shopify/polaris';
-import { FolderDownIcon, FolderIcon, MenuVerticalIcon } from '@shopify/polaris-icons';
-import React, { useCallback, useState } from 'react';
+"use client";
+import { PolarisLayout } from "@/components/polaris/PolarisLayout";
+import { FormCategory } from "@/components/polaris/form/FormCategory";
+import { useCategoryListQuery } from "@/gql/graphql";
+import {
+  ActionList,
+  Box,
+  Card,
+  Icon,
+  Layout,
+  Popover,
+  Spinner,
+} from "@shopify/polaris";
+import {
+  FolderDownIcon,
+  FolderIcon,
+  MenuVerticalIcon,
+} from "@shopify/polaris-icons";
+import React, { useCallback, useState } from "react";
 
 function PopoverControl(props: { id: number; onEdit: any }) {
   const [open, setOpen] = useState(false);
@@ -13,7 +25,7 @@ function PopoverControl(props: { id: number; onEdit: any }) {
 
   const activator = (
     <div
-      className="cursor-pointer hover:bg-gray-300 rounded-full w-[30px] h-[30px] flex flex-row items-center"
+      className="flex h-[30px] w-[30px] cursor-pointer flex-row items-center rounded-full hover:bg-gray-300"
       onClick={toggelOpen}
     >
       <Icon source={MenuVerticalIcon} tone="base" />
@@ -21,8 +33,15 @@ function PopoverControl(props: { id: number; onEdit: any }) {
   );
 
   return (
-    <Popover preferredPosition="mostSpace" activator={activator} active={open} onClose={toggelOpen}>
-      <ActionList items={[{ content: 'Edit', onAction: () => props.onEdit(props.id) }]} />
+    <Popover
+      preferredPosition="mostSpace"
+      activator={activator}
+      active={open}
+      onClose={toggelOpen}
+    >
+      <ActionList
+        items={[{ content: "Edit", onAction: () => props.onEdit(props.id) }]}
+      />
     </Popover>
   );
 }
@@ -39,7 +58,10 @@ export function CategoryListScreen() {
       return (
         <div key={ch.id}>
           <div className="flex flex-row justify-between">
-            <div className={`flex flex-row items-center p-2 cursor-pointer`} style={{ marginLeft: `${number}rem` }}>
+            <div
+              className={`flex cursor-pointer flex-row items-center p-2`}
+              style={{ marginLeft: `${number}rem` }}
+            >
               {/* <div className='border-solid border-l-[0.5px] h-full'></div> */}
               <div>
                 <Icon source={ch.id === open ? FolderDownIcon : FolderIcon} />
@@ -66,11 +88,11 @@ export function CategoryListScreen() {
         <PolarisLayout
           title="Category List"
           fullWidth
-          primaryAction={{ content: 'Create', onAction: () => setActive(true) }}
+          primaryAction={{ content: "Create", onAction: () => setActive(true) }}
         >
           {loading && <Spinner />}
           <FormCategory
-            title={`Categories ${categoryId > 0 ? '#' + categoryId : ''}`}
+            title={`Categories ${categoryId > 0 ? "#" + categoryId : ""}`}
             active={active}
             setActive={(v) => {
               setActive(v);
@@ -84,9 +106,12 @@ export function CategoryListScreen() {
                 return (
                   <div key={x.id}>
                     <div className="flex flex-row justify-between">
-                      <div className="flex flex-row items-center p-2 cursor-pointer">
-                        <div>
-                          <Icon source={x.id === open ? FolderDownIcon : FolderIcon} />
+                      <div className="flex cursor-pointer flex-row items-center p-2">
+                        <div>#{x.index}.</div>
+                        <div className="-mt-1">
+                          <Icon
+                            source={x.id === open ? FolderDownIcon : FolderIcon}
+                          />
                         </div>
                         <div className="ml-2">{x.name}</div>
                       </div>

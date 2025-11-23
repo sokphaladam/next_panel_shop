@@ -2,10 +2,12 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   StatusOrderItem,
   TableSet,
+  useConfigureTableSetMutation,
   useGenerateTableSetMutation,
   useGenerateTokenOrderMutation,
   useOrderSubscriptSubscription,
@@ -17,6 +19,8 @@ import { useUser } from "@/service/UserProvider";
 import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import GridTableForm from "./grid-table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function TableItem({ x }: { x: TableSet }) {
   const { push } = useRouter();
@@ -130,6 +134,9 @@ function SetScreen() {
   const [generate, propsUpdate] = useGenerateTokenOrderMutation({
     refetchQueries: ["tableSetList"],
   });
+  const [configureTableSet, propsConfigure] = useConfigureTableSetMutation({
+    refetchQueries: ["tableSetList"],
+  });
   useOrderSubscriptSubscription({
     onData: (res) => {
       if (
@@ -186,37 +193,131 @@ function SetScreen() {
     </div>;
   }
 
+  const intitialFloors = data?.tableSetList
+    ?.filter((f) => !f?.fake)
+    .reduce((a: Record<string, any[]>, b: any) => {
+      const key = b?.floor;
+
+      if (!a[key]) {
+        a[key] = [];
+      }
+      a[key].push(b);
+      return a;
+    }, {});
+
   return (
     <div className="w-full p-6">
-      <div className="flex flex-row items-center gap-4">
-        <Badge className="bg-emerald-500">
-          <div className="flex flex-row items-center justify-between p-1">
-            Available = {data?.tableSetList?.filter((x) => !x?.order).length}
-          </div>
-        </Badge>
-        <Badge className="bg-yellow-500">
-          <div className="flex flex-row items-center justify-between p-1">
-            In Order = {data?.tableSetList?.filter((x) => !!x?.order).length}
-          </div>
-        </Badge>
-        <Badge className="bg-orange-300">
-          <div className="flex flex-row items-center justify-between p-1">
-            Print Order ={" "}
-            {data?.tableSetList?.filter((x) => !!x?.order?.firstPrint).length}
-          </div>
-        </Badge>
+      <div className="flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center gap-4">
+          <Badge className="bg-emerald-500">
+            <div className="flex flex-row items-center justify-between p-1">
+              Available = {data?.tableSetList?.filter((x) => !x?.order).length}
+            </div>
+          </Badge>
+          <Badge className="bg-yellow-500">
+            <div className="flex flex-row items-center justify-between p-1">
+              In Order = {data?.tableSetList?.filter((x) => !!x?.order).length}
+            </div>
+          </Badge>
+          <Badge className="bg-orange-300">
+            <div className="flex flex-row items-center justify-between p-1">
+              Print Order ={" "}
+              {data?.tableSetList?.filter((x) => !!x?.order?.firstPrint).length}
+            </div>
+          </Badge>
+        </div>
+        <div>
+          <Button
+            size={"sm"}
+            onClick={handleGenerateTable}
+            disabled={
+              propsTable.loading ||
+              propsConfigure.loading ||
+              propsUpdate.loading ||
+              loading
+            }
+          >
+            Generate Table
+          </Button>
+          <GridTableForm
+            trigger={
+              <Button
+                size={"sm"}
+                className="ml-2"
+                disabled={
+                  propsTable.loading ||
+                  propsConfigure.loading ||
+                  propsUpdate.loading ||
+                  loading
+                }
+              >
+                Configure Table
+              </Button>
+            }
+            initialFloors={Object.keys(intitialFloors || {}).map((x) => {
+              return {
+                id: x,
+                name: x,
+                rangeStart: intitialFloors?.[x].at(0).set,
+                rangeEnd: intitialFloors?.[x].at(intitialFloors[x].length - 1)
+                  .set,
+              };
+            })}
+            onSubmit={(floor) => {
+              configureTableSet({
+                variables: {
+                  data: floor.map((x) => {
+                    return {
+                      floor: x.name,
+                      rangeStart: x.rangeStart,
+                      rangeEnd: x.rangeEnd,
+                    };
+                  }),
+                },
+              });
+            }}
+          />
+        </div>
       </div>
       <br />
-      <div className="max-xs:grid-cols-1 grid grid-cols-12 gap-4 max-lg:grid-cols-12 max-md:grid-cols-6 max-sm:grid-cols-3">
-        {data &&
-          data?.tableSetList?.map((x) => {
-            return (
-              <div key={x?.set}>
-                <TableItem key={x?.set} x={x || {}} />
-              </div>
-            );
-          })}
-      </div>
+      <Card>
+        <CardContent className="p-4">
+          {intitialFloors && (
+            <Tabs
+              defaultValue={
+                intitialFloors && Object.keys(intitialFloors || {}).at(0)
+              }
+              className="w-full"
+            >
+              <TabsList>
+                {intitialFloors &&
+                  Object.keys(intitialFloors || {}).map((floor) => (
+                    <TabsTrigger key={floor} value={floor}>
+                      {floor}
+                    </TabsTrigger>
+                  ))}
+              </TabsList>
+              {intitialFloors &&
+                Object.keys(intitialFloors || {}).map((floor) => (
+                  <TabsContent key={floor} value={floor} className="w-full">
+                    <div className="max-xs:grid-cols-1 grid grid-cols-12 gap-4 max-lg:grid-cols-12 max-md:grid-cols-6 max-sm:grid-cols-3">
+                      {data &&
+                        data?.tableSetList
+                          ?.filter((x) => x?.floor === floor)
+                          .map((x) => {
+                            return (
+                              <div key={x?.set}>
+                                <TableItem key={x?.set} x={x || {}} />
+                              </div>
+                            );
+                          })}
+                    </div>
+                  </TabsContent>
+                ))}
+            </Tabs>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

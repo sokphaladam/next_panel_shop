@@ -129,6 +129,7 @@ query category($categoryId: Int!) {
     id
     name
     root
+    index
   }
 }
 
@@ -243,6 +244,8 @@ query order($token: String, $orderId: Int) {
       contact
     }
     items {
+      printSuccessDate
+      printedDate
       createdDate
       id
       qty
@@ -291,6 +294,7 @@ query tableSetList($limit: Int, $offset: Int) {
   tableSetList(limit: $limit, offset: $offset) {
     set
     fake
+    floor
     order {
       id
       uuid

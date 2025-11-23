@@ -245,3 +245,11 @@ mutation mergeOrder($fromOrderId: [Int!], $toOrderId: Int) {
 mutation setPrintOrderItemToKitchen($setPrintOrderItemToKitchenId: Int!) {
   setPrintOrderItemToKitchen(id: $setPrintOrderItemToKitchenId)
 }
+
+mutation updateCategoryIndex($data: [CategoryIndexInput]) {
+  updateCategoryIndex(data: $data)
+}
+
+mutation configureTableSet($data: [ConfigureTableSetInput]) {
+  configureTableSet(data: $data)
+}

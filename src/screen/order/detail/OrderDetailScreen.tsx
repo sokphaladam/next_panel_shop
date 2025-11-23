@@ -638,7 +638,11 @@ export default function OrderDetailScreen() {
                                     <small className="text-pink-700">
                                       From last updated (
                                       {moment(
-                                        new Date(item?.createdDate as any)
+                                        item?.printSuccessDate
+                                          ? new Date(
+                                              item?.printSuccessDate as any
+                                            )
+                                          : new Date(item?.printedDate as any)
                                       ).fromNow(true)}
                                       )
                                     </small>
