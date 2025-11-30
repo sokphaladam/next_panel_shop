@@ -15,4 +15,4 @@ services:
       PORT: $PORT # Should match build args
       NEXT_PUBLIC_ENDPOINT: $NEXT_PUBLIC_ENDPOINT
     restart: always
-    command: ["npm", "run", "start", "-p", "$PORT"]
+    command: ["sh", "-c", "npm start -- -p $PORT"]

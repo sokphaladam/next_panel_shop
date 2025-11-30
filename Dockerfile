@@ -2,6 +2,8 @@ FROM node:20-alpine
 
 ARG NEXT_PUBLIC_ENDPOINT
 ENV NEXT_PUBLIC_ENDPOINT=${NEXT_PUBLIC_ENDPOINT}
+ARG PORT
+ENV PORT=${PORT}
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -23,6 +25,6 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Building app
 RUN npm run build
 # HEALTHCHECK CMD curl --fail http://localhost:80 || exit 1
-# EXPOSE 80
+EXPOSE ${PORT}
 
-CMD [ "npm", "run", "start", "-p", "$PORT"]
+CMD ["sh", "-c", "npm start -- -p $PORT"]
