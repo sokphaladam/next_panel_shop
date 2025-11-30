@@ -25,4 +25,4 @@ RUN npm run build
 # HEALTHCHECK CMD curl --fail http://localhost:80 || exit 1
 # EXPOSE 80
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start", "-p", "$PORT"]
