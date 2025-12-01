@@ -634,19 +634,30 @@ export default function OrderDetailScreen() {
                                       {item?.status} x{item?.qty}
                                     </Text>
                                   </div>
-                                  <div>
-                                    <small className="text-pink-700">
-                                      From last updated (
-                                      {moment(
-                                        item?.printSuccessDate
-                                          ? new Date(
+                                  {item?.status !== StatusOrderItem.Pending && (
+                                    <div>
+                                      <small className="text-pink-700">
+                                        From last updated (
+                                        {moment(
+                                          new Date(item?.printedDate as any)
+                                        ).fromNow(true)}
+                                        )
+                                      </small>
+
+                                      {item?.printSuccessDate && (
+                                        <small className="text-pink-700">
+                                          <br />
+                                          Print successed (
+                                          {moment(
+                                            new Date(
                                               item?.printSuccessDate as any
                                             )
-                                          : new Date(item?.printedDate as any)
-                                      ).fromNow(true)}
-                                      )
-                                    </small>
-                                  </div>
+                                          ).fromNow(true)}
+                                          )
+                                        </small>
+                                      )}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </IndexTable.Cell>
