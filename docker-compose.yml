@@ -8,7 +8,6 @@ services:
       args:
         NEXT_PUBLIC_ENDPOINT: $NEXT_PUBLIC_ENDPOINT
         PORT: $PORT
-    container_name: pos-docker
     ports:
       - "$PORT:$PORT" # host:container
     environment:
