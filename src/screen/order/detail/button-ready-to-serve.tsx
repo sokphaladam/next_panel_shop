@@ -8,13 +8,17 @@ import {
 } from "@/components/ui/tooltip";
 import { StatusOrderItem, useMarkOrderItemStatusMutation } from "@/gql/graphql";
 import { HandPlatter } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState, forwardRef } from "react";
 
 interface ButtonReadyToServeProps {
   id: number;
+  as?: "button" | "text";
 }
 
-export function ButtonReadyToServe(props: ButtonReadyToServeProps) {
+export const ButtonReadyToServe = forwardRef<
+  HTMLButtonElement,
+  ButtonReadyToServeProps
+>((props, ref) => {
   const { toasts, setToasts } = useCustomToast();
   const [mark, { loading }] = useMarkOrderItemStatusMutation({
     refetchQueries: ["order"],
@@ -57,6 +61,8 @@ export function ButtonReadyToServe(props: ButtonReadyToServeProps) {
             size={"sm"}
             className="bg-secondary hover:bg-secondary"
             onClick={handleClick}
+            ref={ref}
+            style={props.as === "text" ? { display: "none" } : {}}
           >
             <HandPlatter className="h-3 w-3 text-secondary-foreground" />
           </Button>
@@ -65,4 +71,6 @@ export function ButtonReadyToServe(props: ButtonReadyToServeProps) {
       </Tooltip>
     </TooltipProvider>
   );
-}
+});
+
+ButtonReadyToServe.displayName = "ButtonReadyToServe";

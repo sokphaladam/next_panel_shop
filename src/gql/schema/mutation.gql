@@ -253,3 +253,7 @@ mutation updateCategoryIndex($data: [CategoryIndexInput]) {
 mutation configureTableSet($data: [ConfigureTableSetInput]) {
   configureTableSet(data: $data)
 }
+
+mutation setOrderItemDiscount($orderDetailId: Int!, $discount: Float!) {
+  setOrderItemDiscount(orderDetailId: $orderDetailId, discount: $discount)
+}

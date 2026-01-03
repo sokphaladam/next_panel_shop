@@ -5,10 +5,8 @@ import {
   StatusOrder,
   StatusOrderItem,
   useChangeOrderStatusMutation,
-  useMarkOrderItemStatusMutation,
   useOrderQuery,
   useOrderSubscriptSubscription,
-  useSetPrintOrderItemToKitchenMutation,
 } from "@/gql/graphql";
 import { Modal } from "@/hook/modal";
 import { useWindowSize } from "@/hook/useWindowSize";
@@ -38,13 +36,11 @@ import {
 import {
   CheckCircleIcon,
   ClipboardCheckFilledIcon,
-  DeleteIcon,
   InfoIcon,
   StatusActiveIcon,
   XCircleIcon,
 } from "@shopify/polaris-icons";
 import moment from "moment";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { DeliveryPickup } from "../components/DeliveryPickup";
@@ -54,9 +50,8 @@ import { FormSetPaymentType } from "../components/FormSetPaymentType";
 import { PrintOrder } from "../components/PrintOrder";
 import { SignatureOrder } from "../components/SignatureOrder";
 import { SwapTable } from "../components/SwapTable";
-import { ButtonReadyToServe } from "./button-ready-to-serve";
-import { ControllChangeQty } from "./ControllChangeQty";
 import { ControllPerson } from "./ControllPerson";
+import { OrderListItem } from "./order-list-item";
 
 const tabs: TabProps[] = [
   {
@@ -107,12 +102,6 @@ export default function OrderDetailScreen() {
     variables: {
       orderId: Number(params.id),
     },
-  });
-  const [mark] = useMarkOrderItemStatusMutation({
-    refetchQueries: ["order", "orderList"],
-  });
-  const [setPrint] = useSetPrintOrderItemToKitchenMutation({
-    refetchQueries: ["order", "orderList"],
   });
   const [change] = useChangeOrderStatusMutation({
     refetchQueries: ["order", "orderList"],
@@ -185,17 +174,6 @@ export default function OrderDetailScreen() {
         .finally();
     },
     [user, data]
-  );
-
-  const rePrintToKitchen = useCallback(
-    (id: number) => {
-      setPrint({
-        variables: {
-          setPrintOrderItemToKitchenId: Number(id),
-        },
-      });
-    },
-    [setPrint]
   );
 
   const handleUpdate = useCallback(
@@ -583,207 +561,9 @@ export default function OrderDetailScreen() {
                           ].includes(f.status)
                     )
                     .map((item, index) => {
-                      const priceAfterDis =
-                        Number(item?.price) -
-                        (Number(item?.price) * Number(item?.discount)) / 100;
-                      return (
-                        <React.Fragment key={index}>
-                          <IndexTable.Row
-                            position={index}
-                            id={item?.id + ""}
-                            tone={
-                              item?.status === StatusOrderItem.Completed
-                                ? "success"
-                                : undefined
-                            }
-                          >
-                            <IndexTable.Cell>{index + 1}</IndexTable.Cell>
-                            <IndexTable.Cell>
-                              <div className="flex flex-row gap-2">
-                                <Image
-                                  alt=""
-                                  src={
-                                    item?.sku?.image ||
-                                    item?.product?.images ||
-                                    ""
-                                  }
-                                  width={40}
-                                  height={40}
-                                  objectFit="contain"
-                                  style={{
-                                    width: 40,
-                                    borderRadius: 5,
-                                    maxHeight: 40,
-                                    objectFit: "cover",
-                                  }}
-                                  loading="lazy"
-                                />
-                                {/* <Thumbnail alt="" source={item?.product?.images + ''} size="small" /> */}
-                                <div className="flex flex-col justify-between">
-                                  <Text as="p" variant="bodySm" truncate>
-                                    {item?.product?.title} {/* <small> */}
-                                    <strong>({item?.sku?.name})</strong>
-                                    {/* </small> */}
-                                  </Text>
-                                  <div className="flex flex-row">
-                                    <Text
-                                      as="strong"
-                                      variant="bodySm"
-                                      tone="base"
-                                    >
-                                      {item?.status} x{item?.qty}
-                                    </Text>
-                                  </div>
-                                  {item?.status !== StatusOrderItem.Pending && (
-                                    <div>
-                                      <small className="text-pink-700">
-                                        From last updated (
-                                        {moment(
-                                          new Date(item?.printedDate as any)
-                                        ).fromNow(true)}
-                                        )
-                                      </small>
-
-                                      {item?.printSuccessDate && (
-                                        <small className="text-pink-700">
-                                          <br />
-                                          Print successed (
-                                          {moment(
-                                            new Date(
-                                              item?.printSuccessDate as any
-                                            )
-                                          ).fromNow(true)}
-                                          )
-                                        </small>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </IndexTable.Cell>
-                            <IndexTable.Cell>
-                              <Text as="strong" variant="bodySm">
-                                ${priceAfterDis.toFixed(2)}
-                              </Text>
-                            </IndexTable.Cell>
-                            <IndexTable.Cell>
-                              <Text
-                                as="strong"
-                                variant="bodySm"
-                                fontWeight="bold"
-                                tone="success"
-                              >
-                                $
-                                {(priceAfterDis * Number(item?.qty)).toFixed(2)}
-                              </Text>
-                            </IndexTable.Cell>
-                            <IndexTable.Cell>
-                              <ControllChangeQty item={item || {}} />
-                            </IndexTable.Cell>
-                            {[
-                              StatusOrderItem.Pending,
-                              StatusOrderItem.Making,
-                              StatusOrderItem.Completed,
-                            ].includes(item?.status as any) && (
-                              <IndexTable.Cell>
-                                <div className="flex flex-col items-center">
-                                  <div className="flex flex-row items-center gap-1">
-                                    <div>
-                                      <Button
-                                        size="slim"
-                                        variant="primary"
-                                        tone="critical"
-                                        disabled={
-                                          ![1, 2, 6].includes(
-                                            user?.role?.id || 0
-                                          ) &&
-                                          item?.status !==
-                                            StatusOrderItem.Pending
-                                        }
-                                        onClick={() => {
-                                          Modal.dialog({
-                                            title: "Confirmation",
-                                            body: [
-                                              <div key={1}>
-                                                {"Are you sure to remove this item: " +
-                                                  item?.product?.title}
-                                              </div>,
-                                            ],
-                                            buttons: [
-                                              {
-                                                title: "Yes",
-                                                onPress: () => {
-                                                  mark({
-                                                    variables: {
-                                                      markOrderItemStatusId:
-                                                        Number(item?.id),
-                                                      status:
-                                                        StatusOrderItem.Deleted,
-                                                    },
-                                                  });
-                                                },
-                                              },
-                                            ],
-                                          });
-                                        }}
-                                      >
-                                        {(<Icon source={DeleteIcon} />) as any}
-                                      </Button>
-                                    </div>
-                                    {item?.status !== StatusOrderItem.Pending &&
-                                      [6, 2].includes(user?.role?.id || 0) && (
-                                        <div>
-                                          <Button
-                                            onClick={async () => {
-                                              rePrintToKitchen(item?.id || 0);
-                                            }}
-                                          >
-                                            {item?.isPrint
-                                              ? "Re-print"
-                                              : "Print"}
-                                          </Button>
-                                        </div>
-                                      )}
-                                    {![
-                                      StatusOrderItem.Completed,
-                                      StatusOrderItem.Pending,
-                                    ].includes(item?.status!) && (
-                                      <div>
-                                        <ButtonReadyToServe
-                                          id={item?.id ?? 0}
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
-                                  {item?.isPrint ? (
-                                    <div>
-                                      <small className="text-pink-700">
-                                        Already to kitchen
-                                      </small>
-                                    </div>
-                                  ) : (
-                                    <></>
-                                  )}
-                                </div>
-                              </IndexTable.Cell>
-                            )}
-                          </IndexTable.Row>
-                          {(item?.addons || item?.remark) && (
-                            <IndexTable.Row position={index} id={item?.id + ""}>
-                              <IndexTable.Cell></IndexTable.Cell>
-                              <IndexTable.Cell
-                                colSpan={5}
-                                className="bg-yellow-200"
-                              >
-                                {item.addons && <div>Addon: {item.addons}</div>}
-                                {item.remark && (
-                                  <div>Remark: {item.remark}</div>
-                                )}
-                              </IndexTable.Cell>
-                            </IndexTable.Row>
-                          )}
-                        </React.Fragment>
-                      );
+                      return item ? (
+                        <OrderListItem key={index} index={index} item={item} />
+                      ) : null;
                     })}
                 </IndexTable>
               </div>

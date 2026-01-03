@@ -260,6 +260,7 @@ export type Mutation = {
   peopleInOrder?: Maybe<Scalars['Boolean']['output']>;
   resetPassword?: Maybe<Scalars['Boolean']['output']>;
   setItemShowOn?: Maybe<Scalars['Boolean']['output']>;
+  setOrderItemDiscount?: Maybe<Scalars['Boolean']['output']>;
   setPrintOrderItemToKitchen?: Maybe<Scalars['Boolean']['output']>;
   setTypePaymentOrder?: Maybe<Scalars['Boolean']['output']>;
   signatureOrder?: Maybe<Scalars['Boolean']['output']>;
@@ -463,6 +464,12 @@ export type MutationSetItemShowOnArgs = {
   productId: Scalars['Int']['input'];
   skuId?: InputMaybe<Scalars['Int']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationSetOrderItemDiscountArgs = {
+  discount: Scalars['Float']['input'];
+  orderDetailId: Scalars['Int']['input'];
 };
 
 
@@ -1719,6 +1726,14 @@ export type ConfigureTableSetMutationVariables = Exact<{
 
 
 export type ConfigureTableSetMutation = { __typename?: 'Mutation', configureTableSet?: boolean | null };
+
+export type SetOrderItemDiscountMutationVariables = Exact<{
+  orderDetailId: Scalars['Int']['input'];
+  discount: Scalars['Float']['input'];
+}>;
+
+
+export type SetOrderItemDiscountMutation = { __typename?: 'Mutation', setOrderItemDiscount?: boolean | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3726,6 +3741,38 @@ export function useConfigureTableSetMutation(baseOptions?: Apollo.MutationHookOp
 export type ConfigureTableSetMutationHookResult = ReturnType<typeof useConfigureTableSetMutation>;
 export type ConfigureTableSetMutationResult = Apollo.MutationResult<ConfigureTableSetMutation>;
 export type ConfigureTableSetMutationOptions = Apollo.BaseMutationOptions<ConfigureTableSetMutation, ConfigureTableSetMutationVariables>;
+export const SetOrderItemDiscountDocument = gql`
+    mutation setOrderItemDiscount($orderDetailId: Int!, $discount: Float!) {
+  setOrderItemDiscount(orderDetailId: $orderDetailId, discount: $discount)
+}
+    `;
+export type SetOrderItemDiscountMutationFn = Apollo.MutationFunction<SetOrderItemDiscountMutation, SetOrderItemDiscountMutationVariables>;
+
+/**
+ * __useSetOrderItemDiscountMutation__
+ *
+ * To run a mutation, you first call `useSetOrderItemDiscountMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetOrderItemDiscountMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setOrderItemDiscountMutation, { data, loading, error }] = useSetOrderItemDiscountMutation({
+ *   variables: {
+ *      orderDetailId: // value for 'orderDetailId'
+ *      discount: // value for 'discount'
+ *   },
+ * });
+ */
+export function useSetOrderItemDiscountMutation(baseOptions?: Apollo.MutationHookOptions<SetOrderItemDiscountMutation, SetOrderItemDiscountMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetOrderItemDiscountMutation, SetOrderItemDiscountMutationVariables>(SetOrderItemDiscountDocument, options);
+      }
+export type SetOrderItemDiscountMutationHookResult = ReturnType<typeof useSetOrderItemDiscountMutation>;
+export type SetOrderItemDiscountMutationResult = Apollo.MutationResult<SetOrderItemDiscountMutation>;
+export type SetOrderItemDiscountMutationOptions = Apollo.BaseMutationOptions<SetOrderItemDiscountMutation, SetOrderItemDiscountMutationVariables>;
 export const MeDocument = gql`
     query me {
   me {
