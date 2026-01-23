@@ -57,13 +57,17 @@ export function OrderListItem({ item, index }: Props) {
   const previewDiscountPrice = useMemo(() => {
     if (discountType === "percentage") {
       return (
-        Number(item?.price) -
-        (Number(item?.price) * Number(discountValue)) / 100
+        Number((item?.price || 0) * (item?.qty || 0)) -
+        (Number((item?.price || 0) * (item?.qty || 0)) *
+          Number(discountValue)) /
+          100
       );
     } else {
-      return Number(item?.price) - Number(discountValue);
+      return (
+        Number((item?.price || 0) * (item?.qty || 0)) - Number(discountValue)
+      );
     }
-  }, [item?.price, discountValue, discountType]);
+  }, [item?.price, item?.qty, discountValue, discountType]);
   const [mark] = useMarkOrderItemStatusMutation({
     refetchQueries: ["order", "orderList"],
   });
@@ -92,10 +96,12 @@ export function OrderListItem({ item, index }: Props) {
       discountPercentage = Number(discountValue);
     } else {
       // Convert amount to percentage
-      const originalPrice = Number(item?.price) || 0;
+      const originalPrice = Number((item?.price || 0) * (item?.qty || 0)) || 0;
       discountPercentage =
         originalPrice > 0 ? (Number(discountValue) / originalPrice) * 100 : 0;
     }
+
+    console.log(discountPercentage);
 
     setDiscount({
       variables: {
@@ -105,7 +111,14 @@ export function OrderListItem({ item, index }: Props) {
     }).then(() => {
       setDiscountModalActive(false);
     });
-  }, [setDiscount, item?.id, item?.price, discountValue, discountType]);
+  }, [
+    setDiscount,
+    item?.id,
+    item?.price,
+    item?.qty,
+    discountValue,
+    discountType,
+  ]);
 
   const handleMenuSelect = useCallback(
     (actionId: string) => {
@@ -275,7 +288,7 @@ export function OrderListItem({ item, index }: Props) {
                         onAction: () => handleMenuSelect("discount"),
                       },
                       {
-                        content: "Server",
+                        content: "Served",
                         icon: CheckIcon,
                         onAction: () => buttonRef.current?.click(),
                       },
@@ -347,7 +360,8 @@ export function OrderListItem({ item, index }: Props) {
 
             <div style={{ marginBottom: "16px" }}>
               <Text as="p" variant="bodyMd">
-                Current Price: ${item?.price?.toFixed(2)}
+                Current Amount: $
+                {((item?.price || 0) * (item?.qty || 0)).toFixed(2)}
               </Text>
               <Text as="p" variant="bodyMd">
                 Current Discount: {item?.discount?.toFixed(2)}%
@@ -420,7 +434,8 @@ export function OrderListItem({ item, index }: Props) {
                     {" "}
                     (
                     {(
-                      (Number(discountValue) / (Number(item?.price) || 1)) *
+                      (Number(discountValue) /
+                        (Number((item?.price || 0) * (item?.qty || 0)) || 1)) *
                       100
                     ).toFixed(1)}
                     % off)
@@ -446,7 +461,8 @@ export function OrderListItem({ item, index }: Props) {
                 disabled={
                   Number(discountValue) < 0 ||
                   (discountType === "amount" &&
-                    Number(discountValue) > (Number(item?.price) || 0))
+                    Number(discountValue) >
+                      (Number((item?.price || 0) * (item?.qty || 0)) || 0))
                 }
               >
                 Apply Discount
