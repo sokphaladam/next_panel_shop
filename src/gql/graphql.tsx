@@ -1054,6 +1054,7 @@ export type QueryProductStockListArgs = {
 
 export type QueryReportSaleBreakDownArgs = {
   from?: InputMaybe<Scalars['String']['input']>;
+  groupBy?: InputMaybe<ReportSaleGroupBy>;
   to?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2070,6 +2071,7 @@ export type ActivityStaffQuery = { __typename?: 'Query', activityStaff?: any | n
 export type ReportSaleBreakDownQueryVariables = Exact<{
   from?: InputMaybe<Scalars['String']['input']>;
   to?: InputMaybe<Scalars['String']['input']>;
+  groupBy?: InputMaybe<ReportSaleGroupBy>;
 }>;
 
 
@@ -6092,8 +6094,8 @@ export type ActivityStaffLazyQueryHookResult = ReturnType<typeof useActivityStaf
 export type ActivityStaffSuspenseQueryHookResult = ReturnType<typeof useActivityStaffSuspenseQuery>;
 export type ActivityStaffQueryResult = Apollo.QueryResult<ActivityStaffQuery, ActivityStaffQueryVariables>;
 export const ReportSaleBreakDownDocument = gql`
-    query reportSaleBreakDown($from: String, $to: String) {
-  reportSaleBreakDown(from: $from, to: $to)
+    query reportSaleBreakDown($from: String, $to: String, $groupBy: ReportSaleGroupBy) {
+  reportSaleBreakDown(from: $from, to: $to, groupBy: $groupBy)
 }
     `;
 
@@ -6111,6 +6113,7 @@ export const ReportSaleBreakDownDocument = gql`
  *   variables: {
  *      from: // value for 'from'
  *      to: // value for 'to'
+ *      groupBy: // value for 'groupBy'
  *   },
  * });
  */

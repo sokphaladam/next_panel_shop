@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useReportSaleBreakDownQuery } from "@/gql/graphql";
-import downloadExcelFile, { onGetExportExcel } from "@/lib/DownloadExcelFile";
+import { useReportSaleBreakDownQuery, ReportSaleGroupBy } from "@/gql/graphql";
+import { onGetExportExcel } from "@/lib/DownloadExcelFile";
 import moment from "moment";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -13,19 +13,25 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export function ReportSaleBreakDownScreen() {
   // Initialize date range state with default dates
   const now = moment();
   const [dateRange, setDateRange] = useState({
-    from: new Date(now.clone().startOf("month").format("YYYY-MM-DD")),
+    from: new Date(now.clone().startOf("day").format("YYYY-MM-DD")),
     to: new Date(now.format("YYYY-MM-DD")),
   });
+  const [groupByProduct, setGroupByProduct] = useState(true);
 
   const { data, loading } = useReportSaleBreakDownQuery({
     variables: {
       from: moment(dateRange.from).format("YYYY-MM-DD"),
       to: moment(dateRange.to).format("YYYY-MM-DD 23:59:59"),
+      groupBy: groupByProduct
+        ? ReportSaleGroupBy.Product
+        : ReportSaleGroupBy.Date,
     },
   });
 
@@ -63,10 +69,10 @@ export function ReportSaleBreakDownScreen() {
       Type: "GRAND TOTAL",
       "Product Code": "",
       "Product Name": "",
+      ...(!groupByProduct && { "Ordered At": "" }),
       Quantity: parseFloat(grandTotal.quantity),
       "Supply Price": parseFloat(grandTotal.supply_price),
       "Total Price": parseFloat(grandTotal.total_price),
-      Modifier: 0,
       Discount: parseFloat(grandTotal.discount),
       Revenue: parseFloat(grandTotal.revenue),
       Profit: parseFloat(grandTotal.profit),
@@ -80,10 +86,10 @@ export function ReportSaleBreakDownScreen() {
           Type: "Category Summary",
           "Product Code": "",
           "Product Name": `Category: ${categoryData.category}`,
+          ...(!groupByProduct && { "Ordered At": "" }),
           Quantity: parseFloat(categoryData.summary.quantity),
           "Supply Price": parseFloat(categoryData.summary.supply_price),
           "Total Price": parseFloat(categoryData.summary.total_price),
-          Modifier: 0,
           Discount: parseFloat(categoryData.summary.discount),
           Revenue: parseFloat(categoryData.summary.revenue),
           Profit: parseFloat(categoryData.summary.profit),
@@ -98,12 +104,12 @@ export function ReportSaleBreakDownScreen() {
 
           excelData.push({
             Type: "Detail",
-            "Product Code": product.product_code,
+            "Product Code": `${product.product_code}-${product.product_id}-${product.sku_id}`,
             "Product Name": productName,
+            ...(!groupByProduct && { "Ordered At": product.created_at }),
             Quantity: parseFloat(product.quantity),
             "Supply Price": parseFloat(product.supply_price),
             "Total Price": parseFloat(product.total_price),
-            Modifier: 0,
             Discount: parseFloat(product.discount),
             Revenue: parseFloat(product.revenue),
             Profit: parseFloat(product.profit),
@@ -157,6 +163,21 @@ export function ReportSaleBreakDownScreen() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          {/* Group By Product Checkbox */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="groupByProduct"
+              checked={groupByProduct}
+              onCheckedChange={(checked) => setGroupByProduct(checked === true)}
+            />
+            <Label
+              htmlFor="groupByProduct"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Group by Product
+            </Label>
+          </div>
+
           {/* Date Range Picker */}
           <Popover>
             <PopoverTrigger asChild>
@@ -226,6 +247,11 @@ export function ReportSaleBreakDownScreen() {
                 <th className="border-r p-3 text-left font-medium text-gray-700">
                   Product Name
                 </th>
+                {!groupByProduct && (
+                  <th className="border-r p-3 text-left font-medium text-gray-700">
+                    Ordered At
+                  </th>
+                )}
                 <th className="border-r p-3 text-right font-medium text-gray-700">
                   Quantity
                 </th>
@@ -234,9 +260,6 @@ export function ReportSaleBreakDownScreen() {
                 </th>
                 <th className="border-r p-3 text-right font-medium text-gray-700">
                   Total Price
-                </th>
-                <th className="border-r p-3 text-right font-medium text-gray-700">
-                  Modifier
                 </th>
                 <th className="border-r p-3 text-right font-medium text-gray-700">
                   Discount
@@ -254,6 +277,9 @@ export function ReportSaleBreakDownScreen() {
               <tr className="border-b-2 border-blue-200 bg-blue-50 font-bold">
                 <td className="border-r p-3">📈</td>
                 <td className="border-r p-3 text-blue-800">GRAND TOTAL</td>
+                {!groupByProduct && (
+                  <td className="border-r p-3 text-blue-800">-</td>
+                )}
                 <td className="border-r p-3 text-right">
                   {formatNumber(grandTotal.quantity)}
                 </td>
@@ -263,7 +289,6 @@ export function ReportSaleBreakDownScreen() {
                 <td className="border-r p-3 text-right text-blue-800">
                   {formatNumber(grandTotal.total_price)}
                 </td>
-                <td className="border-r p-3 text-right">{formatNumber(0)}</td>
                 <td className="border-r p-3 text-right">
                   {formatNumber(grandTotal.discount)}
                 </td>
@@ -285,6 +310,9 @@ export function ReportSaleBreakDownScreen() {
                       <td className="border-r p-3 text-gray-700">
                         Category: {categoryData.category}
                       </td>
+                      {!groupByProduct && (
+                        <td className="border-r p-3 text-right">-</td>
+                      )}
                       <td className="border-r p-3 text-right">
                         {formatNumber(categoryData.summary.quantity)}
                       </td>
@@ -293,9 +321,6 @@ export function ReportSaleBreakDownScreen() {
                       </td>
                       <td className="border-r p-3 text-right">
                         {formatNumber(categoryData.summary.total_price)}
-                      </td>
-                      <td className="border-r p-3 text-right">
-                        {formatNumber(0)}
                       </td>
                       <td className="border-r p-3 text-right">
                         {formatNumber(categoryData.summary.discount)}
@@ -316,13 +341,19 @@ export function ReportSaleBreakDownScreen() {
                           className="border-b hover:bg-gray-50"
                         >
                           <td className="border-r p-3 text-sm">
-                            {product.product_code}
+                            {product.product_code}-{product.product_id}-
+                            {product.sku_id}
                           </td>
                           <td className="border-r p-3 text-sm">
                             {product.product_name && product.product_name.trim()
                               ? `${product.product_name} - ${product.sku_name}`
                               : product.sku_name}
                           </td>
+                          {!groupByProduct && (
+                            <td className="border-r p-3 text-sm">
+                              {product.created_at}
+                            </td>
+                          )}
                           <td className="border-r p-3 text-right text-sm">
                             {formatNumber(parseFloat(product.quantity))}
                           </td>
@@ -331,9 +362,6 @@ export function ReportSaleBreakDownScreen() {
                           </td>
                           <td className="border-r p-3 text-right text-sm">
                             {formatNumber(parseFloat(product.total_price))}
-                          </td>
-                          <td className="border-r p-3 text-right text-sm">
-                            {formatNumber(0)}
                           </td>
                           <td className="border-r p-3 text-right text-sm">
                             {formatNumber(parseFloat(product.discount))}
