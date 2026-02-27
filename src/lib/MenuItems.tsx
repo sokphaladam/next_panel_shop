@@ -165,6 +165,11 @@ export function MenuItems(user: User | null) {
           url: "/sale",
           items: [
             {
+              label: lng.menu_report_sale_breakdown,
+              url: "/sale/breakdown",
+              icon: FileSpreadsheet,
+            },
+            {
               label: lng.menu_report_sale,
               url: "/sale",
               icon: FileSpreadsheet,
@@ -487,6 +492,11 @@ export function MenuItems(user: User | null) {
                 icon: FileSpreadsheet,
                 url: "/sale",
                 items: [
+                  {
+                    label: lng.menu_report_sale_breakdown,
+                    url: "/sale/breakdown",
+                    icon: FileSpreadsheet,
+                  },
                   {
                     label: lng.menu_report_sale,
                     url: "/sale",

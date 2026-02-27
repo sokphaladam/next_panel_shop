@@ -850,6 +850,7 @@ export type Query = {
   productList?: Maybe<Array<Maybe<Product>>>;
   productStock?: Maybe<ProductStock>;
   productStockList?: Maybe<Array<Maybe<ProductStock>>>;
+  reportSaleBreakDown?: Maybe<Scalars['JSON']['output']>;
   reportSaleByDay?: Maybe<Scalars['JSON']['output']>;
   reportSaleProduct?: Maybe<Scalars['JSON']['output']>;
   reportStaffPayroll?: Maybe<Scalars['JSON']['output']>;
@@ -1048,6 +1049,12 @@ export type QueryProductStockArgs = {
 export type QueryProductStockListArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryReportSaleBreakDownArgs = {
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2059,6 +2066,14 @@ export type ActivityStaffQueryVariables = Exact<{
 
 
 export type ActivityStaffQuery = { __typename?: 'Query', activityStaff?: any | null };
+
+export type ReportSaleBreakDownQueryVariables = Exact<{
+  from?: InputMaybe<Scalars['String']['input']>;
+  to?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type ReportSaleBreakDownQuery = { __typename?: 'Query', reportSaleBreakDown?: any | null };
 
 export type SubscriptionLoadSubscriptionVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -6076,6 +6091,45 @@ export type ActivityStaffQueryHookResult = ReturnType<typeof useActivityStaffQue
 export type ActivityStaffLazyQueryHookResult = ReturnType<typeof useActivityStaffLazyQuery>;
 export type ActivityStaffSuspenseQueryHookResult = ReturnType<typeof useActivityStaffSuspenseQuery>;
 export type ActivityStaffQueryResult = Apollo.QueryResult<ActivityStaffQuery, ActivityStaffQueryVariables>;
+export const ReportSaleBreakDownDocument = gql`
+    query reportSaleBreakDown($from: String, $to: String) {
+  reportSaleBreakDown(from: $from, to: $to)
+}
+    `;
+
+/**
+ * __useReportSaleBreakDownQuery__
+ *
+ * To run a query within a React component, call `useReportSaleBreakDownQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportSaleBreakDownQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportSaleBreakDownQuery({
+ *   variables: {
+ *      from: // value for 'from'
+ *      to: // value for 'to'
+ *   },
+ * });
+ */
+export function useReportSaleBreakDownQuery(baseOptions?: Apollo.QueryHookOptions<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>(ReportSaleBreakDownDocument, options);
+      }
+export function useReportSaleBreakDownLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>(ReportSaleBreakDownDocument, options);
+        }
+export function useReportSaleBreakDownSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>(ReportSaleBreakDownDocument, options);
+        }
+export type ReportSaleBreakDownQueryHookResult = ReturnType<typeof useReportSaleBreakDownQuery>;
+export type ReportSaleBreakDownLazyQueryHookResult = ReturnType<typeof useReportSaleBreakDownLazyQuery>;
+export type ReportSaleBreakDownSuspenseQueryHookResult = ReturnType<typeof useReportSaleBreakDownSuspenseQuery>;
+export type ReportSaleBreakDownQueryResult = Apollo.QueryResult<ReportSaleBreakDownQuery, ReportSaleBreakDownQueryVariables>;
 export const SubscriptionLoadDocument = gql`
     subscription subscriptionLoad($channel: String) {
   newOrderPending(channel: $channel)

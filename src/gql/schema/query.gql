@@ -918,3 +918,7 @@ query transactionStockList($offset: Int, $limit: Int) {
 query activityStaff($to: String, $from: String, $type: [String], $userId: Int) {
   activityStaff(to: $to, from: $from, type: $type, userId: $userId)
 }
+
+query reportSaleBreakDown($from: String, $to: String) {
+  reportSaleBreakDown(from: $from, to: $to)
+}

@@ -29,5 +29,6 @@
   "menu_option": "Option",
   "menu_delivery": "Delivery",
   "menu_position": "Position",
-  "menu_payment_info": "Payment Info"
+  "menu_payment_info": "Payment Info",
+  "menu_report_sale_breakdown": "Sale Breakdown Report"
 }
