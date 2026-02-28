@@ -462,7 +462,10 @@ export default function OrderDetailScreen() {
                           tone="success"
                           variant="primary"
                           onClick={() => handleUpdate(StatusOrder.Checkout)}
-                          disabled={![1, 2, 6].includes(user?.role?.id || 0)}
+                          disabled={
+                            ![1, 2, 6].includes(user?.role?.id || 0) ||
+                            !user?.shift
+                          }
                         >
                           Checkout
                         </Button>
