@@ -6,15 +6,23 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: '**',
-        protocol: 'https',
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
-  output: 'standalone',
+  output: "standalone",
 };
 
 export default nextConfig;
