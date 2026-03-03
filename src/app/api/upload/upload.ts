@@ -16,7 +16,7 @@ export async function uploadFileMinIO(req: Request) {
 
   return NextResponse.json(
     {
-      url: `http://116.212.144.88:9002/images/${fileName}`,
+      url: `http://116.212.144.88:19002/images/${fileName}`,
     },
     { status: 200 }
   );

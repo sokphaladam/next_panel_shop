@@ -29,13 +29,17 @@ export function PolarisUpload(props: {
         reader.onloadend = async () => {
           const base64 = reader.result?.toString().split(",")[1];
           if (base64) {
+            const file = acceptedFiles[0];
+            const uniqueId = new Date().getTime();
+            const extension = file.name.split(".").pop();
+            const newFileName = `${uniqueId}.${extension}`;
             const res = await fetch("/api/upload", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                fileName: acceptedFiles[0].name,
+                fileName: newFileName,
                 fileContent: base64,
               }),
             });
